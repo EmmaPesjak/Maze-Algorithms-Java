@@ -31,13 +31,13 @@ public class MainController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                if (mainModel.calculate(mainView.getFileName())) {
-                    mainView.displayResults(); // Skicka  in solvade mazar här från model?
+                if (true) {
+                    mainView.displayResults(mainModel.calculate(mainView.getFileName())); // Skicka  in solvade mazar här från model?
 
                 } else {
                     mainView.displayErrorMsg("Did not work."); // Annat felmeddeleande här?
                 }
-            } catch (Exception exception) { // vilken sorts exception?
+            } catch (Exception exception) { // vilken sorts exception? IOException? Mer?
                 System.out.println(exception);
                 mainView.displayErrorMsg("Please enter a valid file name.");
             }

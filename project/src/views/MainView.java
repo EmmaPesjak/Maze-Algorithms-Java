@@ -30,7 +30,7 @@ public class MainView extends JFrame {
      */
     private void init() {
         this.setResizable(false);
-        this.setSize(1000, 650); // Annan storlek?
+        this.setSize(2000, 800); // Annan storlek?
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel.setBackground(Constants.COLOR_BACKGROUND);
@@ -86,8 +86,10 @@ public class MainView extends JFrame {
     /**
      * Displays the result of the solves mazes.
      */
-    public void displayResults() {
+    public void displayResults(JPanel maze) {
         panel.removeAll();
+
+        panel.add(maze);
 
         // Här printar vi ut de solvade mazarna sen. Skicka dem från model på någon vänster?
         // Köra någon sorts BorderLayout och lägga mazarna i west, center, east?
