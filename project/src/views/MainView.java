@@ -89,7 +89,7 @@ public class MainView extends JFrame {
     public void displayResults() {
         panel.removeAll();
 
-        // Här printar vi ut de solvade mazarna sen.
+        // Här printar vi ut de solvade mazarna sen. Skicka dem från model på någon vänster?
         // Köra någon sorts BorderLayout och lägga mazarna i west, center, east?
 
         this.revalidate();

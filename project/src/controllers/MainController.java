@@ -32,7 +32,7 @@ public class MainController {
         public void actionPerformed(ActionEvent e) {
             try {
                 if (mainModel.calculate(mainView.getFileName())) {
-                    mainView.displayResults();
+                    mainView.displayResults(); // Skicka  in solvade mazar här från model?
 
                 } else {
                     mainView.displayErrorMsg("Did not work."); // Annat felmeddeleande här?
@@ -43,5 +43,4 @@ public class MainController {
             }
         }
     }
-
 }
