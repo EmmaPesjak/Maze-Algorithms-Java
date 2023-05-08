@@ -1,8 +1,18 @@
+import controllers.MainController;
+
+import javax.swing.*;
+
+/**
+ * The main starting point for the project.
+ * @author Emma Pesjak
+ */
 public class Main {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello world!");
-        System.out.println("hej");
-        System.out.println("test");
-        MazeGenerator mazeGenerator = new MazeGenerator();
+
+    /**
+     * Create the Controller to start the program.
+     * @param args are command arguments. Not relevant here.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MainController::new);
     }
 }

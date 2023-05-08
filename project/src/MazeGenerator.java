@@ -13,7 +13,7 @@ public class MazeGenerator {
     private boolean maze[][];
 
     public MazeGenerator() throws Exception {
-        maze = generateMaze("mazetest.png");
+        maze = generateMaze("project/src/mazeImages/mazetest.png");
         for (boolean[] row : maze) {
             System.out.println(Arrays.toString(row));
         }
