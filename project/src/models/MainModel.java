@@ -1,19 +1,14 @@
 package models;
 
-
 // Detta blir ju typ vår MazeGenerator/solver
-
-import support.Stack;
-
-
-import java.util.List;
 import javax.imageio.ImageIO;
+import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -24,7 +19,9 @@ public class MainModel {
 
     private static final int MAX_PANEL_WIDTH = 700;
     private static final int MAX_PANEL_HEIGHT = 700;
-    private int[][] binaryMaze;
+    private boolean[][] maze;
+    private int startX, startY, endX, endY;
+    private int mazeLeft, mazeTop, mazeRight, mazeBottom;
 
 
     public MainModel() {
@@ -36,11 +33,15 @@ public class MainModel {
 
         // Get the image.
         BufferedImage image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
-        generateMaze(image);
 
         // Get height and width.
         int width = image.getWidth();
         int height = image.getHeight();
+
+        generateMaze(image);
+
+        // Calculate the shortest path from the start point to the end point.
+        List<Point> path = dijkstraOne();
 
         // Create a binary image of the maze.
         BufferedImage binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
@@ -72,18 +73,46 @@ public class MainModel {
             }
         }
 
-        System.out.println(binaryImage);
-
         //generateMaze(binaryImage);
 
         // Create a custom JPanel to display the binary image.
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
+                //super.paintComponent(g);
+
+                // Scale and draw the binary image on the panel.
+                //g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+
+
                 super.paintComponent(g);
 
                 // Scale and draw the binary image on the panel.
                 g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+
+                // Draw the start and end points
+                g.setColor(Color.GREEN);
+                g.fillOval(startX, startY, 10, 10);
+                g.setColor(Color.RED);
+                g.fillOval(endX, endY, 10, 10);
+
+                // Draw the maze
+                /*g.setColor(Color.BLACK);
+                for (int y = 0; y < maze[0].length; y++) {
+                    for (int x = 0; x < maze.length; x++) {
+                        if (maze[x][y]) {
+                            g.fillRect(x + mazeLeft, y + mazeTop, 1, 1);
+                        }
+                    }
+                }*/
+
+                // Draw the path
+                /*g.setColor(Color.BLUE);
+                for (int i = 0; i < path.size() - 1; i++) {
+                    Point p1 = path.get(i);
+                    Point p2 = path.get(i + 1);
+                    g.drawLine(p1.x, p1.y, p2.x, p2.y);
+                }*/
             }
         };
 
@@ -91,14 +120,103 @@ public class MainModel {
         panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         return panel;
-
-        // Men här räcker det  ju inte att bara rita bilden :) måste lösa med algoritmerna!
-
-        // Returnera true om det gick att lösa.
-        //return (dijkstraOne() && dijkstraTwo() && aStar());
     }
 
     private void generateMaze(BufferedImage binaryImage){
+        mazeLeft = Integer.MAX_VALUE;
+        mazeTop = Integer.MAX_VALUE;
+        mazeRight = Integer.MIN_VALUE;
+        mazeBottom = Integer.MIN_VALUE;
+
+        int width = binaryImage.getWidth();
+        int height = binaryImage.getHeight();
+
+        // Determine the bounding box of the maze and find start and end points
+        // HJÄÄÄÄÄÄLP HATAR DETTA
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int rgb = binaryImage.getRGB(x, y);
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+
+                // Check if the pixel is black (a wall)
+                if (red == 0 && green == 0 && blue == 0) {
+                    mazeLeft = Math.min(mazeLeft, x);
+                    mazeTop = Math.min(mazeTop, y);
+                    mazeRight = Math.max(mazeRight, x);
+                    mazeBottom = Math.max(mazeBottom, y);
+                }
+
+                // Check if the pixel is close to red (the start point)
+                // VARFÖR FUNKAR SKETEN INTE
+                /*if (red >= redThreshold && green < greenThreshold && blue < blueThreshold) {
+                    startX = x;
+                    startY = y;
+                    System.out.println(rgb);
+                }
+
+                // Check if the pixel is blue (the end point)
+                if (red == 0 && green == 0 && blue == 255) {
+                    endX = x;
+                    endY = y;
+                }*/
+            }
+        }
+
+        // Set the start and end points to the manually specified values (TEST). Ska egentligen komma från
+        // loopen som är mög.
+        startX = mazeLeft;
+        startY = mazeTop;
+        endX = mazeRight;
+        endY = mazeBottom;
+
+        // Create the 2D boolean array representing the maze
+        maze = new boolean[mazeRight - mazeLeft + 1][mazeBottom - mazeTop + 1];
+        for (int y = mazeTop; y <= mazeBottom; y++) {
+            for (int x = mazeLeft; x <= mazeRight; x++) {
+                int rgb = binaryImage.getRGB(x, y);
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+
+                // Check if the pixel is black (a wall)
+                if (red == 0 && green == 0 && blue == 0) {
+                    maze[x - mazeLeft][y - mazeTop] = true;
+                }
+            }
+        }
+
+        System.out.println("Boundaries: " + mazeLeft + ", " + mazeTop + ", " + mazeRight + ", " + mazeBottom);
+        System.out.println("Size: " + maze.length + ", " + maze[0].length);
+        System.out.println("Start: " + startX + ", " + startY);
+        System.out.println("End: " + endX + ", " + endY);
+        System.out.println("Width: " + width + ", height: " + height);
+    }
+
+    // Other data structure
+    private List<Point> dijkstraOne() {
+        // Run Dijkstra's algorithm to find the shortest path
+
+        return null;
+    }
+
+
+    // Heap
+    private boolean dijkstraTwo() {
+        // Returnera true om det gick att lösa.
+        return true;
+    }
+
+    private boolean aStar() {
+        // Returnera true om det gick att lösa.
+        return true;
+    }
+
+
+
+
+    /*private void generateMaze(BufferedImage binaryImage){
         int height = binaryImage.getHeight();
         int width = binaryImage.getWidth();
         // Create a 2D array to hold the binary image.
@@ -130,7 +248,7 @@ public class MainModel {
 
         // Identify boundaries of walls, to then be able to find start/destination.
         // Find minimum and maximum x and y coordinates of walls.
-        int minX = width - 1, minY = height - 1, maxX = 0, maxY = 0;
+        /*int minX = width - 1, minY = height - 1, maxX = 0, maxY = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (binaryArray[y][x] == 1) {
@@ -165,11 +283,11 @@ public class MainModel {
         }*/
 
         // Find start and destination points
-        findHolesInMaze(mazeArray);
+        //findHolesInMaze(mazeArray);
 
-    }
+    //}
 
-    public void findHolesInMaze(int[][] maze) {
+    /*public void findHolesInMaze(int[][] maze) {
         int width = maze[0].length;
         int height = maze.length;
 
@@ -347,20 +465,5 @@ public class MainModel {
 
     }*/
 
-    // Heap
-    private boolean dijkstraOne() {
-        // Returnera true om det gick att lösa.
-        return true;
-    }
 
-    // Other data structure
-    private boolean dijkstraTwo() {
-        // Returnera true om det gick att lösa.
-        return true;
-    }
-
-    private boolean aStar() {
-        // Returnera true om det gick att lösa.
-        return true;
-    }
 }
