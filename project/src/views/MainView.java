@@ -12,25 +12,27 @@ import java.awt.event.ActionListener;
 public class MainView extends JFrame {
 
     private final JPanel panel = new JPanel();
-    private final JButton solveButton = new JButton("Solve Maze");
-    private final ActionListener listener;
+    private final ActionListener solveListener;
+    private final ActionListener restartListener;
     private final JTextField textField = new JTextField(30);
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
-     * @param listener is the action listener.
+     * @param solveListener is the action listener.
      */
-    public MainView(ActionListener listener) {
-        this.listener = listener;
+    public MainView(ActionListener solveListener, ActionListener restartListener) {
+        this.solveListener = solveListener;
+        this.restartListener = restartListener;
         init();
     }
 
     /**
      * Initiator for setting up the GUI.
      */
-    private void init() {
+    public void init() {
+        panel.removeAll();
         this.setResizable(false);
-        this.setSize(2000, 800); // Annan storlek?
+        this.setSize(1000, 600); // Annan storlek?
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel.setBackground(Constants.COLOR_BACKGROUND);
@@ -63,11 +65,13 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
+
+        final JButton solveButton = new JButton("Solve Maze");
         solveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         solveButton.setBackground(Constants.COLOR_BUTTON);
         solveButton.setFont(Constants.FONT_BUTTON);
         solveButton.setForeground(Constants.COLOR_BUTTON_TEXT);
-        solveButton.addActionListener(listener);
+        solveButton.addActionListener(solveListener);
         panel.add(solveButton);
 
         this.add(panel);
@@ -86,14 +90,90 @@ public class MainView extends JFrame {
     /**
      * Displays the result of the solves mazes.
      */
-    public void displayResults(JPanel maze) {
+    public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
         panel.removeAll();
 
-        panel.add(maze);
+        panel.setBackground(Constants.COLOR_BACKGROUND);
+        mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
+        mazeDijkstraTwo.setBackground(Constants.COLOR_BACKGROUND);
+        mazeAStar.setBackground(Constants.COLOR_BACKGROUND);
 
-        // Här printar vi ut de solvade mazarna sen. Skicka dem från model på någon vänster?
-        // Köra någon sorts BorderLayout och lägga mazarna i west, center, east?
+        panel.setLayout(new BorderLayout());
 
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.setBackground(Constants.COLOR_BACKGROUND);
+
+        JPanel westPanel = new JPanel();
+        westPanel.setLayout(new BorderLayout());
+        westPanel.setBackground(Constants.COLOR_BACKGROUND);
+        westPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
+        westPanel.add(mazeDijkstraOne);
+        panel.add(westPanel, BorderLayout.WEST);
+
+        JLabel label1 = new JLabel("Dijkstra with ...");
+        label1.setForeground(Constants.COLOR_TEXT);
+        label1.setFont(Constants.FONT_TEXT);
+        label1.setHorizontalAlignment(JLabel.CENTER);
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new GridLayout(2, 1, 10, 10));
+        JPanel labelsPanel = new JPanel();
+        labelsPanel.setLayout(new GridLayout(1, 3, 10, 5));
+
+
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
+        centerPanel.add(mazeDijkstraTwo);
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
+
+        panel.add(centerPanel, BorderLayout.CENTER);
+
+        JLabel label2 = new JLabel("Dijkstra with heap");
+        label2.setForeground(Constants.COLOR_TEXT);
+        label2.setFont(Constants.FONT_TEXT);
+        label2.setHorizontalAlignment(JLabel.CENTER);
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new BorderLayout());
+        eastPanel.setBackground(Constants.COLOR_BACKGROUND);
+        eastPanel.add(mazeAStar, BorderLayout.WEST);
+        eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
+        panel.add(eastPanel, BorderLayout.EAST);
+
+        JLabel label3 = new JLabel("A*");
+        label3.setForeground(Constants.COLOR_TEXT);
+        label3.setFont(Constants.FONT_TEXT);
+        label3.setHorizontalAlignment(JLabel.CENTER);
+        label3.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        southPanel.setBackground(Constants.COLOR_BACKGROUND);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Constants.COLOR_BACKGROUND);
+
+        final JButton restartButton = new JButton("Run new maze");
+        restartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        restartButton.setBackground(Constants.COLOR_BUTTON);
+        restartButton.setFont(Constants.FONT_BUTTON);
+        restartButton.setForeground(Constants.COLOR_BUTTON_TEXT);
+        buttonPanel.add(restartButton);
+        restartButton.addActionListener(restartListener);
+
+        labelsPanel.add(label1);
+        labelsPanel.add(label2);
+        labelsPanel.add(label3);
+        labelsPanel.setBackground(Constants.COLOR_BACKGROUND);
+
+        southPanel.add(labelsPanel);
+        southPanel.add(buttonPanel);
+
+        panel.add(southPanel, BorderLayout.SOUTH);
+
+        this.pack(); // Behövs för att rutan ska få rätt storlek.
         this.revalidate();
         this.repaint();
     }

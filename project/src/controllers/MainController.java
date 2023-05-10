@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 public class MainController {
 
     private final MainModel mainModel = new MainModel();
-    private final MainView mainView = new MainView(new ButtonListener());
+    private final MainView mainView = new MainView(new SolveButtonListener(), new RestartButtonListener());
 
     public MainController() {
 
@@ -23,7 +23,7 @@ public class MainController {
     /**
      * Inner class responsible for listening to the solve button.
      */
-    class ButtonListener implements ActionListener {
+    class SolveButtonListener implements ActionListener {
 
         /**
          * {@inheritDoc}
@@ -32,7 +32,8 @@ public class MainController {
         public void actionPerformed(ActionEvent e) {
             try {
                 if (true) {
-                    mainView.displayResults(mainModel.calculate(mainView.getFileName())); // Skicka  in solvade mazar här från model?
+                    // Skicka  in solvade mazar här från model. Här får vi ju fixa så vi inte anropar tre gånger!
+                    mainView.displayResults(mainModel.calculate(mainView.getFileName()), mainModel.calculate(mainView.getFileName()), mainModel.calculate(mainView.getFileName()));
 
                 } else {
                     mainView.displayErrorMsg("Did not work."); // Annat felmeddeleande här?
@@ -41,6 +42,20 @@ public class MainController {
                 System.out.println(exception);
                 mainView.displayErrorMsg("Please enter a valid file name.");
             }
+        }
+    }
+
+    /**
+     * Inner class responsible for listening to the restart button.
+     */
+    class RestartButtonListener implements ActionListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            mainView.init();
         }
     }
 }
