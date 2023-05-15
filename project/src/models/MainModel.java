@@ -8,9 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Main model class, responsible for handling the application's data and performing calculations.
@@ -102,6 +100,8 @@ public class MainModel {
     }
 
     public JPanel displayPath(Point start, Point finish, String algo){
+
+
         if (start != null) {
             startX = start.x;
             startY = start.y;
@@ -112,6 +112,13 @@ public class MainModel {
         }
 
         generateMaze(image);
+
+        // dubbelkolla så att skiten faktiskt är path ????????
+        assert start != null;
+        if (!maze[start.x][start.y] || !maze[finish.x][finish.y]){
+            System.out.println("de är ju förfan inte path");
+            return null;
+        }
 
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
@@ -219,7 +226,6 @@ public class MainModel {
         }
 
         generateMaze(image);
-
 
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
