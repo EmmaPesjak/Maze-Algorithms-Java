@@ -2,7 +2,6 @@ package models;
 
 // Detta blir ju typ vår MazeGenerator/solver
 import javax.imageio.ImageIO;
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,8 +19,10 @@ public class MainModel {
     private static final int MAX_PANEL_WIDTH = 700;
     private static final int MAX_PANEL_HEIGHT = 700;
     private boolean[][] maze;
-    private int startX, startY, endX, endY;
+    private int startX = -1, startY = -1, endX = -1, endY = -1;
     private int mazeLeft, mazeTop, mazeRight, mazeBottom;
+    private boolean showPoints = true; // Flag to control the display of start and end points
+    private JPanel panel;
 
 
     public MainModel() {
@@ -29,7 +30,15 @@ public class MainModel {
     }
 
     // Kirra mazarna
-    public JPanel calculate(String fileName) throws IOException {
+    public JPanel createImage(String fileName, Point startCoords, Point finishCoords) throws IOException {
+
+        if (startCoords != null) {
+            startX = startCoords.x;
+            startY = startCoords.y;
+            endX = finishCoords.x;
+            endY = finishCoords.y;
+        }
+
 
         // Get the image.
         BufferedImage image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
@@ -39,6 +48,8 @@ public class MainModel {
         int height = image.getHeight();
 
         generateMaze(image);
+
+
 
         // Calculate the shortest path from the start point to the end point.
         List<Point> path = dijkstraOne();
@@ -76,7 +87,7 @@ public class MainModel {
         //generateMaze(binaryImage);
 
         // Create a custom JPanel to display the binary image.
-        JPanel panel = new JPanel() {
+        panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 //super.paintComponent(g);
@@ -91,10 +102,13 @@ public class MainModel {
                 g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
 
                 // Draw the start and end points
-                g.setColor(Color.GREEN);
-                g.fillOval(startX, startY, 10, 10);
-                g.setColor(Color.RED);
-                g.fillOval(endX, endY, 10, 10);
+                if (showPoints && startX != -1) {
+                    g.setColor(Color.GREEN);
+                    g.fillOval(startX, startY, 10, 10);
+                    g.setColor(Color.RED);
+                    g.fillOval(endX, endY, 10, 10);
+                }
+
 
                 // Draw the maze
                 /*g.setColor(Color.BLACK);
@@ -121,6 +135,8 @@ public class MainModel {
 
         return panel;
     }
+
+
 
     private void generateMaze(BufferedImage binaryImage){
         mazeLeft = Integer.MAX_VALUE;
@@ -166,10 +182,11 @@ public class MainModel {
 
         // Set the start and end points to the manually specified values (TEST). Ska egentligen komma från
         // loopen som är mög.
-        startX = mazeLeft;
-        startY = mazeTop;
-        endX = mazeRight;
-        endY = mazeBottom;
+        //EMMA: jag ändrar här så jag får användarens val
+        //startX = mazeLeft;
+        //startY = mazeTop;
+        //endX = mazeRight;
+        //endY = mazeBottom;
 
         // Create the 2D boolean array representing the maze
         maze = new boolean[mazeRight - mazeLeft + 1][mazeBottom - mazeTop + 1];
@@ -211,6 +228,32 @@ public class MainModel {
     private boolean aStar() {
         // Returnera true om det gick att lösa.
         return true;
+    }
+
+    /**
+     * Method for removing the start and finish points.
+     */
+    private void removePoints() {
+        showPoints = false;
+        panel.repaint();
+    }
+
+    /**
+     * Method for showing the start and finish points.
+     */
+    public void showPoints() {
+        showPoints = true;
+    }
+
+    /**
+     * Method for resetting the start and finish points.
+     */
+    public void clearPoints() {
+        removePoints();
+        startX = -1;
+        startY = -1;
+        endX = -1;
+        endY = -1;
     }
 
 

@@ -17,5 +17,6 @@ public interface Constants {
     // Fonts.
     Font FONT_BIG = new Font(Font.MONOSPACED, Font.BOLD, 52);
     Font FONT_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 28);
+    Font FONT_SMALL_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 18);
     Font FONT_BUTTON = new Font(Font.MONOSPACED, Font.BOLD, 32);
 }

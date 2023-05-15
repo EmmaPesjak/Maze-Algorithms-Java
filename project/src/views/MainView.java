@@ -4,7 +4,7 @@ import support.Constants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * Main View class of the program, used for the GUI of the application.
@@ -12,15 +12,23 @@ import java.awt.event.ActionListener;
 public class MainView extends JFrame {
 
     private final JPanel panel = new JPanel();
+    private final ActionListener selectListener;
     private final ActionListener solveListener;
     private final ActionListener restartListener;
     private final JTextField textField = new JTextField(30);
+    private int clickCount = 0;
+    private Point startCoords;
+    private Point finishCoords;
+    private final JPanel explanationPanel = new JPanel();
+    private final JLabel explanationLabel = new JLabel();
+    private final JLabel coordLabel = new JLabel();
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
      * @param solveListener is the action listener.
      */
-    public MainView(ActionListener solveListener, ActionListener restartListener) {
+    public MainView(ActionListener selectListener, ActionListener solveListener, ActionListener restartListener) {
+        this.selectListener = selectListener;
         this.solveListener = solveListener;
         this.restartListener = restartListener;
         init();
@@ -30,7 +38,7 @@ public class MainView extends JFrame {
      * Initiator for setting up the GUI.
      */
     public void init() {
-        panel.removeAll();
+        panel.removeAll(); // Clear the panel.
         this.setResizable(false);
         this.setSize(1000, 600); // Annan storlek?
         this.setVisible(true);
@@ -65,14 +73,9 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-
-        final JButton solveButton = new JButton("Solve Maze");
-        solveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        solveButton.setBackground(Constants.COLOR_BUTTON);
-        solveButton.setFont(Constants.FONT_BUTTON);
-        solveButton.setForeground(Constants.COLOR_BUTTON_TEXT);
-        solveButton.addActionListener(solveListener);
-        panel.add(solveButton);
+        final CustomButton selectButton = new CustomButton("Select Maze");
+        selectButton.addActionListener(selectListener);
+        panel.add(selectButton);
 
         this.add(panel);
         this.revalidate();
@@ -88,10 +91,90 @@ public class MainView extends JFrame {
     }
 
     /**
+     * Shows the selected maze and lets the user pick start and finish coordinates.
+     * @param maze is the maze.
+     */
+    public void showMaze(JPanel maze) {
+        panel.removeAll(); // Clear the panel.
+
+        coordLabel.setFont(Constants.FONT_SMALL_TEXT);
+        coordLabel.setForeground(Constants.COLOR_TEXT);
+        coordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        explanationLabel.setFont(Constants.FONT_SMALL_TEXT);
+        explanationLabel.setForeground(Constants.COLOR_TEXT);
+        explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        maze.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                clickCount++;
+                if (clickCount == 1) {
+                    explanationLabel.setText("Select the finish");
+                    startCoords = e.getPoint();
+                    coordLabel.setText("Start Coordinates: x=" + startCoords.x + ", y=" + startCoords.y);
+                    panel.add(coordLabel);
+                    panel.revalidate();
+                } else if (clickCount == 2) {
+                    explanationPanel.removeAll(); // Remove old text.
+                    finishCoords = e.getPoint();
+                    coordLabel.setText("Finish Coordinates: x=" + finishCoords.x + ", y=" + finishCoords.y);
+                    panel.add(coordLabel);
+                    final CustomButton solveButton = new CustomButton("Solve Maze");
+                    solveButton.addActionListener(solveListener);
+                    explanationPanel.add(solveButton);
+                    panel.revalidate();
+                }
+            }
+
+            // Not needed by the application but have to be overridden.
+            @Override
+            public void mousePressed(MouseEvent e) {}
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+        coordLabel.setText(" ");
+        explanationLabel.setText("Select the start");
+
+        explanationPanel.setBackground(Constants.COLOR_BACKGROUND);
+        explanationPanel.add(explanationLabel);
+
+        panel.add(explanationPanel);
+        panel.add(maze);
+        panel.add(coordLabel);
+
+        this.pack(); // To get the right size for the frame.
+        this.revalidate();
+        this.repaint();
+    }
+
+    /**
+     * Getter for the start coordinates.
+     * @return the coordinates.
+     */
+    public Point getStartCoords() {
+        return startCoords;
+    }
+
+    /**
+     * Getter for the finish coordinates.
+     * @return the coordinates.
+     */
+    public Point getFinishCoords() {
+        return finishCoords;
+    }
+
+    /**
      * Displays the result of the solves mazes.
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
-        panel.removeAll();
+        clickCount = 0; // reset the click count for potential next solved maze
+        panel.removeAll(); // Clear the panel.
+        explanationPanel.removeAll(); // Clear the panel.
 
         panel.setBackground(Constants.COLOR_BACKGROUND);
         mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
@@ -124,7 +207,6 @@ public class MainView extends JFrame {
         JPanel labelsPanel = new JPanel();
         labelsPanel.setLayout(new GridLayout(1, 3, 10, 5));
 
-
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
         centerPanel.add(mazeDijkstraTwo);
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
@@ -155,11 +237,7 @@ public class MainView extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Constants.COLOR_BACKGROUND);
 
-        final JButton restartButton = new JButton("Run new maze");
-        restartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        restartButton.setBackground(Constants.COLOR_BUTTON);
-        restartButton.setFont(Constants.FONT_BUTTON);
-        restartButton.setForeground(Constants.COLOR_BUTTON_TEXT);
+        final CustomButton restartButton = new CustomButton("Run new maze");
         buttonPanel.add(restartButton);
         restartButton.addActionListener(restartListener);
 
@@ -173,7 +251,7 @@ public class MainView extends JFrame {
 
         panel.add(southPanel, BorderLayout.SOUTH);
 
-        this.pack(); // Behövs för att rutan ska få rätt storlek.
+        this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
     }
