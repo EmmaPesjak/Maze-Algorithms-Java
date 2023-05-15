@@ -1,7 +1,6 @@
 package models;
 
 // Detta blir ju typ vår MazeGenerator/solver
-import support.Graph;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,9 +14,14 @@ import java.util.Objects;
 
 /**
  * Main model class, responsible for handling the application's data and performing calculations.
- * @author Emma Pesjak
+ * @author Emma Pesjak mannen var inte så ego
  */
 public class MainModel {
+
+    /**
+     * tjena mannen, fick göra 2 funktioner istället för fick massa nullgrejer på start/end så det är därför
+     * det är 1 miljon variabler just nu.
+     */
 
     private static final int MAX_PANEL_WIDTH = 700;
     private static final int MAX_PANEL_HEIGHT = 700;
@@ -126,10 +130,9 @@ public class MainModel {
                     g.fillOval(endX, endY, 10, 10);
                 }
 
-                //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
                 switch (algo) {
                     case "dijkstraOne" -> {
-                        dijkstraOne = new DjikstraOne(maze, new MazePoint(start), new MazePoint(end));
+                        dijkstraOne = new DjikstraOne(maze, start, end);
                         List<MazePoint> shortestPath = dijkstraOne.solvePath();
 
                         // Draw the shortest path
@@ -216,7 +219,6 @@ public class MainModel {
         }
 
         generateMaze(image);
-        //generateMaze(binaryImage);
 
 
         // Create a custom JPanel to display the binary image.
@@ -239,7 +241,7 @@ public class MainModel {
                 //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
                 switch (whichAlgo) {
                     case "dijkstraOne" -> {
-                        dijkstraOne = new DjikstraOne(maze, new MazePoint(start), new MazePoint(end));
+                        dijkstraOne = new DjikstraOne(maze, start, end);
                         List<MazePoint> shortestPath = dijkstraOne.solvePath();
 
                         // Draw the shortest path
@@ -302,16 +304,10 @@ public class MainModel {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 // Convert binary image coordinates to maze coordinates
-                int mazeX = x / cellSize;
-                int mazeY = y / cellSize;
-
-                maze[mazeX][mazeY] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
+                maze[x][y] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
             }
         }
 
-
-        //start = new Point(startX / cellSize, startY / cellSize);
-        //end = new Point(endX / cellSize, endY / cellSize);
     }
 
 

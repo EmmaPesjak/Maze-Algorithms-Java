@@ -16,18 +16,20 @@ public class DjikstraOne {
     private List<MazePoint> shortestPath;
 
 
-    public DjikstraOne(boolean[][] maze, MazePoint start, MazePoint end){
+    public DjikstraOne(boolean[][] maze, Point start, Point end){
         this.maze = maze;
-        this.start = start;
-        this.end = end;
+        this.start = new MazePoint(start);
+        this.end = new MazePoint(end);
     }
 
+    /**
+     * Försöker fan gå igenom hela mazen tills den har hittat slutmöget. Men den hittar fan aldrig skiten.
+     * Mög.
+     * @return
+     */
     public List<MazePoint> solvePath(){
         int width = maze.length;
         int height = maze[0].length;
-
-        // Create a set of visited nodes.
-        Set<MazePoint> visited = new HashSet<>();
 
         // Create a map of distances to each node.
         Map<MazePoint, Integer> distances = new HashMap<>();
@@ -40,14 +42,19 @@ public class DjikstraOne {
             }
         }
 
-        PriorityQueue<MazePoint> pq = new PriorityQueue<>();
+        // Initiate a priority-queue to hold points.
+        PriorityQueue<MazePoint> pq = new PriorityQueue<>(Comparator.naturalOrder());
         distances.put(start, 0); // Set start point's distance to 0
         pq.offer(start); // Add start point to the priority queue
 
+        System.out.println("nu går vi in här ja");
+
+        // VARFÖR FORTSÄTTER DENNA FOREVER? HITTAR TYP INTE END POINT??
         while (!pq.isEmpty()){
             MazePoint current = pq.poll();
 
             // Check if the current point is the end point
+            // VARFÖR HITTAR DEN ALDRIG JÄVELN
             if (current.equals(end)) {
                 System.out.println("nu jävlar bidde det end");
                 break;
@@ -64,9 +71,10 @@ public class DjikstraOne {
                     pq.offer(neighbor);
                 }
             }
-
-            System.out.println(pq.size());
         }
+
+        // Hit kommer den aldrig :((((((((
+        System.out.println("klar med första loopfan");
 
         // Reconstruct the shortest path from the end-point.
         shortestPath = new ArrayList<>();
@@ -137,6 +145,10 @@ public class DjikstraOne {
                 // Check if the neighbor is true (white pixel = open path)
                 if (maze[nx][ny]) {
                     neighbors.add(new MazePoint(new Point(nx, ny)));
+                }
+
+                if (nx == end.getPoint().x && ny == end.getPoint().y){
+                    System.out.println("inne i neighbours or de vidde bra");
                 }
             }
         }

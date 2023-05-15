@@ -68,15 +68,20 @@ public class MainController {
                 Point start = mainView.getStartCoords();
                 Point end = mainView.getFinishCoords();
 
-                JPanel path = mainModel.displayPath(start, end, "dijkstraOne");
-                mainView.showMaze(path);
+                JPanel path1 = mainModel.displayPath(start, end, "dijkstraOne");
+                JPanel path2 = mainModel.displayPath(start, end, "dijkstraTwo");
+                JPanel path3 = mainModel.displayPath(start, end, "aStar");
+
+                mainView.displayResults(path1, path2, path3);
+
+
                 // Skicka  in solvade mazar här från model. Här får vi ju fixa så vi inte anropar tre gånger!
                 /*mainView.displayResults(mainModel.createMaze(
                         mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "dijkstraOne"),
                         mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "dijkstraTwo"),
                         mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "aStar"));*/
             //} catch (IOException exception) {
-                mainView.displayErrorMsg("Something went wrong, please restart the program and try again.");
+                //mainView.displayErrorMsg("Something went wrong, please restart the program and try again.");
                 //System.out.println(exception);
             //}
         }
