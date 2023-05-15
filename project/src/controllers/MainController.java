@@ -18,19 +18,21 @@ public class MainController {
     private final MainModel mainModel = new MainModel();
     private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(), new RestartButtonListener());
 
-    public MainController() {
-
-    }
-
+    /**
+     *  Inner class responsible for listening to the select maze button.
+     */
     class SelectButtonListener implements ActionListener {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!Objects.equals(mainView.getFileName(), "")) {
+            if (!Objects.equals(mainView.getFileName(), "")) { // Ensure that the user has entered a file name.
                 try {
                     mainView.showMaze(mainModel.createImage(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords())); // här får man ju slänga in en bild istället
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    mainView.displayErrorMsg("Please enter a valid file name.");
                 }
             } else {
                 mainView.displayErrorMsg("Enter a file name!");
@@ -48,18 +50,17 @@ public class MainController {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            // Här tror jag att vi kan skippa try/catchen när vi väl har fixat hur vi kör algosarna.
             try {
                 if (true) {
                     mainModel.showPoints(); // Make sure that the start and finish points are showing.
                     // Skicka  in solvade mazar här från model. Här får vi ju fixa så vi inte anropar tre gånger!
                     mainView.displayResults(mainModel.createImage(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords()), mainModel.createImage(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords()), mainModel.createImage(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords()));
-
                 } else {
-                    mainView.displayErrorMsg("Did not work."); // Annat felmeddeleande här?
+                    mainView.displayErrorMsg("Did not work.");
                 }
             } catch (IOException exception) {
-                System.out.println(exception);
-                mainView.displayErrorMsg("Please enter a valid file name.");
+                mainView.displayErrorMsg("Something went wrong, please restart the program and try again.");
             }
         }
     }

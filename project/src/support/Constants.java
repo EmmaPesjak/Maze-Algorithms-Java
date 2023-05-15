@@ -8,11 +8,11 @@ import java.awt.*;
  */
 public interface Constants {
 
-    // Colors. Här får vi ju ha några redigt snygga färger sen.
-    Color COLOR_BACKGROUND = new Color(1, 1, 1);
-    Color COLOR_TEXT = new Color(235, 235, 235);
-    Color COLOR_BUTTON = new Color(150, 150, 150);
-    Color COLOR_BUTTON_TEXT = new Color(10, 10, 10);
+    // Colors.
+    Color COLOR_BACKGROUND = new Color(0, 94, 98);
+    Color COLOR_TEXT = new Color(176, 222, 115);
+    Color COLOR_BUTTON = new Color(59, 161, 122);
+    Color COLOR_BUTTON_TEXT = new Color(192, 225, 148);
 
     // Fonts.
     Font FONT_BIG = new Font(Font.MONOSPACED, Font.BOLD, 52);

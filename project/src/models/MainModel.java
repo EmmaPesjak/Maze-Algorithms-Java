@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-
 /**
  * Main model class, responsible for handling the application's data and performing calculations.
  * @author Emma Pesjak
@@ -23,11 +22,6 @@ public class MainModel {
     private int mazeLeft, mazeTop, mazeRight, mazeBottom;
     private boolean showPoints = true; // Flag to control the display of start and end points
     private JPanel panel;
-
-
-    public MainModel() {
-
-    }
 
     // Kirra mazarna
     public JPanel createImage(String fileName, Point startCoords, Point finishCoords) throws IOException {
@@ -90,12 +84,6 @@ public class MainModel {
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-                //super.paintComponent(g);
-
-                // Scale and draw the binary image on the panel.
-                //g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
-
-
                 super.paintComponent(g);
 
                 // Scale and draw the binary image on the panel.
@@ -108,7 +96,6 @@ public class MainModel {
                     g.setColor(Color.RED);
                     g.fillOval(endX, endY, 10, 10);
                 }
-
 
                 // Draw the maze
                 /*g.setColor(Color.BLACK);
@@ -209,6 +196,12 @@ public class MainModel {
         System.out.println("Start: " + startX + ", " + startY);
         System.out.println("End: " + endX + ", " + endY);
         System.out.println("Width: " + width + ", height: " + height);
+    }
+
+    public void solveMaze() {
+        // denna får man ju typ kalla på för att solva mazarna sen, men ska den returnera 3st färdigmålade
+        // JPanels då?
+        // Vi får typ snygga till koden för hur bilden skapas så det blir lite lättare.
     }
 
     // Other data structure
