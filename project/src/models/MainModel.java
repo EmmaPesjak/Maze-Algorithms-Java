@@ -1,12 +1,15 @@
 package models;
 
 // Detta blir ju typ vår MazeGenerator/solver
+import support.Graph;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,46 +21,43 @@ public class MainModel {
 
     private static final int MAX_PANEL_WIDTH = 700;
     private static final int MAX_PANEL_HEIGHT = 700;
-    private boolean[][] maze;
+    private static final int cellSize = 10;
+    private int panelWidth;
+    private int panelHeight;
+    private double scale;
+
+    private int width, height;
     private int startX = -1, startY = -1, endX = -1, endY = -1;
-    private int mazeLeft, mazeTop, mazeRight, mazeBottom;
+    private BufferedImage image;
+    private BufferedImage binaryImage;
     private boolean showPoints = true; // Flag to control the display of start and end points
     private JPanel panel;
+    private DjikstraOne dijkstraOne;
 
-    // Kirra mazarna
-    public JPanel createMaze(String fileName, Point startCoords, Point finishCoords, String whichAlgo) throws IOException {
+    private boolean[][] maze;
+    private Point start;
+    private Point end;
 
-        if (startCoords != null) {
-            startX = startCoords.x;
-            startY = startCoords.y;
-            endX = finishCoords.x;
-            endY = finishCoords.y;
-        }
+    private int mazeLeft, mazeTop, mazeRight, mazeBottom;
 
 
+    public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
-        BufferedImage image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
+        image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
 
         // Get height and width.
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        generateMaze(image);
-
-
-
-        // Calculate the shortest path from the start point to the end point.
-        List<Point> path = dijkstraOne();
+        width = image.getWidth();
+        height = image.getHeight();
 
         // Create a binary image of the maze.
-        BufferedImage binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
 
         // Calculate the scaling factor for the JPanel size since we have to shrink the image.
-        double scale = Math.min((double) MAX_PANEL_WIDTH / width, (double) MAX_PANEL_HEIGHT / height);
+        scale = Math.min((double) MAX_PANEL_WIDTH / width, (double) MAX_PANEL_HEIGHT / height);
 
         // Calculate the scaled dimensions for the JPanel.
-        int panelWidth = (int) (width * scale);
-        int panelHeight = (int) (height * scale);
+        panelWidth = (int) (width * scale);
+        panelHeight = (int) (height * scale);
 
         // Iterate over the pixels of the image.
         for (int y = 0; y < height; y++) {
@@ -79,7 +79,35 @@ public class MainModel {
             }
         }
 
-        //generateMaze(binaryImage);
+        // Create a custom JPanel to display the binary image.
+        panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // Scale and draw the binary image on the panel.
+                g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+
+            }
+        };
+
+        // Set the preferred size of the panel
+        panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        return panel;
+    }
+
+    public JPanel displayPath(Point start, Point finish, String algo){
+        if (start != null) {
+            startX = start.x;
+            startY = start.y;
+            endX = finish.x;
+            endY = finish.y;
+            this.start = start;
+            this.end = finish;
+        }
+
+        generateMaze(image);
 
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
@@ -98,12 +126,136 @@ public class MainModel {
                     g.fillOval(endX, endY, 10, 10);
                 }
 
+                //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
+                switch (algo) {
+                    case "dijkstraOne" -> {
+                        dijkstraOne = new DjikstraOne(maze, new MazePoint(start), new MazePoint(end));
+                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
+
+                        // Draw the shortest path
+                        if (shortestPath != null) {
+                            System.out.println("det bidde inte en null");
+                            System.out.println(shortestPath);
+                            g.setColor(Color.YELLOW);
+                            for (MazePoint point : shortestPath) {
+                                int cellX = point.getPoint().x * cellSize;
+                                int cellY = point.getPoint().y * cellSize;
+                                g.fillRect(cellX, cellY, cellSize, cellSize);
+                            }
+                        }
+
+                        //g.setColor(Color.MAGENTA);
+                        //g.fillOval(100, 100, 40, 40);
+                    }
+                    case "dijkstraTwo" -> {
+                        g.setColor(Color.PINK);
+                        g.fillOval(100, 100, 50, 50);
+                    }
+                    case "aStar" -> {
+                        g.setColor(Color.CYAN);
+                        g.fillOval(50, 50, 20, 20);
+                    }
+                }
+            }
+        };
+
+        // Set the preferred size of the panel
+        panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        return panel;
+    }
+
+
+    // Kirra mazarna
+    public JPanel createMaze(String fileName, Point startCoords, Point finishCoords, String whichAlgo) throws IOException {
+
+        if (startCoords != null) {
+            startX = startCoords.x;
+            startY = startCoords.y;
+            endX = finishCoords.x;
+            endY = finishCoords.y;
+            //this.start = startCoords;
+            //this.end = finishCoords;
+        }
+
+        // Get the image.
+        BufferedImage image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
+
+        // Get height and width.
+        width = image.getWidth();
+        height = image.getHeight();
+
+        // Create a binary image of the maze.
+        binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+
+        // Calculate the scaling factor for the JPanel size since we have to shrink the image.
+        double scale = Math.min((double) MAX_PANEL_WIDTH / width, (double) MAX_PANEL_HEIGHT / height);
+
+        // Calculate the scaled dimensions for the JPanel.
+        panelWidth = (int) (width * scale);
+        panelHeight = (int) (height * scale);
+
+        // Iterate over the pixels of the image.
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Get the RGB value of the pixel.
+                int rgb = image.getRGB(x, y);
+
+                // Extract the red, green, and blue components.
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+
+                // Compute the grayscale value of the pixel.
+                int grayscale = (red + green + blue) / 3;
+
+                // Set the grayscale value as the RGB value for the binary image.
+                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
+                binaryImage.setRGB(x, y, binaryRGB);
+            }
+        }
+
+        generateMaze(image);
+        //generateMaze(binaryImage);
+
+
+        // Create a custom JPanel to display the binary image.
+        panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // Scale and draw the binary image on the panel.
+                g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+
+                // Draw the start and end points
+                if (showPoints && startX != -1) {
+                    g.setColor(Color.GREEN);
+                    g.fillOval(startX, startY, 10, 10);
+                    g.setColor(Color.RED);
+                    g.fillOval(endX, endY, 10, 10);
+                }
 
                 //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
                 switch (whichAlgo) {
                     case "dijkstraOne" -> {
-                        g.setColor(Color.MAGENTA);
-                        g.fillOval(100, 100, 40, 40);
+                        dijkstraOne = new DjikstraOne(maze, new MazePoint(start), new MazePoint(end));
+                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
+
+                        // Draw the shortest path
+                        if (shortestPath != null) {
+                            System.out.println("det bidde inte en null");
+                            System.out.println(shortestPath);
+                            g.setColor(Color.YELLOW);
+                            for (MazePoint point : shortestPath) {
+                                int cellX = point.getPoint().x * cellSize;
+                                int cellY = point.getPoint().y * cellSize;
+                                g.fillRect(cellX, cellY, cellSize, cellSize);
+                            }
+                        }
+
+                        //g.setColor(Color.MAGENTA);
+                        //g.fillOval(100, 100, 40, 40);
                     }
                     case "dijkstraTwo" -> {
                         g.setColor(Color.PINK);
@@ -141,9 +293,41 @@ public class MainModel {
         return panel;
     }
 
+    private void generateMaze(BufferedImage binaryImage) {
+        int width = binaryImage.getWidth();
+        int height = binaryImage.getHeight();
+
+        // Create the 2D boolean array representing the maze
+        maze = new boolean[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // Convert binary image coordinates to maze coordinates
+                int mazeX = x / cellSize;
+                int mazeY = y / cellSize;
+
+                maze[mazeX][mazeY] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
+            }
+        }
 
 
-    private void generateMaze(BufferedImage binaryImage){
+        //start = new Point(startX / cellSize, startY / cellSize);
+        //end = new Point(endX / cellSize, endY / cellSize);
+    }
+
+
+    /*private void dijkstraOne(){
+        List<Point> shortestPath = new ArrayList<>();
+        Point start;
+        Point end;
+
+    }*/
+
+    private void addNeighbour(Point point){
+
+    }
+
+
+    private void generateMazeHej(BufferedImage binaryImage){
         mazeLeft = Integer.MAX_VALUE;
         mazeTop = Integer.MAX_VALUE;
         mazeRight = Integer.MIN_VALUE;
@@ -217,11 +401,11 @@ public class MainModel {
     }
 
     // Other data structure
-    private List<Point> dijkstraOne() {
+    /*private List<Point> dijkstraOne() {
         // Run Dijkstra's algorithm to find the shortest path
 
         return null;
-    }
+    }*/
 
 
     // Heap

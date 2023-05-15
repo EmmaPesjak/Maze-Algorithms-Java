@@ -3,8 +3,11 @@ package controllers;
 import models.MainModel;
 import views.MainView;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -30,7 +33,16 @@ public class MainController {
         public void actionPerformed(ActionEvent e) {
             if (!Objects.equals(mainView.getFileName(), "")) { // Ensure that the user has entered a file name.
                 try {
-                    mainView.showMaze(mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "none")); // här får man ju slänga in en bild istället
+                    // Get values before calling show-maze.
+                    String file = mainView.getFileName();
+
+                    JPanel img = mainModel.getMaze(file);
+                    mainView.showMaze(img);
+
+
+
+                    //JPanel maze = mainModel.createMaze(file, start, end, "dijkstraOne");
+                    //mainView.showMaze(maze); // här får man ju slänga in en bild istället
                 } catch (IOException ex) {
                     mainView.displayErrorMsg("Please enter a valid file name.");
                 }
@@ -51,16 +63,22 @@ public class MainController {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Här tror jag att vi kan skippa try/catchen när vi väl har fixat hur vi kör algosarna.
-            try {
+            //try {
                 mainModel.showPoints(); // Make sure that the start and finish points are showing.
+                Point start = mainView.getStartCoords();
+                Point end = mainView.getFinishCoords();
+
+                JPanel path = mainModel.displayPath(start, end, "dijkstraOne");
+                mainView.showMaze(path);
                 // Skicka  in solvade mazar här från model. Här får vi ju fixa så vi inte anropar tre gånger!
-                mainView.displayResults(mainModel.createMaze(
+                /*mainView.displayResults(mainModel.createMaze(
                         mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "dijkstraOne"),
                         mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "dijkstraTwo"),
-                        mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "aStar"));
-            } catch (IOException exception) {
+                        mainModel.createMaze(mainView.getFileName(), mainView.getStartCoords(), mainView.getFinishCoords(), "aStar"));*/
+            //} catch (IOException exception) {
                 mainView.displayErrorMsg("Something went wrong, please restart the program and try again.");
-            }
+                //System.out.println(exception);
+            //}
         }
     }
 
