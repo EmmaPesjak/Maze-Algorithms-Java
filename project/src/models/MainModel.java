@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main model class, responsible for handling the application's data and performing calculations.
@@ -24,7 +25,7 @@ public class MainModel {
     private JPanel panel;
 
     // Kirra mazarna
-    public JPanel createImage(String fileName, Point startCoords, Point finishCoords) throws IOException {
+    public JPanel createMaze(String fileName, Point startCoords, Point finishCoords, String whichAlgo) throws IOException {
 
         if (startCoords != null) {
             startX = startCoords.x;
@@ -95,6 +96,23 @@ public class MainModel {
                     g.fillOval(startX, startY, 10, 10);
                     g.setColor(Color.RED);
                     g.fillOval(endX, endY, 10, 10);
+                }
+
+
+                //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
+                switch (whichAlgo) {
+                    case "dijkstraOne" -> {
+                        g.setColor(Color.MAGENTA);
+                        g.fillOval(100, 100, 40, 40);
+                    }
+                    case "dijkstraTwo" -> {
+                        g.setColor(Color.PINK);
+                        g.fillOval(100, 100, 50, 50);
+                    }
+                    case "aStar" -> {
+                        g.setColor(Color.CYAN);
+                        g.fillOval(50, 50, 20, 20);
+                    }
                 }
 
                 // Draw the maze
@@ -196,12 +214,6 @@ public class MainModel {
         System.out.println("Start: " + startX + ", " + startY);
         System.out.println("End: " + endX + ", " + endY);
         System.out.println("Width: " + width + ", height: " + height);
-    }
-
-    public void solveMaze() {
-        // denna får man ju typ kalla på för att solva mazarna sen, men ska den returnera 3st färdigmålade
-        // JPanels då?
-        // Vi får typ snygga till koden för hur bilden skapas så det blir lite lättare.
     }
 
     // Other data structure
