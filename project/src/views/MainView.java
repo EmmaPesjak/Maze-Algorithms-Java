@@ -22,7 +22,13 @@ public class MainView extends JFrame {
     private final JPanel explanationPanel = new JPanel();
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
+
+
+    private JPanel loadingPanel = new JPanel();
+    private JPanel textLoadingPanel = new JPanel();
     private JLabel loadingLabel;
+    private JLabel textLoadingLabel;
+
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
@@ -169,13 +175,41 @@ public class MainView extends JFrame {
         return finishCoords;
     }
 
-    public void startLoading(){
-        loadingLabel = new JLabel(new ImageIcon("loading.gif"));
-        loadingLabel.setBounds(50, 50, 100, 100);
+    public void displayLoadingPanel() {
+        // Clear the current content
+        panel.removeAll(); // Clear the panel.
+        explanationPanel.removeAll(); // Clear the panel.
 
-        // Add the loading label to the frame
-        this.getContentPane().add(loadingLabel);
+        panel.setBackground(Constants.COLOR_BACKGROUND);
+        //loadingPanel.setLayout(new BorderLayout());
+
+        panel.setLayout(new BorderLayout());
+        panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
+
+        // Create a label to display the loading GIF
+        loadingLabel = new JLabel(new ImageIcon("project/src/Spinner-1s-200px.gif"));
+        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        textLoadingLabel = new JLabel("Finding the shortest path...");
+        textLoadingLabel.setFont(Constants.FONT_BIG);
+        textLoadingLabel.setForeground(Constants.COLOR_TEXT);
+
+        // Add the label to the loading panel
+        panel.add(loadingLabel, BorderLayout.CENTER);
+        panel.add(textLoadingLabel, BorderLayout.SOUTH);
+
+        // Add the loading panel to the view
+        //this.add(loadingPanel, BorderLayout.CENTER);
+        this.pack(); // To get the right size for the frame.
         this.revalidate();
+        this.repaint();
+    }
+
+    public void closeLoadingPanel() {
+        // Remove the loading panel from the view
+        remove(loadingPanel);
+        revalidate();
+        repaint();
     }
 
     /**
@@ -185,6 +219,7 @@ public class MainView extends JFrame {
 
         // TODO: kan man fixa i Swing så det kommer någon sorts loadscreen? Sökningarna tar ju fett lång tid!
         // TODO: se till så att alla 3 paneler får plats
+
 
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
@@ -227,7 +262,7 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel("Dijkstra with heap");
+        JLabel label2 = new JLabel("Dijkstra with deque");
         label2.setForeground(Constants.COLOR_TEXT);
         label2.setFont(Constants.FONT_TEXT);
         label2.setHorizontalAlignment(JLabel.CENTER);

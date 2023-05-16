@@ -20,8 +20,8 @@ public class MainModel {
      * det är 1 miljon variabler just nu.
      */
 
-    private static final int MAX_PANEL_WIDTH = 700;
-    private static final int MAX_PANEL_HEIGHT = 700;
+    private static final int MAX_PANEL_WIDTH = 500;  // Ändrade för det fick inte plats med 3 bildmögar
+    private static final int MAX_PANEL_HEIGHT = 500;
     private static final int cellSize = 1; //ändrade denna från 10 till 1, INGEN ANING VARFÖR MEN DET BIDDE BÄTTRE HAHAH
     private int panelWidth;
     private int panelHeight;
