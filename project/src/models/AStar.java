@@ -79,21 +79,21 @@ public class AStar {
 
             // Otherwise continue traversing the maze, adding available neighbours to the
             // open set (prio queue).
-            List<MazePointAStar> neighbors = getNeighbours(currentPoint);
-            for (MazePointAStar neighbor : neighbors) {
+            List<MazePointAStar> neighbours = getNeighbours(currentPoint);
+            for (MazePointAStar neighbour : neighbours) {
                 // Check if they are in the closed set (already visited), do not add.
-                if (closedSet.contains(neighbor)) {
+                if (closedSet.contains(neighbour)) {
                     continue;
                 }
                 // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point)
                 int newDistance = currentPoint.getDistance() + 1;
                 // If the neighbour's current distance is higher, we update its parent to the current point
                 // and calculate and set the new distance and heuristics. Then we add it to the open set.
-                if (newDistance < neighbor.getDistance()) {
-                    neighbor.setParent(currentPoint);
-                    neighbor.setDistance(newDistance);
-                    neighbor.setHeuristicValue(calculateTheHeuristicValue(neighbor, endMazePoint));
-                    openSet.add(neighbor);
+                if (newDistance < neighbour.getDistance()) {
+                    neighbour.setParent(currentPoint);
+                    neighbour.setDistance(newDistance);
+                    neighbour.setHeuristicValue(calculateTheHeuristicValue(neighbour, endMazePoint));
+                    openSet.add(neighbour);
                 }
             }
         }
