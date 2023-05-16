@@ -8,7 +8,7 @@ import java.util.List;
  * Class representing Dijkstra's algorithm using a Priority Queue, used for solving the maze and
  * finding the shortest path.
  */
-public class DijkstraOne {
+public class Dijkstra {
 
 //    private final int INF = Constants.INFINITY;
 //    private final boolean[][] maze;
@@ -17,7 +17,7 @@ public class DijkstraOne {
 //    private List<MazePoint> shortestPath;
 //
 //
-//    public DijkstraOne(boolean[][] maze, Point start, Point end){
+//    public Dijkstra(boolean[][] maze, Point start, Point end){
 //        this.maze = maze;
 //        this.start = new MazePoint(start);
 //        this.end = new MazePoint(end);
@@ -169,7 +169,7 @@ public class DijkstraOne {
      * @param start is the start point.
      * @param end is the end point.
      */
-    public DijkstraOne(boolean[][] maze, Point start, Point end) {
+    public Dijkstra(boolean[][] maze, Point start, Point end) {
         this.maze = maze;
         this.mazePoints = new MazePointDijkstra[maze.length][maze[0].length];
         this.start = start;
@@ -180,7 +180,7 @@ public class DijkstraOne {
      * Finds the shortest path through the maze using Dijkstra's algorithm.
      * @return the shortest path as an array of points.
      */
-    public List<Point> solvePath() {
+    public List<Point> solveHeapPath() {
         // Convert the 2D array to a 2D array of MazePointDijkstras.
         convertToMazePoints();
         // Get the start and end.
@@ -231,11 +231,86 @@ public class DijkstraOne {
     }
 
     /**
+     * Solve the shortest path using Dequeue and map.
+     * @return shortest path.
+     */
+    public List<Point> solveOtherPath(){
+        // Convert the 2D array to a 2D array of MazePointDijkstras.
+        convertToMazePoints();
+        // Get the start and end.
+        MazePointDijkstra startMazePoint = mazePoints[start.x][start.y];
+        MazePointDijkstra endMazePoint = mazePoints[end.x][end.y];
+
+        // Initialize a deque to store points to be visited.
+        Deque<MazePointDijkstra> openSet = new ArrayDeque<>();
+
+        // Create an array for the already visited points.
+        List<MazePointDijkstra> closedSet = new ArrayList<>();
+        // Initial distance is 0.
+        startMazePoint.setDistance(0);
+        // Add to the priority queue.
+        openSet.add(startMazePoint);
+
+        // Initialize Map for storing visited points and its distance from start.
+        //Map<MazePointDijkstra, Integer> distances = new HashMap<>();
+
+        // Push start into deque and set distance to 0.
+        //deque.push(startMazePoint);
+        //distances.put(startMazePoint, 0);
+
+        // While deque has points, get current point and perform algorithm.
+        while (!openSet.isEmpty()) {
+            MazePointDijkstra currentPoint = openSet.pop();
+
+            // If it has reached the end, generate final path.
+            if (currentPoint == endMazePoint) {
+                return generateFinalPath(currentPoint);
+            }
+
+            // Otherwise continue traversing the maze, adding available neighbours to the
+            // open set (prio queue).
+            List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
+            for (MazePointDijkstra neighbor : neighbors) {
+                // Check if they are in the closed set (already visited), do not add.
+                if (closedSet.contains(neighbor)) {
+                    continue;
+                }
+                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
+                int tentativeDistance = currentPoint.getDistance() + 1;
+                // If the neighbour's current distance is higher, we update its previous point to the current point
+                // and calculate and set the new distance. Then we add it to the open set.
+                if (tentativeDistance < neighbor.getDistance()) {
+                    neighbor.setPrevious(currentPoint);
+                    neighbor.setDistance(tentativeDistance);
+                    openSet.add(neighbor);
+                }
+            }
+
+            // Get neighbours to current point.
+            /*List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
+            for (MazePointDijkstra neighbor : neighbors) {
+
+                // Get distance and compare the distances values
+                int distance = distances.get(currentPoint) + 1;
+
+                // If it hasn't been visited or if distance is smaller than current, update the map and
+                // continue search on neighbor.
+                if (!distances.containsKey(neighbor) || distance < distances.get(neighbor)) {
+                    distances.put(neighbor, distance);
+                    deque.push(neighbor);
+                }
+            }*/
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
      * Iterates over the maze 2D array, creating MazePointDijkstras for each point in the maze,
      * which are stored in the mazePoints 2D array. The MazePointDijkstras are then used
      * during the algorithm path finding to store and update distance and previous point.
      */
-    private void convertToMazePoints() {
+    private void  convertToMazePoints() {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
                 mazePoints[i][j] = new MazePointDijkstra(new Point(i, j));

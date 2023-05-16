@@ -33,7 +33,7 @@ public class MainModel {
     private BufferedImage binaryImage;
     private boolean showPoints = true; // Flag to control the display of start and end points
     private JPanel panel;
-    private DijkstraOne dijkstraOne;
+    private Dijkstra dijkstra;
     private AStar aStar;
 
     private boolean[][] maze;
@@ -99,26 +99,26 @@ public class MainModel {
         return panel;
     }
 
-    public JPanel displayPath(Point start, Point finish, String algo){
+    public JPanel displayPath(Point startPoint, Point finish, String algo){
 
-
-        if (start != null) {
-            startX = start.x;
-            startY = start.y;
+        if (startPoint != null) {
+            startX = startPoint.x;
+            startY = startPoint.y;
             endX = finish.x;
             endY = finish.y;
-            this.start = start;
+            this.start = startPoint;
             this.end = finish;
         }
 
         generateMaze(image);
 
         // dubbelkolla så att skiten faktiskt är path ????????
-        assert start != null;
+        /*assert start != null;
         if (!maze[start.x][start.y] || !maze[finish.x][finish.y]){
             System.out.println("de är ju förfan inte path");
             return null;
-        }
+        }*/
+
 
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
@@ -140,11 +140,8 @@ public class MainModel {
                 switch (algo) {
                     case "dijkstraOne" -> {
 
-                         //Kommenterar bort detta så länge medans jag håller på med A*
-                        dijkstraOne = new DijkstraOne(maze, start, end);
-                        List<Point> shortestPath = dijkstraOne.solvePath();
-
-                        System.out.println(shortestPath.size());
+                        dijkstra = new Dijkstra(maze, start, end);
+                        List<Point> shortestPath = dijkstra.solveHeapPath();
 
                         // Draw the shortest path by drawing each cell.
                         g.setColor(Color.BLUE);
@@ -170,8 +167,17 @@ public class MainModel {
                         //g.fillOval(100, 100, 40, 40);
                     }
                     case "dijkstraTwo" -> {
-                        g.setColor(Color.PINK);
-                        g.fillOval(100, 100, 50, 50);
+                        dijkstra = new Dijkstra(maze, start, end);
+                        List<Point> shortestPath2 = dijkstra.solveOtherPath();
+
+                        // Draw the shortest path by drawing each cell.
+                        g.setColor(Color.BLUE);
+                        for (Point point : shortestPath2) {
+                            int cellX = point.x * cellSize;
+                            int cellY = point.y * cellSize;
+                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        }
+
                     }
                     case "aStar" -> {
                         // Solve the maze with the A* algorithm and get a list of points with the path.
@@ -203,6 +209,7 @@ public class MainModel {
 
 
     // JAG FATTAR INTE VARFÖR DENNA ÄR HÄR?? DEN ANVÄNDS INTE?
+    // NÄ DET VAR DEN FÖRRA JÄKELN. VILLE INTE TA BORT ÄN OM LIVET SKULLE FUCKAS MED DET NYA. XOXO GOSSIP GIRL
     // Kirra mazarna
     public JPanel createMaze(String fileName, Point startCoords, Point finishCoords, String whichAlgo) throws IOException {
 
@@ -273,11 +280,11 @@ public class MainModel {
 
                 //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
                 switch (whichAlgo) {
-                    case "dijkstraOne" -> {
+                    case "dijkstra" -> {
 
                         // Kommenterar bort detta så länge medans jag håller på med A*
-//                        dijkstraOne = new DijkstraOne(maze, start, end);
-//                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
+//                        dijkstra = new Dijkstra(maze, start, end);
+//                        List<MazePoint> shortestPath = dijkstra.solvePath();
 //
 //                        // Draw the shortest path
 //                        if (shortestPath != null) {
@@ -379,17 +386,6 @@ public class MainModel {
     }
 
 
-    /*private void dijkstraOne(){
-        List<Point> shortestPath = new ArrayList<>();
-        Point start;
-        Point end;
-
-    }*/
-
-    private void addNeighbour(Point point){
-
-    }
-
 
     private void generateMazeHej(BufferedImage binaryImage){
         mazeLeft = Integer.MAX_VALUE;
@@ -456,32 +452,8 @@ public class MainModel {
                 }
             }
         }
-
-        System.out.println("Boundaries: " + mazeLeft + ", " + mazeTop + ", " + mazeRight + ", " + mazeBottom);
-        System.out.println("Size: " + maze.length + ", " + maze[0].length);
-        System.out.println("Start: " + startX + ", " + startY);
-        System.out.println("End: " + endX + ", " + endY);
-        System.out.println("Width: " + width + ", height: " + height);
     }
 
-    // Other data structure
-    /*private List<Point> dijkstraOne() {
-        // Run Dijkstra's algorithm to find the shortest path
-
-        return null;
-    }*/
-
-
-    // Heap
-    private boolean dijkstraTwo() {
-        // Returnera true om det gick att lösa.
-        return true;
-    }
-
-    private boolean aStar() {
-        // Returnera true om det gick att lösa.
-        return true;
-    }
 
     /**
      * Method for removing the start and finish points.

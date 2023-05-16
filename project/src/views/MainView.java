@@ -22,6 +22,7 @@ public class MainView extends JFrame {
     private final JPanel explanationPanel = new JPanel();
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
+    private JLabel loadingLabel;
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
@@ -168,12 +169,22 @@ public class MainView extends JFrame {
         return finishCoords;
     }
 
+    public void startLoading(){
+        loadingLabel = new JLabel(new ImageIcon("loading.gif"));
+        loadingLabel.setBounds(50, 50, 100, 100);
+
+        // Add the loading label to the frame
+        this.getContentPane().add(loadingLabel);
+        this.revalidate();
+    }
+
     /**
      * Displays the result of the solves mazes.
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
 
         // TODO: kan man fixa i Swing så det kommer någon sorts loadscreen? Sökningarna tar ju fett lång tid!
+        // TODO: se till så att alla 3 paneler får plats
 
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
