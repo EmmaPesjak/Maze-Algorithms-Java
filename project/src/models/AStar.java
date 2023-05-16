@@ -34,7 +34,7 @@ public class AStar {
     /**
      * Iterates over the maze 2D array, creating MazePointAStars for each point in the maze,
      * which are stored in the mazePoints 2D array. The MazePointAStars are then used
-     * during the A* algorithm path finding to store and update heuristics, distance, and parents.
+     * during the A* algorithm path finding to store and update heuristics, distance, and previous point.
      */
     private void convertToMazePoints() {
         for (int i = 0; i < maze.length; i++) {
@@ -54,7 +54,7 @@ public class AStar {
         // Get the start and end.
         MazePointAStar startMazePoint = mazePoints[start.x][start.y];
         MazePointAStar endMazePoint = mazePoints[end.x][end.y];
-        // Create a priority queue for prioritizing the points by length and heuristic. These points have
+        // Create a priority queue for prioritizing the points by distance and heuristic. These points have
         // not yet been visited but are considered in the order of the priority.
         PriorityQueue<MazePointAStar> openSet = new PriorityQueue<>();
         // Create an array for the already visited points.
@@ -85,12 +85,12 @@ public class AStar {
                 if (closedSet.contains(neighbour)) {
                     continue;
                 }
-                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point)
+                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
                 int newDistance = currentPoint.getDistance() + 1;
-                // If the neighbour's current distance is higher, we update its parent to the current point
+                // If the neighbour's current distance is higher, we update its previous point to the current point
                 // and calculate and set the new distance and heuristics. Then we add it to the open set.
                 if (newDistance < neighbour.getDistance()) {
-                    neighbour.setParent(currentPoint);
+                    neighbour.setPrevious(currentPoint);
                     neighbour.setDistance(newDistance);
                     neighbour.setHeuristicValue(calculateTheHeuristicValue(neighbour, endMazePoint));
                     openSet.add(neighbour);
@@ -153,10 +153,10 @@ public class AStar {
         List<Point> shortestPointPath = new ArrayList<>(); // Create an array for the points.
         // Set the current point as the end point to begin.
         MazePointAStar currentPoint = endPoint;
-        // Loop over, adding the point to the array, continuing to the parent.
+        // Loop over, adding the point to the array, continuing to the previous point.
         while (currentPoint != null) {
             shortestPointPath.add(currentPoint.getPoint());
-            currentPoint = currentPoint.getParent();
+            currentPoint = currentPoint.getPrevious();
         }
         // Reverse the path so it begins at the start.
         Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.

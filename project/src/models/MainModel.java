@@ -140,10 +140,20 @@ public class MainModel {
                 switch (algo) {
                     case "dijkstraOne" -> {
 
-                        // Kommenterar bort detta så länge medans jag håller på med A*
-//                        dijkstraOne = new DijkstraOne(maze, start, end);
-//                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
-//
+                         //Kommenterar bort detta så länge medans jag håller på med A*
+                        dijkstraOne = new DijkstraOne(maze, start, end);
+                        List<Point> shortestPath = dijkstraOne.solvePath();
+
+                        System.out.println(shortestPath.size());
+
+                        // Draw the shortest path by drawing each cell.
+                        g.setColor(Color.BLUE);
+                        for (Point point : shortestPath) {
+                            int cellX = point.x * cellSize;
+                            int cellY = point.y * cellSize;
+                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        }
+                        //
 //                        // Draw the shortest path
 //                        if (shortestPath != null) {
 //                            System.out.println("det bidde inte en null");
@@ -168,14 +178,14 @@ public class MainModel {
                         aStar = new AStar(maze, start, end);
                         List<Point> shortestPath = aStar.solvePath();
 
+                        System.out.println(shortestPath.size());  // Varför körs detta två gånger???
+
                         // Draw the shortest path by drawing each cell.
-                        if (shortestPath != null) {
-                            g.setColor(Color.BLUE);
-                            for (Point point : shortestPath) {
-                                int cellX = point.x * cellSize;
-                                int cellY = point.y * cellSize;
-                                g.fillRect(cellX, cellY, cellSize, cellSize);
-                            }
+                        g.setColor(Color.BLUE);
+                        for (Point point : shortestPath) {
+                            int cellX = point.x * cellSize;
+                            int cellY = point.y * cellSize;
+                            g.fillRect(cellX, cellY, cellSize, cellSize);
                         }
 
                         // TODO: gör något ifall att ingen path kunde hittas (om listan är empty)

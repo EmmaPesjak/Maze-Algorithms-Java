@@ -199,7 +199,7 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel("Dijkstra with ...");
+        JLabel label1 = new JLabel("Dijkstra with Prio Queue");
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);

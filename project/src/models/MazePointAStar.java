@@ -4,14 +4,14 @@ import java.awt.*;
 
 /**
  * Represents a Maze Point used by the A* algorithm. Implements the comparable interface for
- * comparing paths. Similar to the other implemented MazePoint class but have added functionalities
- * of heuristic and parent specifically used by the A* algorithm.
+ * comparing paths. Similar to the other implemented MazePoint class but have the added functionality
+ * of heuristic value specifically used by the A* algorithm.
  */
 public class MazePointAStar implements Comparable<MazePointAStar> {
     private final Point point;
     private int distance;
     private int heuristicValue; // Represents the heuristic value of the point, used to estimate the distance.
-    private MazePointAStar parent; // Used to link the path together to be able to reconstruct it in the GUI later.
+    private MazePointAStar previous; // Used to link the path together to be able to reconstruct it in the GUI later.
 
     /**
      * Constructor.
@@ -24,7 +24,7 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
         this.point = point;
         this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
         this.heuristicValue = 0;
-        this.parent = null;
+        this.previous = null;
     }
 
     /**
@@ -69,23 +69,24 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
     }
 
     /**
-     * Getter for the point's parent.
-     * @return the parent.
+     * Getter for the point's previous point.
+     * @return the previous point.
      */
-    public MazePointAStar getParent() {
-        return parent;
+    public MazePointAStar getPrevious() {
+        return previous;
     }
 
     /**
-     * Setter for the point's parent.
-     * @param parent is the parent.
+     * Setter for the point's previous point.
+     * @param previous is the previous point.
      */
-    public void setParent(MazePointAStar parent) {
-        this.parent = parent;
+    public void setPrevious(MazePointAStar previous) {
+        this.previous = previous;
     }
 
     /**
      * {@inheritDoc}
+     * Used when inserting in the priority queue.
      */
     @Override
     public int compareTo(MazePointAStar otherPoint) {
