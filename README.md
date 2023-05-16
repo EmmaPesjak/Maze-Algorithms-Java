@@ -15,3 +15,9 @@
 - Shortest path using A*
 - Display maze with the shortest paths for all algorithms. 
 - Time complexity??? 
+
+
+
+Ska vi typ skriva ut hur lång shortest path blev i GUIt?
+
+Ska vi ta tiden på varje algo och printa ut i GUIt?

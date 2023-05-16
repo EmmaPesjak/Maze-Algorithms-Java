@@ -4,7 +4,6 @@ import javax.swing.*;
 
 /**
  * The main starting point for the project.
- * @author Emma Pesjak
  */
 public class Main {
 

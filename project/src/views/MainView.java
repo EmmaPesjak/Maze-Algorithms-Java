@@ -172,6 +172,9 @@ public class MainView extends JFrame {
      * Displays the result of the solves mazes.
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
+
+        // TODO: kan man fixa i Swing så det kommer någon sorts loadscreen? Sökningarna tar ju fett lång tid!
+
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -196,7 +199,7 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel("Dijkstra with ...");
+        JLabel label1 = new JLabel("Dijkstra with Prio Queue");
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);

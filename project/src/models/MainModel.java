@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * Main model class, responsible for handling the application's data and performing calculations.
- * @author Emma Pesjak mannen var inte så ego
  */
 public class MainModel {
 
@@ -23,7 +22,7 @@ public class MainModel {
 
     private static final int MAX_PANEL_WIDTH = 700;
     private static final int MAX_PANEL_HEIGHT = 700;
-    private static final int cellSize = 10;
+    private static final int cellSize = 1; //ändrade denna från 10 till 1, INGEN ANING VARFÖR MEN DET BIDDE BÄTTRE HAHAH
     private int panelWidth;
     private int panelHeight;
     private double scale;
@@ -34,7 +33,8 @@ public class MainModel {
     private BufferedImage binaryImage;
     private boolean showPoints = true; // Flag to control the display of start and end points
     private JPanel panel;
-    private DjikstraOne dijkstraOne;
+    private DijkstraOne dijkstraOne;
+    private AStar aStar;
 
     private boolean[][] maze;
     private Point start;
@@ -139,20 +139,32 @@ public class MainModel {
 
                 switch (algo) {
                     case "dijkstraOne" -> {
-                        dijkstraOne = new DjikstraOne(maze, start, end);
-                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
 
-                        // Draw the shortest path
-                        if (shortestPath != null) {
-                            System.out.println("det bidde inte en null");
-                            System.out.println(shortestPath);
-                            g.setColor(Color.YELLOW);
-                            for (MazePoint point : shortestPath) {
-                                int cellX = point.getPoint().x * cellSize;
-                                int cellY = point.getPoint().y * cellSize;
-                                g.fillRect(cellX, cellY, cellSize, cellSize);
-                            }
+                         //Kommenterar bort detta så länge medans jag håller på med A*
+                        dijkstraOne = new DijkstraOne(maze, start, end);
+                        List<Point> shortestPath = dijkstraOne.solvePath();
+
+                        System.out.println(shortestPath.size());
+
+                        // Draw the shortest path by drawing each cell.
+                        g.setColor(Color.BLUE);
+                        for (Point point : shortestPath) {
+                            int cellX = point.x * cellSize;
+                            int cellY = point.y * cellSize;
+                            g.fillRect(cellX, cellY, cellSize, cellSize);
                         }
+                        //
+//                        // Draw the shortest path
+//                        if (shortestPath != null) {
+//                            System.out.println("det bidde inte en null");
+//                            System.out.println(shortestPath);
+//                            g.setColor(Color.YELLOW);
+//                            for (MazePoint point : shortestPath) {
+//                                int cellX = point.getPoint().x * cellSize;
+//                                int cellY = point.getPoint().y * cellSize;
+//                                g.fillRect(cellX, cellY, cellSize, cellSize);
+//                            }
+//                        }
 
                         //g.setColor(Color.MAGENTA);
                         //g.fillOval(100, 100, 40, 40);
@@ -162,8 +174,21 @@ public class MainModel {
                         g.fillOval(100, 100, 50, 50);
                     }
                     case "aStar" -> {
-                        g.setColor(Color.CYAN);
-                        g.fillOval(50, 50, 20, 20);
+                        // Solve the maze with the A* algorithm and get a list of points with the path.
+                        aStar = new AStar(maze, start, end);
+                        List<Point> shortestPath = aStar.solvePath();
+
+                        System.out.println(shortestPath.size());  // Varför körs detta två gånger???
+
+                        // Draw the shortest path by drawing each cell.
+                        g.setColor(Color.BLUE);
+                        for (Point point : shortestPath) {
+                            int cellX = point.x * cellSize;
+                            int cellY = point.y * cellSize;
+                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        }
+
+                        // TODO: gör något ifall att ingen path kunde hittas (om listan är empty)
                     }
                 }
             }
@@ -176,6 +201,8 @@ public class MainModel {
     }
 
 
+
+    // JAG FATTAR INTE VARFÖR DENNA ÄR HÄR?? DEN ANVÄNDS INTE?
     // Kirra mazarna
     public JPanel createMaze(String fileName, Point startCoords, Point finishCoords, String whichAlgo) throws IOException {
 
@@ -247,20 +274,22 @@ public class MainModel {
                 //Här kan man rita pathen! eventuellt problem: hur blir det om man kör en till maze? dubbla paths?
                 switch (whichAlgo) {
                     case "dijkstraOne" -> {
-                        dijkstraOne = new DjikstraOne(maze, start, end);
-                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
 
-                        // Draw the shortest path
-                        if (shortestPath != null) {
-                            System.out.println("det bidde inte en null");
-                            System.out.println(shortestPath);
-                            g.setColor(Color.YELLOW);
-                            for (MazePoint point : shortestPath) {
-                                int cellX = point.getPoint().x * cellSize;
-                                int cellY = point.getPoint().y * cellSize;
-                                g.fillRect(cellX, cellY, cellSize, cellSize);
-                            }
-                        }
+                        // Kommenterar bort detta så länge medans jag håller på med A*
+//                        dijkstraOne = new DijkstraOne(maze, start, end);
+//                        List<MazePoint> shortestPath = dijkstraOne.solvePath();
+//
+//                        // Draw the shortest path
+//                        if (shortestPath != null) {
+//                            System.out.println("det bidde inte en null");
+//                            System.out.println(shortestPath);
+//                            g.setColor(Color.YELLOW);
+//                            for (MazePoint point : shortestPath) {
+//                                int cellX = point.getPoint().x * cellSize;
+//                                int cellY = point.getPoint().y * cellSize;
+//                                g.fillRect(cellX, cellY, cellSize, cellSize);
+//                            }
+//                        }
 
                         //g.setColor(Color.MAGENTA);
                         //g.fillOval(100, 100, 40, 40);
@@ -270,8 +299,41 @@ public class MainModel {
                         g.fillOval(100, 100, 50, 50);
                     }
                     case "aStar" -> {
-                        g.setColor(Color.CYAN);
-                        g.fillOval(50, 50, 20, 20);
+
+//                        aStar = new AStar(maze, start, end);
+//                        List<Point> shortestPath = aStar.solvePath();
+//
+//                        // Draw the shortest path
+//                        if (shortestPath != null) {
+//                            g.setColor(Color.YELLOW);
+//                            for (Point point : shortestPath) {
+//                                int cellX = point.x * cellSize;
+//                                int cellY = point.y * cellSize;
+//                                g.fillRect(cellX, cellY, cellSize, cellSize);
+//                            }
+//                        }
+
+//                        aStar = new AStar(maze, start, end);
+//
+//                        List<Point> shortestPath = aStar.solvePath();
+//
+//                        System.out.println("kommer vi hit?");
+////
+////                        // Draw the shortest path
+//                        if (shortestPath != null) {
+//                            System.out.println("det bidde inte en null");
+//                            System.out.println(shortestPath);
+//                            g.setColor(Color.YELLOW);
+//                            for (Point point : shortestPath) {
+//                                int cellX = point.x * cellSize;
+//                                int cellY = point.y * cellSize;
+//                                g.fillRect(cellX, cellY, cellSize, cellSize);
+//                            }
+//                        }
+
+//
+//                        g.setColor(Color.CYAN);
+//                        g.fillOval(50, 50, 20, 20);
                     }
                 }
 
