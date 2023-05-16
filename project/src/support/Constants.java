@@ -4,7 +4,6 @@ import java.awt.*;
 
 /**
  * Interface that define constant values.
- * @author Emma Pesjak
  */
 public interface Constants {
 

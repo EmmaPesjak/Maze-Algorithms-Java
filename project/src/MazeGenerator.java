@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
 
+
+
+// RADERA DENNA??? mvh Emma
+
 public class MazeGenerator {
 
     private BufferedImage mazeImage = null;

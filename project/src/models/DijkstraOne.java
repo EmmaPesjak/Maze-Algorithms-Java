@@ -2,12 +2,11 @@ package models;
 
 import support.Constants;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.awt.*;
 import java.util.List;
 
-public class DjikstraOne {
+public class DijkstraOne {
 
     private final int INF = Constants.INFINITY;
     private final boolean[][] maze;
@@ -16,7 +15,7 @@ public class DjikstraOne {
     private List<MazePoint> shortestPath;
 
 
-    public DjikstraOne(boolean[][] maze, Point start, Point end){
+    public DijkstraOne(boolean[][] maze, Point start, Point end){
         this.maze = maze;
         this.start = new MazePoint(start);
         this.end = new MazePoint(end);

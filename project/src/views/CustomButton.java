@@ -7,7 +7,6 @@ import java.awt.*;
 
 /**
  * Button component class, used for generic buttons in the GUI.
- * @author Emma Pesjak
  */
 public class CustomButton extends JButton {
 

@@ -14,7 +14,6 @@ import java.util.Objects;
 /**
  * The program's main controller. Responsible for the communication between views and models,
  * responding to user input.
- * @author Emma Pesjak
  */
 public class MainController {
 

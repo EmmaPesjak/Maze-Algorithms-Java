@@ -8,7 +8,7 @@ public class MazePoint implements Comparable<MazePoint> {
 
     public MazePoint(Point point) {
         if (point == null) {
-            throw new IllegalArgumentException("Point cannot be null.");
+            throw new IllegalArgumentException("Point cannot be null.");  // TODO Ska vi verkligen throwa här? bättre att skriva något felmeddelande eller blir det det automatiskt?
         }
         this.point = point;
         this.distance = Integer.MAX_VALUE;

@@ -172,6 +172,9 @@ public class MainView extends JFrame {
      * Displays the result of the solves mazes.
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
+
+        // TODO: kan man fixa i Swing så det kommer någon sorts loadscreen? Sökningarna tar ju fett lång tid!
+
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
