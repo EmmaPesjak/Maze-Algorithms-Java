@@ -15,13 +15,9 @@ import java.util.List;
  */
 public class MainModel {
 
-    /**
-     * tjena mannen, fick göra 2 funktioner istället för fick massa nullgrejer på start/end så det är därför
-     * det är 1 miljon variabler just nu.
-     */
 
-    private static final int MAX_PANEL_WIDTH = 500;  // Ändrade för det fick inte plats med 3 bildmögar
-    private static final int MAX_PANEL_HEIGHT = 500;
+    private static final int MAX_PANEL_WIDTH = 550;  // Ändrade för det fick inte plats med 3 bildmögar
+    private static final int MAX_PANEL_HEIGHT = 550;
     private static final int cellSize = 1; //ändrade denna från 10 till 1, INGEN ANING VARFÖR MEN DET BIDDE BÄTTRE HAHAH
     private int panelWidth;
     private int panelHeight;
@@ -42,6 +38,7 @@ public class MainModel {
 
     private int mazeLeft, mazeTop, mazeRight, mazeBottom;
 
+    private boolean aStarHasPath, heapHasPath, dequeHasPath = false; // kolla läget om de faktiskt finns shortest path
 
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
@@ -100,7 +97,6 @@ public class MainModel {
     }
 
     public JPanel displayPath(Point startPoint, Point finish, String algo){
-
         if (startPoint != null) {
             startX = startPoint.x;
             startY = startPoint.y;
@@ -143,59 +139,61 @@ public class MainModel {
                         dijkstra = new Dijkstra(maze, start, end);
                         List<Point> shortestPath = dijkstra.solveHeapPath();
 
-                        // Draw the shortest path by drawing each cell.
-                        g.setColor(Color.BLUE);
-                        for (Point point : shortestPath) {
-                            int cellX = point.x * cellSize;
-                            int cellY = point.y * cellSize;
-                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        if (shortestPath.size() != 0){
+                            heapHasPath = true;
+                            // Draw the shortest path by drawing each cell.
+                            g.setColor(Color.BLUE);
+                            for (Point point : shortestPath) {
+                                int cellX = point.x * cellSize;
+                                int cellY = point.y * cellSize;
+                                g.fillRect(cellX, cellY, cellSize, cellSize);
+                            }
                         }
-                        //
-//                        // Draw the shortest path
-//                        if (shortestPath != null) {
-//                            System.out.println("det bidde inte en null");
-//                            System.out.println(shortestPath);
-//                            g.setColor(Color.YELLOW);
-//                            for (MazePoint point : shortestPath) {
-//                                int cellX = point.getPoint().x * cellSize;
-//                                int cellY = point.getPoint().y * cellSize;
-//                                g.fillRect(cellX, cellY, cellSize, cellSize);
-//                            }
-//                        }
-
-                        //g.setColor(Color.MAGENTA);
-                        //g.fillOval(100, 100, 40, 40);
                     }
                     case "dijkstraTwo" -> {
                         dijkstra = new Dijkstra(maze, start, end);
                         List<Point> shortestPath2 = dijkstra.solveOtherPath();
 
-                        // Draw the shortest path by drawing each cell.
-                        g.setColor(Color.BLUE);
-                        for (Point point : shortestPath2) {
-                            int cellX = point.x * cellSize;
-                            int cellY = point.y * cellSize;
-                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        if (shortestPath2.size() != 0){
+                            dequeHasPath = true;
+                            // Draw the shortest path by drawing each cell.
+                            g.setColor(Color.BLUE);
+                            for (Point point : shortestPath2) {
+                                int cellX = point.x * cellSize;
+                                int cellY = point.y * cellSize;
+                                g.fillRect(cellX, cellY, cellSize, cellSize);
+                            }
                         }
-
                     }
                     case "aStar" -> {
                         // Solve the maze with the A* algorithm and get a list of points with the path.
                         aStar = new AStar(maze, start, end);
-                        List<Point> shortestPath = aStar.solvePath();
+                        List<Point> shortestPath3 = aStar.solvePath();
 
-                        System.out.println(shortestPath.size());  // Varför körs detta två gånger???
-
-                        // Draw the shortest path by drawing each cell.
-                        g.setColor(Color.BLUE);
-                        for (Point point : shortestPath) {
-                            int cellX = point.x * cellSize;
-                            int cellY = point.y * cellSize;
-                            g.fillRect(cellX, cellY, cellSize, cellSize);
+                        if (shortestPath3.size() != 0){
+                            aStarHasPath = true;
+                            // Draw the shortest path by drawing each cell.
+                            g.setColor(Color.BLUE);
+                            for (Point point : shortestPath3) {
+                                int cellX = point.x * cellSize;
+                                int cellY = point.y * cellSize;
+                                g.fillRect(cellX, cellY, cellSize, cellSize);
+                            }
                         }
-
-                        // TODO: gör något ifall att ingen path kunde hittas (om listan är empty)
                     }
+                }
+
+                // vet inte vad jag tänkte göra med de här. det är sent på kvällen nu yolo.
+                if (!aStarHasPath){
+                    String msg1 = "No path was found with A*.";
+                }
+
+                if (!heapHasPath){
+                    String msg2 = "No path was found with Heap and Dijkstra's.";
+                }
+
+                if (!dequeHasPath){
+                    String msg3 = "No path was found with Deque and Dijkstra's.";
                 }
             }
         };
@@ -205,6 +203,75 @@ public class MainModel {
 
         return panel;
     }
+
+    /**
+     * Hej
+     * @param binaryImage
+     */
+    private void generateMaze(BufferedImage binaryImage) {
+        int width = binaryImage.getWidth();
+        int height = binaryImage.getHeight();
+
+        // Create the 2D boolean array representing the maze
+        maze = new boolean[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // Convert binary image coordinates to maze coordinates
+
+                // Testar runt lite med threshold istället men fan inget funkar ju.
+                int rgb = binaryImage.getRGB(x, y);
+                boolean isWhite = isWhitePixel(rgb);
+                maze[x][y] = isWhite;
+
+                //maze[x][y] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
+            }
+        }
+    }
+
+    private boolean isWhitePixel(int rgb) {
+        int red = (rgb >> 16) & 0xFF;
+        int green = (rgb >> 8) & 0xFF;
+        int blue = rgb & 0xFF;
+        int threshold = 128;  // random hej
+
+        // Check if the average of RGB values is above the threshold
+        int average = (red + green + blue) / 3;
+        return average > threshold;
+    }
+
+
+
+    /**
+     * Method for removing the start and finish points.
+     */
+    private void removePoints() {
+        showPoints = false;
+        panel.repaint();
+    }
+
+    /**
+     * Method for showing the start and finish points.
+     */
+    public void showPoints() {
+        showPoints = true;
+    }
+
+    /**
+     * Method for resetting the start and finish points.
+     */
+    public void clearPoints() {
+        removePoints();
+        startX = -1;
+        startY = -1;
+        endX = -1;
+        endY = -1;
+        aStarHasPath = false;
+        heapHasPath = false;
+        dequeHasPath = false;
+    }
+
+
+    // --------------- RANDOM MÖG SOM VI NOG KAN TA BORT?? -------------------//
 
 
 
@@ -370,20 +437,6 @@ public class MainModel {
         return panel;
     }
 
-    private void generateMaze(BufferedImage binaryImage) {
-        int width = binaryImage.getWidth();
-        int height = binaryImage.getHeight();
-
-        // Create the 2D boolean array representing the maze
-        maze = new boolean[width][height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                // Convert binary image coordinates to maze coordinates
-                maze[x][y] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
-            }
-        }
-
-    }
 
 
 
@@ -454,32 +507,6 @@ public class MainModel {
         }
     }
 
-
-    /**
-     * Method for removing the start and finish points.
-     */
-    private void removePoints() {
-        showPoints = false;
-        panel.repaint();
-    }
-
-    /**
-     * Method for showing the start and finish points.
-     */
-    public void showPoints() {
-        showPoints = true;
-    }
-
-    /**
-     * Method for resetting the start and finish points.
-     */
-    public void clearPoints() {
-        removePoints();
-        startX = -1;
-        startY = -1;
-        endX = -1;
-        endY = -1;
-    }
 
 
 

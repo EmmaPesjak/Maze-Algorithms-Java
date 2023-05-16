@@ -24,10 +24,7 @@ public class MainView extends JFrame {
     private final JLabel coordLabel = new JLabel();
 
 
-    private JPanel loadingPanel = new JPanel();
-    private JPanel textLoadingPanel = new JPanel();
-    private JLabel loadingLabel;
-    private JLabel textLoadingLabel;
+    private final JPanel loadingPanel = new JPanel();
 
 
     /**
@@ -176,30 +173,32 @@ public class MainView extends JFrame {
     }
 
     public void displayLoadingPanel() {
+
+        // #TODO Vartfan kommer den svarta bakgrunden från?????? VARFÖR BLIR ALLT SÅ FULT ??? och, varför funkar inte
+        //  animeringen på min gif :(((( funkade fan innan.
+
         // Clear the current content
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
 
         panel.setBackground(Constants.COLOR_BACKGROUND);
-        //loadingPanel.setLayout(new BorderLayout());
 
         panel.setLayout(new BorderLayout());
         panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
 
         // Create a label to display the loading GIF
-        loadingLabel = new JLabel(new ImageIcon("project/src/Spinner-1s-200px.gif"));
+        JLabel loadingLabel = new JLabel(new ImageIcon("project/src/support/spinner.gif"));
         loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        textLoadingLabel = new JLabel("Finding the shortest path...");
+        JLabel textLoadingLabel = new JLabel("Finding the shortest path...");
         textLoadingLabel.setFont(Constants.FONT_BIG);
         textLoadingLabel.setForeground(Constants.COLOR_TEXT);
 
-        // Add the label to the loading panel
-        panel.add(loadingLabel, BorderLayout.CENTER);
+        // Add the label to the panel
+        panel.add(loadingLabel, BorderLayout.NORTH);
         panel.add(textLoadingLabel, BorderLayout.SOUTH);
 
         // Add the loading panel to the view
-        //this.add(loadingPanel, BorderLayout.CENTER);
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
@@ -217,9 +216,7 @@ public class MainView extends JFrame {
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
 
-        // TODO: kan man fixa i Swing så det kommer någon sorts loadscreen? Sökningarna tar ju fett lång tid!
-        // TODO: se till så att alla 3 paneler får plats
-
+        // TODO: se till så att alla 3 paneler får plats/inget knäppt mellanrum
 
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.

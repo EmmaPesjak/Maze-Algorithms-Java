@@ -241,65 +241,51 @@ public class Dijkstra {
         MazePointDijkstra startMazePoint = mazePoints[start.x][start.y];
         MazePointDijkstra endMazePoint = mazePoints[end.x][end.y];
 
+
         // Initialize a deque to store points to be visited.
         Deque<MazePointDijkstra> openSet = new ArrayDeque<>();
+        // Create a set for storing the closed set (already visited points).
+        Set<MazePointDijkstra> closedSet = new HashSet<>();
 
-        // Create an array for the already visited points.
-        List<MazePointDijkstra> closedSet = new ArrayList<>();
-        // Initial distance is 0.
+        // Initialize distance of start point to 0.
         startMazePoint.setDistance(0);
-        // Add to the priority queue.
+        // Add the start point to the deque.
         openSet.add(startMazePoint);
 
-        // Initialize Map for storing visited points and its distance from start.
-        //Map<MazePointDijkstra, Integer> distances = new HashMap<>();
-
-        // Push start into deque and set distance to 0.
-        //deque.push(startMazePoint);
-        //distances.put(startMazePoint, 0);
-
-        // While deque has points, get current point and perform algorithm.
+        // Loop until the deque is empty.
         while (!openSet.isEmpty()) {
-            MazePointDijkstra currentPoint = openSet.pop();
+            // Get the point at the front of the deque.
+            MazePointDijkstra currentPoint = openSet.pollFirst();
 
-            // If it has reached the end, generate final path.
+            // If the current point has already been visited, skip it.
+            if (closedSet.contains(currentPoint)) {
+                continue;
+            }
+
+            // Mark the current point as visited.
+            closedSet.add(currentPoint);
+
+            // Check if we have reached the end, if so, return the shortest path.
             if (currentPoint == endMazePoint) {
                 return generateFinalPath(currentPoint);
             }
 
-            // Otherwise continue traversing the maze, adding available neighbours to the
-            // open set (prio queue).
+            // Get the neighbors of the current point.
             List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
+
+            // Process the neighbors.
             for (MazePointDijkstra neighbor : neighbors) {
-                // Check if they are in the closed set (already visited), do not add.
-                if (closedSet.contains(neighbor)) {
-                    continue;
-                }
-                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
+                // Calculate the new distance from the start point to the neighbor.
                 int tentativeDistance = currentPoint.getDistance() + 1;
-                // If the neighbour's current distance is higher, we update its previous point to the current point
-                // and calculate and set the new distance. Then we add it to the open set.
+
+                // If the neighbor's current distance is higher than the new distance,
+                // update its previous point and distance, then add it to the deque.
                 if (tentativeDistance < neighbor.getDistance()) {
                     neighbor.setPrevious(currentPoint);
                     neighbor.setDistance(tentativeDistance);
-                    openSet.add(neighbor);
+                    openSet.addLast(neighbor);
                 }
             }
-
-            // Get neighbours to current point.
-            /*List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
-            for (MazePointDijkstra neighbor : neighbors) {
-
-                // Get distance and compare the distances values
-                int distance = distances.get(currentPoint) + 1;
-
-                // If it hasn't been visited or if distance is smaller than current, update the map and
-                // continue search on neighbor.
-                if (!distances.containsKey(neighbor) || distance < distances.get(neighbor)) {
-                    distances.put(neighbor, distance);
-                    deque.push(neighbor);
-                }
-            }*/
         }
 
         return Collections.emptyList();

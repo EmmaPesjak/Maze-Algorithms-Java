@@ -73,8 +73,6 @@ public class MainController {
 
                 // Display the results in the view
                 SwingUtilities.invokeLater(() -> {
-
-                    System.out.println("display results hej");
                     mainView.displayResults(path1, path2, path3);
 
                     // Close the loading dialog after displaying the results

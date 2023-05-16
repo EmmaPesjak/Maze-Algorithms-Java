@@ -21,3 +21,9 @@
 Ska vi typ skriva ut hur lång shortest path blev i GUIt?
 
 Ska vi ta tiden på varje algo och printa ut i GUIt?
+
+# TODO'S:
+Varför går den igenom väggar ibland? Finns det vita pixlar inne i väggarna som gör att den kan smita igenom?
+Varför är allt så jäla söligt? Kan man göra det med bättre time complexity och sånt shet?
+Kirra storleken på framen och bilderna så pack() blir fint
+Error msg om det inte fanns någon path.
