@@ -19,4 +19,7 @@ public interface Constants {
     Font FONT_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 28);
     Font FONT_SMALL_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 18);
     Font FONT_BUTTON = new Font(Font.MONOSPACED, Font.BOLD, 32);
+
+    // Values.
+    int INFINITY = Integer.MAX_VALUE;
 }
