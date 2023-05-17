@@ -22,7 +22,7 @@ public class MainModel {
 
     private int startX = -1, startY = -1, endX = -1, endY = -1;
     private BufferedImage image;
-    private BufferedImage binaryImage;
+    //private BufferedImage binaryImage;
     private boolean showPoints = true; // Flag to control the display of start and end points.
     private JPanel panel;
 
@@ -42,8 +42,8 @@ public class MainModel {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        // Create a binary image of the maze.
-        binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+//        // Create a binary image of the maze.
+//        binaryImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
 
         // Calculate the scaling factor for the JPanel size since we have to shrink the image.
         scale = (int) Math.min((float) Constants.MAX_PANEL_WIDTH / width, (float) Constants.MAX_PANEL_HEIGHT / height);
@@ -56,26 +56,27 @@ public class MainModel {
         // Calculate the scaled dimensions for the JPanel.
         panelWidth = (width * scale);
         panelHeight = (height * scale);
-
-        // Iterate over the pixels of the image.
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                // Get the RGB value of the pixel.
-                int rgb = image.getRGB(x, y);
-
-                // Extract the red, green, and blue components.
-                int red = (rgb >> 16) & 0xFF;
-                int green = (rgb >> 8) & 0xFF;
-                int blue = rgb & 0xFF;
-
-                // Compute the grayscale value of the pixel.
-                int grayscale = (red + green + blue) / 3;
-
-                // Set the grayscale value as the RGB value for the binary image.
-                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
-                binaryImage.setRGB(x, y, binaryRGB);
-            }
-        }
+//
+        //TODO kommenterar bort binaryImage, ska vi radera den helt?
+//        // Iterate over the pixels of the image.
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                // Get the RGB value of the pixel.
+//                int rgb = image.getRGB(x, y);
+//
+//                // Extract the red, green, and blue components.
+//                int red = (rgb >> 16) & 0xFF;
+//                int green = (rgb >> 8) & 0xFF;
+//                int blue = rgb & 0xFF;
+//
+//                // Compute the grayscale value of the pixel.
+//                int grayscale = (red + green + blue) / 3;
+//
+//                // Set the grayscale value as the RGB value for the binary image.
+//                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
+//                binaryImage.setRGB(x, y, binaryRGB);
+//            }
+//        }
 
 
         // Create a custom JPanel to display the binary image.
@@ -85,7 +86,7 @@ public class MainModel {
                 super.paintComponent(g);
 
                 // Scale and draw the binary image on the panel.
-                g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+                g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
             }
         };
 
@@ -113,7 +114,7 @@ public class MainModel {
             return null; // or handle the case when startPoint is null
         }
 
-        generateMaze(image); // är det image eller binaryImage som ska in här? Fattar inte riktigt.
+        generateMaze(image);
 
 
         // TODO: denna får vi ju typ ha men skriva på skärmen att användaren klickade på en vägg och de ska picka om?
@@ -132,7 +133,7 @@ public class MainModel {
                 super.paintComponent(g);
 
                 // Scale and draw the binary image on the panel.
-                g.drawImage(binaryImage, 0, 0, panelWidth, panelHeight, null);
+                g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
 
                 // Draw the start and end points
                 if (showPoints && startX != -1) {
@@ -238,11 +239,11 @@ public class MainModel {
     //TODO: finns det något bättre sätt att skapa mazen eftersom man får 34857394857349857349875 celler så blir algoritmerna aslångsamma
     /**
      * Hej
-     * @param binaryImage
+     * @param image
      */
-    private void generateMaze(BufferedImage binaryImage) { // Här säger du binaryImage men vi skickar in image? Därför jag inte fattar
-        int width = binaryImage.getWidth();
-        int height = binaryImage.getHeight();
+    private void generateMaze(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
         // Create the 2D boolean array representing the maze
         maze = new boolean[width][height];
@@ -251,11 +252,11 @@ public class MainModel {
                 // Convert binary image coordinates to maze coordinates
 
                 // Testar runt lite med threshold istället men fan inget funkar ju.
-                int rgb = binaryImage.getRGB(x, y);
+                int rgb = image.getRGB(x, y);
                 boolean isWhite = isWhitePixel(rgb);
                 maze[x][y] = isWhite;
 
-                //maze[x][y] = binaryImage.getRGB(x, y) == Color.WHITE.getRGB();
+                //maze[x][y] = image.getRGB(x, y) == Color.WHITE.getRGB();
             }
         }
     }
