@@ -12,6 +12,9 @@ public interface Constants {
     Color COLOR_TEXT = new Color(176, 222, 115);
     Color COLOR_BUTTON = new Color(59, 161, 122);
     Color COLOR_BUTTON_TEXT = new Color(192, 225, 148);
+    Color COLOR_START = new Color(255, 186, 127);
+    Color COLOR_END =  new Color(122, 107, 156);
+    Color COLOR_PATH = new Color(222, 142, 192);
 
     // Fonts.
     Font FONT_BIG = new Font(Font.MONOSPACED, Font.BOLD, 52);

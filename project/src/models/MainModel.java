@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class MainModel {
 
-    private static final int cellSize = 1; //ändrade denna från 10 till 1, INGEN ANING VARFÖR MEN DET BIDDE BÄTTRE HAHAH
     private int panelWidth;
     private int panelHeight;
 
@@ -49,14 +48,14 @@ public class MainModel {
         // Calculate the scaling factor for the JPanel size since we have to shrink the image.
         scale = (int) Math.min((float) Constants.MAX_PANEL_WIDTH / width, (float) Constants.MAX_PANEL_HEIGHT / height);
 
-        // Can't have scale 0.
+        // Can't have scale 0. TODO: detta är ju kanske inte optimalt...
         if (scale == 0) {
             scale = 1;
         }
 
         // Calculate the scaled dimensions for the JPanel.
-        panelWidth = (int) (width * scale);
-        panelHeight = (int) (height * scale);
+        panelWidth = (width * scale);
+        panelHeight = (height * scale);
 
         // Iterate over the pixels of the image.
         for (int y = 0; y < height; y++) {
@@ -137,9 +136,9 @@ public class MainModel {
 
                 // Draw the start and end points
                 if (showPoints && startX != -1) {
-                    g.setColor(Color.GREEN);
+                    g.setColor(Constants.COLOR_START);
                     g.fillOval(startX-5, startY-5, 10, 10); // -5 to center.
-                    g.setColor(Color.RED);
+                    g.setColor(Constants.COLOR_END);
                     g.fillOval(endX-5, endY-5, 10, 10); // -5 to center.
                 }
 
@@ -148,17 +147,13 @@ public class MainModel {
                 // Draw the calculated paths.
                 switch (algo) {
                     case (Constants.DIJK_HEAP) -> {
-
-
                         System.out.println("Varför körs denna 2 gånger????");
-
 
                         List<Point> shortestPath = dijkstra.solveHeapPath();
 
                         if (shortestPath.size() != 0){
                             heapHasPath = true;
-                            // Draw the shortest path by drawing each cell.
-                            g.setColor(Color.MAGENTA);
+                            // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
@@ -167,8 +162,7 @@ public class MainModel {
 
                         if (shortestPath.size() != 0){
                             dequeHasPath = true;
-                            // Draw the shortest path by drawing each cell.
-                            g.setColor(Color.MAGENTA);
+                            // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
@@ -179,8 +173,7 @@ public class MainModel {
 
                         if (shortestPath.size() != 0){
                             aStarHasPath = true;
-                            // Draw the shortest path by drawing each cell.
-                            g.setColor(Color.MAGENTA);
+                            // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
@@ -218,17 +211,20 @@ public class MainModel {
      * @param path is the path list of points.
      */
     private void drawPath(Graphics g, List<Point> path) {
+        g.setColor(Constants.COLOR_PATH);
+
         // Create Graphics 2D, so we can set the stroke thickness.
         Graphics2D g2d = (Graphics2D) g;
 
         // Set the thickness for the path lines.
-        g2d.setStroke(new BasicStroke(2));
+        g2d.setStroke(new BasicStroke(3));
 
         // Draw lines between the cells of the path.
         for (int i = 0; i < path.size() - 1; i++) {
             Point current = path.get(i);
             Point next = path.get(i + 1);
 
+            int cellSize = 1;
             double startX = current.x * cellSize * scale + cellSize / 2.0;
             double startY = current.y * cellSize * scale + cellSize / 2.0;
             double endX = next.x * cellSize * scale + cellSize / 2.0;

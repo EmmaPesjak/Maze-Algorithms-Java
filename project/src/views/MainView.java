@@ -106,6 +106,8 @@ public class MainView extends JFrame {
         explanationLabel.setForeground(Constants.COLOR_TEXT);
         explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        maze.setLayout(null); // Set layout manager to null for absolute positioning when adding dots.
+
         maze.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -117,6 +119,7 @@ public class MainView extends JFrame {
                     coordLabel.setText("Start Coordinates: x=" + startCoords.x + ", y=" + startCoords.y);
                     panel.add(coordLabel);
                     panel.revalidate();
+                    addDot(maze, startCoords, true);
                 } else if (clickCount == 2) {
                     explanationPanel.removeAll(); // Remove old text.
                     finishCoords = e.getPoint();
@@ -126,6 +129,7 @@ public class MainView extends JFrame {
                     solveButton.addActionListener(solveListener);
                     explanationPanel.add(solveButton);
                     panel.revalidate();
+                    addDot(maze, finishCoords, false);
                 }
             }
 
@@ -152,6 +156,42 @@ public class MainView extends JFrame {
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
+    }
+
+    /**
+     * Method for adding a dot where the user presses.
+     * @param maze is the maze image.
+     * @param point is the coordinates of the dot.
+     * @param isStart determines the color of the dot.
+     */
+    private void addDot(JPanel maze, Point point, boolean isStart) {
+        JPanel dot = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+
+                if (isStart) {
+                    g2d.setColor(Constants.COLOR_START);
+                } else {
+                    g2d.setColor(Constants.COLOR_END);
+                }
+                g2d.fillOval(0, 0, getWidth(), getHeight());
+            }
+        };
+
+        dot.setSize(10, 10);
+        dot.setOpaque(false);
+        dot.setBorder(BorderFactory.createEmptyBorder());
+        dot.setLayout(null);
+
+        int dotX = point.x - dot.getWidth() / 2;
+        int dotY = point.y - dot.getHeight() / 2;
+        dot.setLocation(dotX, dotY);
+
+        maze.add(dot);
+        maze.revalidate();
+        maze.repaint();
     }
 
     /**
