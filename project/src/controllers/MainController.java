@@ -67,13 +67,37 @@ public class MainController {
                 Point start = mainView.getStartCoords();
                 Point end = mainView.getFinishCoords();
 
-                JPanel path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
-                JPanel path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
-                JPanel path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+                long startTime, endTime, totStart, totEnd;
+                JPanel path1, path2, path3;
+
+                totStart = System.currentTimeMillis();
+
+                startTime = System.currentTimeMillis();
+                path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
+                endTime = System.currentTimeMillis();
+                long algorithm1Time = endTime - startTime;
+
+                // Measure the execution time of the second algorithm
+                startTime = System.currentTimeMillis();
+                path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
+                endTime = System.currentTimeMillis();
+                long algorithm2Time = endTime - startTime;
+
+                // Measure the execution time of the third algorithm
+                startTime = System.currentTimeMillis();
+                path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+                endTime = System.currentTimeMillis();
+                long algorithm3Time = endTime - startTime;
+
+                totEnd = System.currentTimeMillis();
+                long total = totEnd - totStart;
 
                 // Display the results in the view
                 SwingUtilities.invokeLater(() -> {
                     mainView.displayResults(path1, path2, path3);
+
+                    // Display the execution times
+                    System.out.println("Total: " + total + "\n 1: " + algorithm1Time + ", 2: " + algorithm2Time + ", 3: " + algorithm3Time);
 
                     // Close the loading dialog after displaying the results
                     mainView.closeLoadingPanel();

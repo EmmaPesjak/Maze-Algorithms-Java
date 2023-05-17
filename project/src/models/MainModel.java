@@ -36,6 +36,7 @@ public class MainModel {
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
         image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
+        generateMaze(image);
 
 
         // Get height and width.
@@ -114,7 +115,7 @@ public class MainModel {
             return null; // or handle the case when startPoint is null
         }
 
-        generateMaze(image);
+        //generateMaze(image);
 
 
         // TODO: denna får vi ju typ ha men skriva på skärmen att användaren klickade på en vägg och de ska picka om?
@@ -244,34 +245,23 @@ public class MainModel {
     private void generateMaze(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
+        long start, end;
 
         // Create the 2D boolean array representing the maze
         maze = new boolean[width][height];
+
+        start = System.currentTimeMillis();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 // Convert binary image coordinates to maze coordinates
 
-                // Testar runt lite med threshold istället men fan inget funkar ju.
-                int rgb = image.getRGB(x, y);
-                boolean isWhite = isWhitePixel(rgb);
-                maze[x][y] = isWhite;
-
-                //maze[x][y] = image.getRGB(x, y) == Color.WHITE.getRGB();
+                maze[x][y] = image.getRGB(x, y) == Color.WHITE.getRGB();
             }
         }
+        end = System.currentTimeMillis();
+
+        System.out.println("Total for creating a maze: " + (end - start));
     }
-
-    private boolean isWhitePixel(int rgb) {
-        int red = (rgb >> 16) & 0xFF;
-        int green = (rgb >> 8) & 0xFF;
-        int blue = rgb & 0xFF;
-        int threshold = 128;  // random hej
-
-        // Check if the average of RGB values is above the threshold
-        int average = (red + green + blue) / 3;
-        return average > threshold;
-    }
-
 
 
     /**
