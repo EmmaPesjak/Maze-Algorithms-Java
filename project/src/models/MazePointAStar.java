@@ -18,9 +18,6 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
      * @param point is the coordinate point.
      */
     public MazePointAStar(Point point) {
-        if (point == null) {
-            throw new IllegalArgumentException("Point cannot be null.");//TODO Ska vi verkligen throwa här? bättre att skriva något felmeddelande eller blir det det automatiskt?
-        }
         this.point = point;
         this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
         this.heuristicValue = 0;

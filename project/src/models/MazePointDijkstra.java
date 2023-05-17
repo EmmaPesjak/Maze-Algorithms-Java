@@ -18,7 +18,7 @@ public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
     public MazePointDijkstra(Point point) {
         this.point = point;
         this.previous = null;
-        this.distance = Integer.MAX_VALUE;
+        this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
     }
 
     /**
