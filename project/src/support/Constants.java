@@ -21,4 +21,9 @@ public interface Constants {
 
     // Values.
     int INFINITY = Integer.MAX_VALUE;
+
+    // Strings.
+
+    String NO_PATH = "No shortest path was found!";
+    String ENTER_FILE = "Please enter a valid file name.";
 }
