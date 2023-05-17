@@ -112,7 +112,7 @@ public class MainModel {
                 // Draw the start and end points
                 if (showPoints && startX != -1) {
 
-                    // Gör så att det adjustar den nya mazen
+                    // Gör så att det adjust till den nya mazen
                     int scaledStartX = startX * cellSize * scale + cellSize / 2;
                     int scaledStartY = startY * cellSize * scale + cellSize / 2;
                     int scaledEndX = endX * cellSize * scale + cellSize / 2;
@@ -219,15 +219,28 @@ public class MainModel {
         maze = new boolean[mazeWidth][mazeHeight];
 
         start = System.currentTimeMillis();
+        int threshold = (int) (0.85 * (cellSize * cellSize)); // Adjust the threshold percentage here (e.g., 0.8 for 80% white pixels)
+
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
-                // Convert binary image coordinates to maze coordinates
                 int startX = x * cellSize;
                 int startY = y * cellSize;
                 int endX = startX + cellSize;
                 int endY = startY + cellSize;
 
-                // Check if any pixel in the cell is white
+                int whiteCount = 0;
+
+                for (int i = startX; i < endX; i++) {
+                    for (int j = startY; j < endY; j++) {
+                        if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
+                            whiteCount++;
+                        }
+                    }
+                }
+
+                maze[x][y] = whiteCount >= threshold;
+
+                /*// Check if any pixel in the cell is white
                 boolean cellContainsWhite = false;
                 for (int i = startX; i < endX; i++) {
                     for (int j = startY; j < endY; j++) {
@@ -241,7 +254,7 @@ public class MainModel {
                     }
                 }
 
-                maze[x][y] = cellContainsWhite;
+                maze[x][y] = cellContainsWhite;*/
             }
         }
         end = System.currentTimeMillis();
