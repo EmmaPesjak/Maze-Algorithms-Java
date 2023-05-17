@@ -60,7 +60,7 @@ public class MainController {
             Point start = mainView.getStartCoords();
             Point end = mainView.getFinishCoords();
 
-            // Kolla läget så den faktiskt är fina grejer.
+            // Verify that the points are within maze or on an open path.
             if (!mainModel.checkIfValid(start, end)){
                 mainView.displayErrorMsg(Constants.ERR_COORD);
 
@@ -69,12 +69,14 @@ public class MainController {
                 return;
             }
 
+            // Display the loading panel and start timers (ska vi behålla timers sen???)
+            // #TODO fixa så att panelen inte är så jäkla ful.
             mainView.displayLoadingPanel();
+
             long startTime, endTime, totStart, totEnd;
             JPanel path1, path2, path3;
 
             totStart = System.currentTimeMillis();
-
             startTime = System.currentTimeMillis();
             path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
             endTime = System.currentTimeMillis();
@@ -103,8 +105,8 @@ public class MainController {
 
             // Display the results
             SwingUtilities.invokeLater(() -> {
-                mainView.displayResults(path1, path2, path3);
                 mainView.closeLoadingPanel();
+                mainView.displayResults(path1, path2, path3);
             });
         }
     }

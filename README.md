@@ -30,6 +30,5 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
 
 Kirra storleken på framen och bilderna så pack() blir fint. Hur ska vi göra?? krymper man bilderna så försvinner väggarna!
 Error msg om det inte fanns någon path.
-Se till så att tollen inte går längs väggarna ute, utan alltid innanför väggarna
 Se till så att display results alltid visas dirr efter. Nu tar det typ 42 år.
 VARFÖR PRINTAS SYSTEM.OUT GREJERNA FLERA GÅNGER I SWITCH??? DEN EXITAR JU INTE

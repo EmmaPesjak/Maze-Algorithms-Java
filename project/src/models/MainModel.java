@@ -81,17 +81,19 @@ public class MainModel {
         return panel;
     }
 
+    /**
+     * Check if the start and finish coordinates are within maze/not at a wall.
+     * @param startPoint start-point.
+     * @param finish end-point.
+     * @return whether it's valid or not.
+     */
     public boolean checkIfValid(Point startPoint, Point finish){
         // Check so that the start/finish points are within boundaries
         if (!maze[startPoint.x / cellSize][startPoint.y / cellSize]) {
             return false;
         }
 
-        if (!maze[finish.x / cellSize][finish.y / cellSize]) {
-            return false;
-        }
-
-        return true;
+        return maze[finish.x / cellSize][finish.y / cellSize];
     }
 
     public JPanel displayPath(Point startPoint, Point finish, String algo){
@@ -105,16 +107,6 @@ public class MainModel {
         start = new Point(startX, startY);
         end = new Point(endX, endY);
 
-
-        // TODO: denna får vi ju typ ha men skriva på skärmen att användaren klickade på en vägg och de ska picka om?
-        // dubbelkolla så att skiten faktiskt är path ????????
-        /*assert start != null;
-        if (!maze[start.x][start.y] || !maze[finish.x][finish.y]){
-            System.out.println("de är ju förfan inte path");
-            return null;
-        }*/
-
-
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
             @Override
@@ -127,7 +119,7 @@ public class MainModel {
                 // Draw the start and end points
                 if (showPoints && startX != -1) {
 
-                    // Gör så att det adjust till den nya mazen
+                    // Adjust the coordinates to the cell-size of maze.
                     int scaledStartX = startX * cellSize * scale + cellSize / 2;
                     int scaledStartY = startY * cellSize * scale + cellSize / 2;
                     int scaledEndX = endX * cellSize * scale + cellSize / 2;
@@ -209,7 +201,6 @@ public class MainModel {
             Point current = path.get(i);
             Point next = path.get(i + 1);
 
-            //int cellSize = 1;
             double startX = current.x * cellSize * scale + cellSize / 2.0;
             double startY = current.y * cellSize * scale + cellSize / 2.0;
             double endX = next.x * cellSize * scale + cellSize / 2.0;
@@ -220,8 +211,8 @@ public class MainModel {
     }
 
     /**
-     * Hej
-     * @param image
+     * Generate a 2d-boolean array to represent the maze.
+     * @param image image containing the maze.
      */
     private void generateMaze(BufferedImage image) {
         int width = image.getWidth();
@@ -233,12 +224,13 @@ public class MainModel {
         // Create the 2D boolean array representing the maze
         maze = new boolean[mazeWidth][mazeHeight];
 
-        start = System.currentTimeMillis();
+        start = System.currentTimeMillis();  // bara för att kolla läget
 
-        // Threshold, in this case, 85% of the pixels need to be white to be considered to be white.
+        // Define threshold, in this case, 85% of the pixels need to be white to be considered to be white.
         int threshold = (int) (0.85 * (cellSize * cellSize));
 
-        identifyBoundaries();
+        // Identify the boundaries of the walls.
+        //identifyBoundaries();
 
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
@@ -260,11 +252,12 @@ public class MainModel {
                 }
 
                 // Set to true if amount of white pixels are more than the threshold AND within walls.
-                maze[x][y] = isWithinBoundary(x, y) && whiteCount >= threshold;
+                maze[x][y] = whiteCount >= threshold;
 
             }
         }
 
+        // Identify the boundaries of the walls.
         identifyBoundaries();
 
         // Set cells outside the boundaries to false
@@ -284,6 +277,9 @@ public class MainModel {
         System.out.println("Amount of cells: " + (maze.length * maze[0].length));
     }
 
+    /**
+     * Find the outer walls of maze.
+     */
     private void identifyBoundaries(){
         int mazeWidth = maze.length;
         int mazeHeight = maze[0].length;
@@ -294,6 +290,7 @@ public class MainModel {
         maxX = Integer.MIN_VALUE;
         maxY = Integer.MIN_VALUE;
 
+        // For all cells in maze...
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
                 if (!maze[x][y]) { // Check if the cell is a wall
@@ -315,8 +312,13 @@ public class MainModel {
         }
     }
 
+    /**
+     * Check if the cell is within the boundaries.
+     * @param x x-coordinate.
+     * @param y y-coordinate.
+     * @return if it's within or not.
+     */
     private boolean isWithinBoundary(int x, int y) {
-        // Check if the cell is within the boundaries
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
