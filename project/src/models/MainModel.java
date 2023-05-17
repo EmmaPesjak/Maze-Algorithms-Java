@@ -81,6 +81,19 @@ public class MainModel {
         return panel;
     }
 
+    public boolean checkIfValid(Point startPoint, Point finish){
+        // Check so that the start/finish points are within boundaries
+        if (!maze[startPoint.x / cellSize][startPoint.y / cellSize]) {
+            return false;
+        }
+
+        if (!maze[finish.x / cellSize][finish.y / cellSize]) {
+            return false;
+        }
+
+        return true;
+    }
+
     public JPanel displayPath(Point startPoint, Point finish, String algo){
 
         // Adjust the start and end coordinates to match the cell size

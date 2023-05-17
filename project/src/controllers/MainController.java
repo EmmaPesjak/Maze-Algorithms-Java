@@ -54,13 +54,22 @@ public class MainController {
     class SolveButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            mainView.displayLoadingPanel();
 
             // Run the algorithms and calculate the paths
             mainModel.showPoints(); // Make sure that the start and finish points are showing.
             Point start = mainView.getStartCoords();
             Point end = mainView.getFinishCoords();
 
+            // Kolla läget så den faktiskt är fina grejer.
+            if (!mainModel.checkIfValid(start, end)){
+                mainView.displayErrorMsg(Constants.ERR_COORD);
+
+                // #TODO Gör så att användaren kan välja nya koordinater!
+                mainModel.clearPoints();
+                return;
+            }
+
+            mainView.displayLoadingPanel();
             long startTime, endTime, totStart, totEnd;
             JPanel path1, path2, path3;
 
