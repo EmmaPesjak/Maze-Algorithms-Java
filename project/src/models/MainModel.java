@@ -30,8 +30,7 @@ public class MainModel {
     private Point start;
     private Point end;
     private int scale;
-
-    private boolean aStarHasPath, heapHasPath, dequeHasPath = false; // kolla läget om de faktiskt finns shortest path
+    private final int cellSize = 5;
 
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
@@ -56,28 +55,6 @@ public class MainModel {
         // Calculate the scaled dimensions for the JPanel.
         panelWidth = (width * scale);
         panelHeight = (height * scale);
-//
-        //TODO kommenterar bort binaryImage, ska vi radera den helt?
-//        // Iterate over the pixels of the image.
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                // Get the RGB value of the pixel.
-//                int rgb = image.getRGB(x, y);
-//
-//                // Extract the red, green, and blue components.
-//                int red = (rgb >> 16) & 0xFF;
-//                int green = (rgb >> 8) & 0xFF;
-//                int blue = rgb & 0xFF;
-//
-//                // Compute the grayscale value of the pixel.
-//                int grayscale = (red + green + blue) / 3;
-//
-//                // Set the grayscale value as the RGB value for the binary image.
-//                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
-//                binaryImage.setRGB(x, y, binaryRGB);
-//            }
-//        }
-
 
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
@@ -103,17 +80,16 @@ public class MainModel {
     }
 
     public JPanel displayPath(Point startPoint, Point finish, String algo){
-        System.out.println("Hej nu körs displayPath()");
-        if (startPoint != null) {
-            startX = startPoint.x;
-            startY = startPoint.y;
-            endX = finish.x;
-            endY = finish.y;
-            this.start = startPoint;
-            this.end = finish;
-        } else {
-            return null; // or handle the case when startPoint is null
-        }
+
+        // Adjust the start and end coordinates to match the cell size
+        startX = startPoint.x / cellSize;
+        startY = startPoint.y / cellSize;
+        endX = finish.x / cellSize;
+        endY = finish.y / cellSize;
+
+        start = new Point(startX, startY);
+        end = new Point(endX, endY);
+
 
         // TODO: denna får vi ju typ ha men skriva på skärmen att användaren klickade på en vägg och de ska picka om?
         // dubbelkolla så att skiten faktiskt är path ????????
@@ -135,112 +111,56 @@ public class MainModel {
 
                 // Draw the start and end points
                 if (showPoints && startX != -1) {
+
+                    // Gör så att det adjustar den nya mazen
+                    int scaledStartX = startX * cellSize * scale + cellSize / 2;
+                    int scaledStartY = startY * cellSize * scale + cellSize / 2;
+                    int scaledEndX = endX * cellSize * scale + cellSize / 2;
+                    int scaledEndY = endY * cellSize * scale + cellSize / 2;
+
                     g.setColor(Constants.COLOR_START);
-                    g.fillOval(startX-5, startY-5, 10, 10); // -5 to center.
+                    g.fillOval(scaledStartX - 5, scaledStartY - 5, 10, 10); // -5 to center.
                     g.setColor(Constants.COLOR_END);
-                    g.fillOval(endX-5, endY-5, 10, 10); // -5 to center.
+                    g.fillOval(scaledEndX - 5, scaledEndY - 5, 10, 10); // -5 to center.
+
                 }
 
                 Dijkstra dijkstra = new Dijkstra(maze, start, end);
 
-                boolean dijkHeapExecuted = false;
-                boolean dijkDeqExecuted = false;
-                boolean aStarExecuted = false;
-
                 // Draw the calculated paths.
                 switch (algo) {
                     case (Constants.DIJK_HEAP) -> {
-                        if (!dijkHeapExecuted) {
-                            System.out.println("Varför printas denna efter algoritmerna???");
-
-                            List<Point> shortestPath = dijkstra.solveHeapPath();
-
-                            if (shortestPath.size() != 0){
-                                heapHasPath = true;
-                                // Draw the shortest path.
-                                drawPath(g, shortestPath);
-                            }
-
-                            dijkHeapExecuted = true;
-                        }
-                    }
-                    case (Constants.DIJK_DEQ) -> {
-                        if (!dijkDeqExecuted) {
-                            System.out.println("Varför printas denna efter algoritmerna???");
-
-                            List<Point> shortestPath = dijkstra.solveDequeuePath();
-
-                            if (shortestPath.size() != 0){
-                                dequeHasPath = true;
-                                // Draw the shortest path.
-                                drawPath(g, shortestPath);
-                            }
-
-                            dijkDeqExecuted = true;
-                        }
-                    }
-                    case (Constants.ASTAR) -> {
-                        if (!aStarExecuted) {
-                            System.out.println("Varför printas denna efter algoritmerna???");
-                            // Solve the maze with the A* algorithm and get a list of points with the path.
-                            AStar aStar = new AStar(maze, start, end);
-                            List<Point> shortestPath = aStar.solvePath();
-
-                            if (shortestPath.size() != 0){
-                                aStarHasPath = true;
-                                // Draw the shortest path.
-                                drawPath(g, shortestPath);
-                            }
-
-                            aStarExecuted = true;
-                        }
-                    }
-                }
-
-
-
-
-                /*boolean dijkHeapExecuted = false;
-                boolean dijkDeqExecuted = false;
-                boolean aStarExecuted = false;
-
-                // Draw the calculated paths.
-                switch (algo) {
-                    case (Constants.DIJK_HEAP) -> {
-                        System.out.println("Varför printas denna efter algoritmerna???");
+                        System.out.println("DIJK HEAP: Varför printas denna efter algoritmerna???");
 
                         List<Point> shortestPath = dijkstra.solveHeapPath();
 
                         if (shortestPath.size() != 0){
-                            heapHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
                     case (Constants.DIJK_DEQ) -> {
-                        System.out.println("Varför printas denna efter algoritmerna???");
+                        System.out.println("DIJK DEQ: Varför printas denna efter algoritmerna???");
+
                         List<Point> shortestPath = dijkstra.solveDequeuePath();
 
                         if (shortestPath.size() != 0){
-                            dequeHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
                     case (Constants.ASTAR) -> {
-
-                        System.out.println("Varför printas denna efter algoritmerna???");
+                        System.out.println("A*: Varför printas denna efter algoritmerna???");
                         // Solve the maze with the A* algorithm and get a list of points with the path.
                         AStar aStar = new AStar(maze, start, end);
                         List<Point> shortestPath = aStar.solvePath();
 
                         if (shortestPath.size() != 0){
-                            aStarHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
-                }*/
+                }
             }
         };
 
@@ -274,7 +194,7 @@ public class MainModel {
             Point current = path.get(i);
             Point next = path.get(i + 1);
 
-            int cellSize = 1;
+            //int cellSize = 1;
             double startX = current.x * cellSize * scale + cellSize / 2.0;
             double startY = current.y * cellSize * scale + cellSize / 2.0;
             double endX = next.x * cellSize * scale + cellSize / 2.0;
@@ -284,8 +204,6 @@ public class MainModel {
         }
     }
 
-
-    //TODO: finns det något bättre sätt att skapa mazen eftersom man får 34857394857349857349875 celler så blir algoritmerna aslångsamma
     /**
      * Hej
      * @param image
@@ -293,22 +211,45 @@ public class MainModel {
     private void generateMaze(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
+        int mazeWidth = width / cellSize;
+        int mazeHeight = height / cellSize;
         long start, end;
 
         // Create the 2D boolean array representing the maze
-        maze = new boolean[width][height];
+        maze = new boolean[mazeWidth][mazeHeight];
 
         start = System.currentTimeMillis();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < mazeWidth; x++) {
+            for (int y = 0; y < mazeHeight; y++) {
                 // Convert binary image coordinates to maze coordinates
+                int startX = x * cellSize;
+                int startY = y * cellSize;
+                int endX = startX + cellSize;
+                int endY = startY + cellSize;
 
-                maze[x][y] = image.getRGB(x, y) == Color.WHITE.getRGB();
+                // Check if any pixel in the cell is white
+                boolean cellContainsWhite = false;
+                for (int i = startX; i < endX; i++) {
+                    for (int j = startY; j < endY; j++) {
+                        if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
+                            cellContainsWhite = true;
+                            break;
+                        }
+                    }
+                    if (cellContainsWhite) {
+                        break;
+                    }
+                }
+
+                maze[x][y] = cellContainsWhite;
             }
         }
         end = System.currentTimeMillis();
 
         System.out.println("Total for creating a maze: " + (end - start));
+
+        System.out.println("Total for creating a maze: " + (end - start));
+        System.out.println("Amount of cells: " + (maze.length * maze[0].length));
     }
 
 
@@ -336,8 +277,29 @@ public class MainModel {
         startY = -1;
         endX = -1;
         endY = -1;
-        aStarHasPath = false;
-        heapHasPath = false;
-        dequeHasPath = false;
     }
+
+
+
+    //
+    //TODO kommenterar bort binaryImage, ska vi radera den helt?
+//        // Iterate over the pixels of the image.
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                // Get the RGB value of the pixel.
+//                int rgb = image.getRGB(x, y);
+//
+//                // Extract the red, green, and blue components.
+//                int red = (rgb >> 16) & 0xFF;
+//                int green = (rgb >> 8) & 0xFF;
+//                int blue = rgb & 0xFF;
+//
+//                // Compute the grayscale value of the pixel.
+//                int grayscale = (red + green + blue) / 3;
+//
+//                // Set the grayscale value as the RGB value for the binary image.
+//                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
+//                binaryImage.setRGB(x, y, binaryRGB);
+//            }
+//        }
 }
