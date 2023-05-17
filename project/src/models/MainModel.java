@@ -32,6 +32,8 @@ public class MainModel {
     private int scale;
     private final int cellSize = 5;
 
+    int minX, minY, maxX, maxY;
+
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
         image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
@@ -219,10 +221,16 @@ public class MainModel {
         maze = new boolean[mazeWidth][mazeHeight];
 
         start = System.currentTimeMillis();
-        int threshold = (int) (0.85 * (cellSize * cellSize)); // Adjust the threshold percentage here (e.g., 0.8 for 80% white pixels)
+
+        // Threshold, in this case, 85% of the pixels need to be white to be considered to be white.
+        int threshold = (int) (0.85 * (cellSize * cellSize));
+
+        identifyBoundaries();
 
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
+
+                // Start/end coordinates of the cell.
                 int startX = x * cellSize;
                 int startY = y * cellSize;
                 int endX = startX + cellSize;
@@ -238,31 +246,65 @@ public class MainModel {
                     }
                 }
 
-                maze[x][y] = whiteCount >= threshold;
+                // Set to true if amount of white pixels are more than the threshold AND within walls.
+                maze[x][y] = isWithinBoundary(x, y) && whiteCount >= threshold;
 
-                /*// Check if any pixel in the cell is white
-                boolean cellContainsWhite = false;
-                for (int i = startX; i < endX; i++) {
-                    for (int j = startY; j < endY; j++) {
-                        if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
-                            cellContainsWhite = true;
-                            break;
-                        }
-                    }
-                    if (cellContainsWhite) {
-                        break;
-                    }
-                }
-
-                maze[x][y] = cellContainsWhite;*/
             }
         }
+
+        identifyBoundaries();
+
+        // Set cells outside the boundaries to false
+        for (int x = 0; x < mazeWidth; x++) {
+            for (int y = 0; y < mazeHeight; y++) {
+                if (!isWithinBoundary(x, y)) {
+                    maze[x][y] = false;
+                }
+            }
+        }
+
         end = System.currentTimeMillis();
 
         System.out.println("Total for creating a maze: " + (end - start));
 
         System.out.println("Total for creating a maze: " + (end - start));
         System.out.println("Amount of cells: " + (maze.length * maze[0].length));
+    }
+
+    private void identifyBoundaries(){
+        int mazeWidth = maze.length;
+        int mazeHeight = maze[0].length;
+
+        // Initialize min and max values.
+        minX = Integer.MAX_VALUE;
+        minY = Integer.MAX_VALUE;
+        maxX = Integer.MIN_VALUE;
+        maxY = Integer.MIN_VALUE;
+
+        for (int x = 0; x < mazeWidth; x++) {
+            for (int y = 0; y < mazeHeight; y++) {
+                if (!maze[x][y]) { // Check if the cell is a wall
+                    // Update the boundary-values.
+                    if (x < minX) {
+                        minX = x;
+                    }
+                    if (x > maxX) {
+                        maxX = x;
+                    }
+                    if (y < minY) {
+                        minY = y;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isWithinBoundary(int x, int y) {
+        // Check if the cell is within the boundaries
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
 
