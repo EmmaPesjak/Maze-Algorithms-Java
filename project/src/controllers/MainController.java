@@ -1,13 +1,13 @@
 package controllers;
 
 import models.MainModel;
+import support.Constants;
 import views.MainView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -39,10 +39,10 @@ public class MainController {
                     mainView.showMaze(img);
 
                 } catch (IOException ex) {
-                    mainView.displayErrorMsg("Please enter a valid file name.");
+                    mainView.displayErrorMsg(Constants.ERR_NO_VALID_FILE);
                 }
             } else {
-                mainView.displayErrorMsg("Enter a file name!");
+                mainView.displayErrorMsg(Constants.ERR_NO_FILE_NAME);
             }
         }
     }
@@ -67,9 +67,9 @@ public class MainController {
                 Point start = mainView.getStartCoords();
                 Point end = mainView.getFinishCoords();
 
-                JPanel path1 = mainModel.displayPath(start, end, "dijkstraOne");
-                JPanel path2 = mainModel.displayPath(start, end, "dijkstraTwo");
-                JPanel path3 = mainModel.displayPath(start, end, "aStar");
+                JPanel path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
+                JPanel path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
+                JPanel path3 = mainModel.displayPath(start, end, Constants.ASTAR);
 
                 // Display the results in the view
                 SwingUtilities.invokeLater(() -> {

@@ -23,9 +23,7 @@ public class MainView extends JFrame {
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
 
-
     private final JPanel loadingPanel = new JPanel();
-
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
@@ -53,7 +51,7 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 100)));
 
-        JLabel title = new JLabel("Maze Solver");
+        JLabel title = new JLabel(Constants.TITLE);
         title.setFont(Constants.FONT_BIG);
         title.setForeground(Constants.COLOR_TEXT);
         title.setHorizontalAlignment(JLabel.CENTER);
@@ -62,7 +60,7 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        JLabel textLabel = new JLabel("Enter the file name of the maze you want to solve:");
+        JLabel textLabel = new JLabel(Constants.ENTER_NAME);
         textLabel.setForeground(Constants.COLOR_TEXT);
         textLabel.setFont(Constants.FONT_TEXT);
         textLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -77,7 +75,7 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        final CustomButton selectButton = new CustomButton("Select Maze");
+        final CustomButton selectButton = new CustomButton(Constants.SELECT_BUTTON);
         selectButton.addActionListener(selectListener);
         panel.add(selectButton);
 
@@ -108,26 +106,30 @@ public class MainView extends JFrame {
         explanationLabel.setForeground(Constants.COLOR_TEXT);
         explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        maze.setLayout(null); // Set layout manager to null for absolute positioning when adding dots.
+
         maze.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 clickCount++;
                 if (clickCount == 1) {
-                    explanationLabel.setText("Select the finish");
+                    explanationLabel.setText(Constants.SELECT_FINISH);
                     startCoords = e.getPoint();
                     coordLabel.setText("Start Coordinates: x=" + startCoords.x + ", y=" + startCoords.y);
                     panel.add(coordLabel);
                     panel.revalidate();
+                    addDot(maze, startCoords, true);
                 } else if (clickCount == 2) {
                     explanationPanel.removeAll(); // Remove old text.
                     finishCoords = e.getPoint();
                     coordLabel.setText("Finish Coordinates: x=" + finishCoords.x + ", y=" + finishCoords.y);
                     panel.add(coordLabel);
-                    final CustomButton solveButton = new CustomButton("Solve Maze");
+                    final CustomButton solveButton = new CustomButton(Constants.SOLVE_BUTTON);
                     solveButton.addActionListener(solveListener);
                     explanationPanel.add(solveButton);
                     panel.revalidate();
+                    addDot(maze, finishCoords, false);
                 }
             }
 
@@ -142,7 +144,7 @@ public class MainView extends JFrame {
             public void mouseExited(MouseEvent e) {}
         });
         coordLabel.setText(" ");
-        explanationLabel.setText("Select the start");
+        explanationLabel.setText(Constants.SELECT_START);
 
         explanationPanel.setBackground(Constants.COLOR_BACKGROUND);
         explanationPanel.add(explanationLabel);
@@ -154,6 +156,42 @@ public class MainView extends JFrame {
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
+    }
+
+    /**
+     * Method for adding a dot where the user presses.
+     * @param maze is the maze image.
+     * @param point is the coordinates of the dot.
+     * @param isStart determines the color of the dot.
+     */
+    private void addDot(JPanel maze, Point point, boolean isStart) {
+        JPanel dot = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+
+                if (isStart) {
+                    g2d.setColor(Constants.COLOR_START);
+                } else {
+                    g2d.setColor(Constants.COLOR_END);
+                }
+                g2d.fillOval(0, 0, getWidth(), getHeight());
+            }
+        };
+
+        dot.setSize(10, 10);
+        dot.setOpaque(false);
+        dot.setBorder(BorderFactory.createEmptyBorder());
+        dot.setLayout(null);
+
+        int dotX = point.x - dot.getWidth() / 2;
+        int dotY = point.y - dot.getHeight() / 2;
+        dot.setLocation(dotX, dotY);
+
+        maze.add(dot);
+        maze.revalidate();
+        maze.repaint();
     }
 
     /**
@@ -190,7 +228,7 @@ public class MainView extends JFrame {
         JLabel loadingLabel = new JLabel(new ImageIcon("project/src/support/spinner.gif"));
         loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel textLoadingLabel = new JLabel("Finding the shortest path...");
+        JLabel textLoadingLabel = new JLabel(Constants.LOADING);
         textLoadingLabel.setFont(Constants.FONT_BIG);
         textLoadingLabel.setForeground(Constants.COLOR_TEXT);
 
@@ -242,7 +280,7 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel("Dijkstra with Prio Queue");
+        JLabel label1 = new JLabel(Constants.TEXT_D_HEAP);
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);
@@ -259,7 +297,7 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel("Dijkstra with deque");
+        JLabel label2 = new JLabel(Constants.TEXT_D_DEQ);
         label2.setForeground(Constants.COLOR_TEXT);
         label2.setFont(Constants.FONT_TEXT);
         label2.setHorizontalAlignment(JLabel.CENTER);
@@ -272,7 +310,7 @@ public class MainView extends JFrame {
         eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
         panel.add(eastPanel, BorderLayout.EAST);
 
-        JLabel label3 = new JLabel("A*");
+        JLabel label3 = new JLabel(Constants.TEXT_ASTAR);
         label3.setForeground(Constants.COLOR_TEXT);
         label3.setFont(Constants.FONT_TEXT);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -283,7 +321,7 @@ public class MainView extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Constants.COLOR_BACKGROUND);
 
-        final CustomButton restartButton = new CustomButton("Run new maze");
+        final CustomButton restartButton = new CustomButton(Constants.RESTART_BUTTON);
         buttonPanel.add(restartButton);
         restartButton.addActionListener(restartListener);
 
