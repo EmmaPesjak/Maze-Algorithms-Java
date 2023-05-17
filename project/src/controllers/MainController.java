@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The program's main controller. Responsible for the communication between views and models,
@@ -51,63 +52,52 @@ public class MainController {
      * Inner class responsible for listening to the solve button.
      */
     class SolveButtonListener implements ActionListener {
-
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void actionPerformed(ActionEvent e) {
+            mainView.displayLoadingPanel();
 
-            // Display the loading panel in the view
-            SwingUtilities.invokeLater(mainView::displayLoadingPanel);
+            // Run the algorithms and calculate the paths
+            mainModel.showPoints(); // Make sure that the start and finish points are showing.
+            Point start = mainView.getStartCoords();
+            Point end = mainView.getFinishCoords();
 
-            // Call the algorithms in a separate thread
-            Thread algorithmsThread = new Thread(() -> {
-                mainModel.showPoints(); // Make sure that the start and finish points are showing.
-                Point start = mainView.getStartCoords();
-                Point end = mainView.getFinishCoords();
+            long startTime, endTime, totStart, totEnd;
+            JPanel path1, path2, path3;
 
-                long startTime, endTime, totStart, totEnd;
-                JPanel path1, path2, path3;
+            totStart = System.currentTimeMillis();
 
-                totStart = System.currentTimeMillis();
+            startTime = System.currentTimeMillis();
+            path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
+            endTime = System.currentTimeMillis();
+            long algorithm1Time = endTime - startTime;
+            System.out.println("1: " + algorithm1Time);
 
-                startTime = System.currentTimeMillis();
-                path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
-                endTime = System.currentTimeMillis();
-                long algorithm1Time = endTime - startTime;
+            // Measure the execution time of the second algorithm
+            startTime = System.currentTimeMillis();
+            path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
+            endTime = System.currentTimeMillis();
+            long algorithm2Time = endTime - startTime;
+            System.out.println("2: " + algorithm2Time);
 
-                // Measure the execution time of the second algorithm
-                startTime = System.currentTimeMillis();
-                path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
-                endTime = System.currentTimeMillis();
-                long algorithm2Time = endTime - startTime;
+            // Measure the execution time of the third algorithm
+            startTime = System.currentTimeMillis();
+            path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+            endTime = System.currentTimeMillis();
+            long algorithm3Time = endTime - startTime;
+            System.out.println("3: " + algorithm3Time);
 
-                // Measure the execution time of the third algorithm
-                startTime = System.currentTimeMillis();
-                path3 = mainModel.displayPath(start, end, Constants.ASTAR);
-                endTime = System.currentTimeMillis();
-                long algorithm3Time = endTime - startTime;
+            totEnd = System.currentTimeMillis();
+            long total = totEnd - totStart;
 
-                totEnd = System.currentTimeMillis();
-                long total = totEnd - totStart;
+            // Display the execution times
+            System.out.println("Total: " + total);
 
-                // Display the results in the view
-                SwingUtilities.invokeLater(() -> {
-                    mainView.displayResults(path1, path2, path3);
-
-                    // Display the execution times
-                    System.out.println("Total: " + total + "\n 1: " + algorithm1Time + ", 2: " + algorithm2Time + ", 3: " + algorithm3Time);
-
-                    // Close the loading dialog after displaying the results
-                    mainView.closeLoadingPanel();
-                });
+            // Display the results
+            SwingUtilities.invokeLater(() -> {
+                mainView.displayResults(path1, path2, path3);
+                mainView.closeLoadingPanel();
             });
-
-
-            algorithmsThread.start();
         }
-
     }
 
     /**

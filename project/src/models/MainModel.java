@@ -38,7 +38,6 @@ public class MainModel {
         image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
         generateMaze(image);
 
-
         // Get height and width.
         int width = image.getWidth();
         int height = image.getHeight();
@@ -104,6 +103,7 @@ public class MainModel {
     }
 
     public JPanel displayPath(Point startPoint, Point finish, String algo){
+        System.out.println("Hej nu körs displayPath()");
         if (startPoint != null) {
             startX = startPoint.x;
             startY = startPoint.y;
@@ -114,9 +114,6 @@ public class MainModel {
         } else {
             return null; // or handle the case when startPoint is null
         }
-
-        //generateMaze(image);
-
 
         // TODO: denna får vi ju typ ha men skriva på skärmen att användaren klickade på en vägg och de ska picka om?
         // dubbelkolla så att skiten faktiskt är path ????????
@@ -146,10 +143,71 @@ public class MainModel {
 
                 Dijkstra dijkstra = new Dijkstra(maze, start, end);
 
+                boolean dijkHeapExecuted = false;
+                boolean dijkDeqExecuted = false;
+                boolean aStarExecuted = false;
+
                 // Draw the calculated paths.
                 switch (algo) {
                     case (Constants.DIJK_HEAP) -> {
-                        System.out.println("Varför körs denna 2 gånger????");
+                        if (!dijkHeapExecuted) {
+                            System.out.println("Varför printas denna efter algoritmerna???");
+
+                            List<Point> shortestPath = dijkstra.solveHeapPath();
+
+                            if (shortestPath.size() != 0){
+                                heapHasPath = true;
+                                // Draw the shortest path.
+                                drawPath(g, shortestPath);
+                            }
+
+                            dijkHeapExecuted = true;
+                        }
+                    }
+                    case (Constants.DIJK_DEQ) -> {
+                        if (!dijkDeqExecuted) {
+                            System.out.println("Varför printas denna efter algoritmerna???");
+
+                            List<Point> shortestPath = dijkstra.solveDequeuePath();
+
+                            if (shortestPath.size() != 0){
+                                dequeHasPath = true;
+                                // Draw the shortest path.
+                                drawPath(g, shortestPath);
+                            }
+
+                            dijkDeqExecuted = true;
+                        }
+                    }
+                    case (Constants.ASTAR) -> {
+                        if (!aStarExecuted) {
+                            System.out.println("Varför printas denna efter algoritmerna???");
+                            // Solve the maze with the A* algorithm and get a list of points with the path.
+                            AStar aStar = new AStar(maze, start, end);
+                            List<Point> shortestPath = aStar.solvePath();
+
+                            if (shortestPath.size() != 0){
+                                aStarHasPath = true;
+                                // Draw the shortest path.
+                                drawPath(g, shortestPath);
+                            }
+
+                            aStarExecuted = true;
+                        }
+                    }
+                }
+
+
+
+
+                /*boolean dijkHeapExecuted = false;
+                boolean dijkDeqExecuted = false;
+                boolean aStarExecuted = false;
+
+                // Draw the calculated paths.
+                switch (algo) {
+                    case (Constants.DIJK_HEAP) -> {
+                        System.out.println("Varför printas denna efter algoritmerna???");
 
                         List<Point> shortestPath = dijkstra.solveHeapPath();
 
@@ -160,6 +218,7 @@ public class MainModel {
                         }
                     }
                     case (Constants.DIJK_DEQ) -> {
+                        System.out.println("Varför printas denna efter algoritmerna???");
                         List<Point> shortestPath = dijkstra.solveDequeuePath();
 
                         if (shortestPath.size() != 0){
@@ -169,6 +228,8 @@ public class MainModel {
                         }
                     }
                     case (Constants.ASTAR) -> {
+
+                        System.out.println("Varför printas denna efter algoritmerna???");
                         // Solve the maze with the A* algorithm and get a list of points with the path.
                         AStar aStar = new AStar(maze, start, end);
                         List<Point> shortestPath = aStar.solvePath();
@@ -179,20 +240,7 @@ public class MainModel {
                             drawPath(g, shortestPath);
                         }
                     }
-                }
-
-                // vet inte vad jag tänkte göra med de här. det är sent på kvällen nu yolo.
-                if (!aStarHasPath){
-                    String msg1 = "No path was found with A*.";
-                }
-
-                if (!heapHasPath){
-                    String msg2 = "No path was found with Heap and Dijkstra's.";
-                }
-
-                if (!dequeHasPath){
-                    String msg3 = "No path was found with Deque and Dijkstra's.";
-                }
+                }*/
             }
         };
 
