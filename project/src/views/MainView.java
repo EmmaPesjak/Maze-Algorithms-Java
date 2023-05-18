@@ -24,6 +24,7 @@ public class MainView extends JFrame {
     private final JLabel coordLabel = new JLabel();
 
     private final JPanel loadingPanel = new JPanel();
+    private JPanel maze;
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
@@ -94,9 +95,10 @@ public class MainView extends JFrame {
 
     /**
      * Shows the selected maze and lets the user pick start and finish coordinates.
-     * @param maze is the maze.
+     * @param mazeArg is the maze.
      */
-    public void showMaze(JPanel maze) {
+    public void showMaze(JPanel mazeArg) {
+        this.maze = mazeArg;
         panel.removeAll(); // Clear the panel.
 
         coordLabel.setFont(Constants.FONT_SMALL_TEXT);
@@ -316,7 +318,6 @@ public class MainView extends JFrame {
         panel.add(eastPanel, BorderLayout.EAST);
 
         JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>" + time3 + " ns</div></html>");
-        //JLabel label3 = new JLabel(Constants.TEXT_ASTAR);
         label3.setForeground(Constants.COLOR_TEXT);
         label3.setFont(Constants.FONT_TEXT);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -358,4 +359,5 @@ public class MainView extends JFrame {
     public void displayErrorMsg (String errorMsg) {
         JOptionPane.showMessageDialog(this, errorMsg);
     }
+
 }

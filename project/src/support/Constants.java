@@ -30,6 +30,13 @@ public interface Constants {
     String ERR_NO_FILE_NAME = "Please enter a file name.";
     String ERR_NO_VALID_FILE = "Please enter a valid file name or make sure that the file exists.";
     String ERR_COORD = "Please enter start- and finish-coordinates within maze on open path.";
+    String ERR_NO_PATH = "No paths found!";
+    String ERR_NO_PATH_HEAP_DEQUE = "Dijkstra's with heap and deque did not find any paths.";
+    String ERR_NO_PATH_DEQUE_ASTAR = "Dijkstra's with deque and A* did not find any paths.";
+    String ERR_NO_PATH_HEAP_ASTAR = "Dijkstra's with heap and A* did not find any paths.";
+    String ERR_NO_PATH_HEAP = "Dijkstra's with heap did not find any path.";
+    String ERR_NO_PATH_DEQUE = "Dijkstra's with deque did not find any path.";
+    String ERR_NO_PATH_ASTAR = "A* did not find any path.";
 
     // Algorithms
     String DIJK_HEAP = "dijkstraHeap";

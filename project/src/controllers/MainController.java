@@ -64,19 +64,18 @@ public class MainController {
             if (!mainModel.checkIfValid(start, end)){
                 mainView.displayErrorMsg(Constants.ERR_COORD);
 
-                // #TODO Gör så att användaren kan välja nya koordinater!
+                // Initiate view, allowing the user to choose new coordinates and new image.
                 mainModel.clearPoints();
+                mainView.init();
                 return;
             }
 
-            // Display the loading panel and start timers (ska vi behålla timers sen???)
             // #TODO fixa så att panelen inte är så jäkla ful.
             mainView.displayLoadingPanel();
 
-            long startTime, endTime, totStart, totEnd;
+            long startTime, endTime;
             JPanel path1, path2, path3;
 
-            totStart = System.currentTimeMillis();
             startTime = System.currentTimeMillis();
             path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
             endTime = System.currentTimeMillis();
@@ -97,16 +96,48 @@ public class MainController {
             long algorithm3Time = endTime - startTime;
             System.out.println("3: " + algorithm3Time);
 
-            totEnd = System.currentTimeMillis();
-            long total = totEnd - totStart;
+            // HÄR VISAR DEN 0
+            /*System.out.println("1List-size: " +mainModel.getListSize());
+            boolean heapPath = mainModel.checkIfPath(Constants.DIJK_HEAP);
+            boolean dequePath = mainModel.checkIfPath(Constants.DIJK_DEQ);
+            boolean astarPath = mainModel.checkIfPath(Constants.ASTAR);*/
 
-            // Display the execution times
-            System.out.println("Total: " + total);
+            // Varför returnar den false fastän algoritmerna har körts???????
+            //System.out.println("H: " + heapPath + ", D:" + dequePath +", A: "+ astarPath);
 
             // Display the results
             SwingUtilities.invokeLater(() -> {
+
+
+                // HÄR VISAR DEN 0
+                //System.out.println("2List-size: " +mainModel.getListSize());
+
                 mainView.closeLoadingPanel();
+
                 mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
+
+                // HUR KAN DE VISA 0 OM PANELEN VISAR PATHSEN???
+                // HÄR VISAR DEN 0
+                /*System.out.println("3List-size: " +mainModel.getListSize());
+
+                if (!heapPath && !dequePath && !astarPath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH);
+                } else if (!heapPath && !dequePath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP_DEQUE);
+                } else if (!dequePath && !astarPath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_DEQUE_ASTAR);
+                } else if (!heapPath && !astarPath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP_ASTAR);
+                } else if (!dequePath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_DEQUE);
+                } else if (!heapPath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP);
+                } else if (!astarPath){
+                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_ASTAR);
+                }
+
+                // HÄR VISAR DEN ANTAL (när man klickat OK på dialogrutan
+                System.out.println("4List-size: " +mainModel.getListSize());*/
             });
         }
     }

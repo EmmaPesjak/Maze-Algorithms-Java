@@ -28,7 +28,13 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
   bättre om man har olika graph strukturer och mer flexibel, men i vårt fall är det mög. dessutom så fick vi ner tiden
   när vi bara genererar maze 1 gång. 
 
-Kirra storleken på framen och bilderna så pack() blir fint. Hur ska vi göra?? krymper man bilderna så försvinner väggarna!
-Error msg om det inte fanns någon path.
-Se till så att display results alltid visas dirr efter. Nu tar det typ 42 år.
-VARFÖR PRINTAS SYSTEM.OUT GREJERNA FLERA GÅNGER I SWITCH??? DEN EXITAR JU INTE
+
+xxx Printa ut tiden i gui
+xxx Se till så att användaren dirigeras om till start om koordinaterna är fel 
+
+- Kirra storleken på framen och bilderna så pack() blir fint
+- Kirra load grejen
+- Kirra exekveringen av programmet så att errors på null path visas och sånt mög
+- Kolla time complexity
+- Städa upp kod + kommentarer
+- Kirra MVG grejer om vi pallar: välja om koordinater istället för att dirigeras om till att välja fil
