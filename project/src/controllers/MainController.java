@@ -106,7 +106,7 @@ public class MainController {
             // Display the results
             SwingUtilities.invokeLater(() -> {
                 mainView.closeLoadingPanel();
-                mainView.displayResults(path1, path2, path3);
+                mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
             });
         }
     }

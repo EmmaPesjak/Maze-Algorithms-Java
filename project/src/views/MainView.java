@@ -252,7 +252,8 @@ public class MainView extends JFrame {
     /**
      * Displays the result of the solves mazes.
      */
-    public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
+    public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
+                                long time1, long time2, long time3) {
 
         long start, end;
 
@@ -283,11 +284,12 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel(Constants.TEXT_D_HEAP);
+        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>" + time1 + " ns</div></html>");
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new GridLayout(2, 1, 10, 10));
@@ -300,7 +302,7 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel(Constants.TEXT_D_DEQ);
+        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>" + time2 + " ns</div></html>");
         label2.setForeground(Constants.COLOR_TEXT);
         label2.setFont(Constants.FONT_TEXT);
         label2.setHorizontalAlignment(JLabel.CENTER);
@@ -313,7 +315,8 @@ public class MainView extends JFrame {
         eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
         panel.add(eastPanel, BorderLayout.EAST);
 
-        JLabel label3 = new JLabel(Constants.TEXT_ASTAR);
+        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>" + time3 + " ns</div></html>");
+        //JLabel label3 = new JLabel(Constants.TEXT_ASTAR);
         label3.setForeground(Constants.COLOR_TEXT);
         label3.setFont(Constants.FONT_TEXT);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -346,6 +349,7 @@ public class MainView extends JFrame {
 
         System.out.println("Time for displaying results: " + (end - start));
     }
+
 
     /**
      * Method for displaying error messages.
