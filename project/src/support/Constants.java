@@ -29,6 +29,7 @@ public interface Constants {
     // Error messages.
     String ERR_NO_FILE_NAME = "Please enter a file name.";
     String ERR_NO_VALID_FILE = "Please enter a valid file name or make sure that the file exists.";
+    String ERR_COORD = "Please enter start- and finish-coordinates within maze on open path.";
 
     // Algorithms
     String DIJK_HEAP = "dijkstraHeap";

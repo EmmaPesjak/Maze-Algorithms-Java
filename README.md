@@ -23,5 +23,12 @@ Ska vi typ skriva ut hur lång shortest path blev i GUIt?
 Ska vi ta tiden på varje algo och printa ut i GUIt?
 
 # TODO'S:
+
+- Verkar som att 2d boolean array är mest efficient i vårt allt, eftersom alla pixels har samma weights. en graph är
+  bättre om man har olika graph strukturer och mer flexibel, men i vårt fall är det mög. dessutom så fick vi ner tiden
+  när vi bara genererar maze 1 gång. 
+
 Kirra storleken på framen och bilderna så pack() blir fint. Hur ska vi göra?? krymper man bilderna så försvinner väggarna!
 Error msg om det inte fanns någon path.
+Se till så att display results alltid visas dirr efter. Nu tar det typ 42 år.
+VARFÖR PRINTAS SYSTEM.OUT GREJERNA FLERA GÅNGER I SWITCH??? DEN EXITAR JU INTE

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The program's main controller. Responsible for the communication between views and models,
@@ -51,39 +52,63 @@ public class MainController {
      * Inner class responsible for listening to the solve button.
      */
     class SolveButtonListener implements ActionListener {
-
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // Display the loading panel in the view
-            SwingUtilities.invokeLater(mainView::displayLoadingPanel);
+            // Run the algorithms and calculate the paths
+            mainModel.showPoints(); // Make sure that the start and finish points are showing.
+            Point start = mainView.getStartCoords();
+            Point end = mainView.getFinishCoords();
 
-            // Call the algorithms in a separate thread
-            Thread algorithmsThread = new Thread(() -> {
-                mainModel.showPoints(); // Make sure that the start and finish points are showing.
-                Point start = mainView.getStartCoords();
-                Point end = mainView.getFinishCoords();
+            // Verify that the points are within maze or on an open path.
+            if (!mainModel.checkIfValid(start, end)){
+                mainView.displayErrorMsg(Constants.ERR_COORD);
 
-                JPanel path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
-                JPanel path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
-                JPanel path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+                // #TODO Gör så att användaren kan välja nya koordinater!
+                mainModel.clearPoints();
+                return;
+            }
 
-                // Display the results in the view
-                SwingUtilities.invokeLater(() -> {
-                    mainView.displayResults(path1, path2, path3);
+            // Display the loading panel and start timers (ska vi behålla timers sen???)
+            // #TODO fixa så att panelen inte är så jäkla ful.
+            mainView.displayLoadingPanel();
 
-                    // Close the loading dialog after displaying the results
-                    mainView.closeLoadingPanel();
-                });
+            long startTime, endTime, totStart, totEnd;
+            JPanel path1, path2, path3;
+
+            totStart = System.currentTimeMillis();
+            startTime = System.currentTimeMillis();
+            path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
+            endTime = System.currentTimeMillis();
+            long algorithm1Time = endTime - startTime;
+            System.out.println("1: " + algorithm1Time);
+
+            // Measure the execution time of the second algorithm
+            startTime = System.currentTimeMillis();
+            path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
+            endTime = System.currentTimeMillis();
+            long algorithm2Time = endTime - startTime;
+            System.out.println("2: " + algorithm2Time);
+
+            // Measure the execution time of the third algorithm
+            startTime = System.currentTimeMillis();
+            path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+            endTime = System.currentTimeMillis();
+            long algorithm3Time = endTime - startTime;
+            System.out.println("3: " + algorithm3Time);
+
+            totEnd = System.currentTimeMillis();
+            long total = totEnd - totStart;
+
+            // Display the execution times
+            System.out.println("Total: " + total);
+
+            // Display the results
+            SwingUtilities.invokeLater(() -> {
+                mainView.closeLoadingPanel();
+                mainView.displayResults(path1, path2, path3);
             });
-
-
-            algorithmsThread.start();
         }
-
     }
 
     /**

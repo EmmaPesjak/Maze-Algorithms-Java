@@ -254,8 +254,11 @@ public class MainView extends JFrame {
      */
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
 
+        long start, end;
+
         // TODO: se till så att alla 3 paneler får plats/inget knäppt mellanrum
 
+        start = System.currentTimeMillis();
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -338,6 +341,10 @@ public class MainView extends JFrame {
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
+
+        end = System.currentTimeMillis();
+
+        System.out.println("Time for displaying results: " + (end - start));
     }
 
     /**
