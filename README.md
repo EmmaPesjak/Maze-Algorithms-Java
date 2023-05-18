@@ -29,9 +29,15 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
   när vi bara genererar maze 1 gång. 
 
 
-xxx Printa ut tiden i gui
-xxx Se till så att användaren dirigeras om till start om koordinaterna är fel 
 
+xxx Printa ut tiden i gui
+
+Bug:
+Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
+de inte är valid. När man testar köra om så kan man inte välja prickar. 
+
+- Se till så att användaren dirigeras om till start om koordinaterna är fel (just nu dirigeras den om, men de kan inte 
+  välja koordinater på nytt FASTÄN den gör exakt som vid restart, och varför visas solve-button direkt???)
 - Kirra storleken på framen och bilderna så pack() blir fint
 - Kirra load grejen
 - Kirra exekveringen av programmet så att errors på null path visas och sånt mög

@@ -284,7 +284,7 @@ public class MainModel {
      * @param g is the graphics.
      * @param path is the path list of points.
      */
-    private void drawPath(Graphics g, List<Point> path) {
+    /*private void drawPath(Graphics g, List<Point> path) {
         //System.out.println("draw path is being called");
         g.setColor(Constants.COLOR_PATH);
 
@@ -306,7 +306,42 @@ public class MainModel {
 
             g2d.drawLine((int) startX, (int) startY, (int) endX, (int) endY);
         }
+    }*/
+
+    /**
+     * Bättre time complexity ???
+     * In this modified drawPath method, we create two arrays, xPoints and yPoints, to store the
+     * x and y coordinates of the points in the path. Instead of drawing individual lines between points,
+     * we pass these arrays to the drawPolyline method of the Graphics2D object. This method draws a polyline
+     * connecting all the points in a single method call, resulting in better performance and reduced time
+     * complexity compared to drawing individual lines.
+     * @param g
+     * @param path
+     */
+    private void drawPath(Graphics g, List<Point> path) {
+        g.setColor(Constants.COLOR_PATH);
+
+        // Create Graphics 2D, so we can set the stroke thickness.
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Set the thickness for the path lines.
+        g2d.setStroke(new BasicStroke(3));
+
+        int numPoints = path.size();
+        int[] xPoints = new int[numPoints];
+        int[] yPoints = new int[numPoints];
+
+        // Populate the x and y coordinate arrays for drawing the polyline.
+        for (int i = 0; i < numPoints; i++) {
+            Point point = path.get(i);
+            xPoints[i] = (int) (point.x * cellSize * scale + cellSize / 2.0);
+            yPoints[i] = (int) (point.y * cellSize * scale + cellSize / 2.0);
+        }
+
+        // Draw the polyline representing the path.
+        g2d.drawPolyline(xPoints, yPoints, numPoints);
     }
+
 
     /**
      * Generate a 2d-boolean array to represent the maze.
