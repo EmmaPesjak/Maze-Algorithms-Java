@@ -89,20 +89,6 @@ public class MainModel {
         return panel;
     }
 
-    /**
-     * Check if the start and finish coordinates are within maze/not at a wall.
-     * @param startPoint start-point.
-     * @param finish end-point.
-     * @return whether it's valid or not.
-     */
-    public boolean checkIfValid(Point startPoint, Point finish){
-        // Check so that the start/finish points are within boundaries
-        if (!maze[startPoint.x / cellSize][startPoint.y / cellSize]) {
-            return false;
-        }
-
-        return maze[finish.x / cellSize][finish.y / cellSize];
-    }
 
     /*public JPanel displayPath(Point startPoint, Point finish, String algo) {
         // Adjust the start and end coordinates to match the cell size
@@ -449,6 +435,17 @@ public class MainModel {
      */
     private boolean isWithinBoundary(int x, int y) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
+    /**
+     * Check if the start and finish coordinates are within maze/not at a wall.
+     * @param startPoint start-point.
+     * @param finish end-point.
+     * @return whether it's valid or not.
+     */
+    public boolean checkIfValid(Point startPoint, Point finish){
+        // Check so that the start/finish points are within boundaries
+        return maze[startPoint.x / cellSize][startPoint.y / cellSize] || !maze[finish.x / cellSize][finish.y / cellSize];
     }
 
     public int getListSize(){

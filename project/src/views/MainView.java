@@ -111,6 +111,7 @@ public class MainView extends JFrame {
         explanationLabel.setFont(Constants.FONT_SMALL_TEXT);
         explanationLabel.setForeground(Constants.COLOR_TEXT);
         explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        clickCount = 0;
 
         maze.setLayout(null); // Set layout manager to null for absolute positioning when adding dots.
 
@@ -137,8 +138,6 @@ public class MainView extends JFrame {
                     panel.revalidate();
                     addDot(maze, finishCoords, false);
                 }
-
-                System.out.println("e: " + e.getPoint());
             }
 
 
@@ -167,9 +166,6 @@ public class MainView extends JFrame {
         this.repaint();
     }
 
-    private void addListener(){
-
-    }
 
     /**
      * Method for adding a dot where the user presses.
@@ -232,7 +228,7 @@ public class MainView extends JFrame {
     public void clearCoords(){
         startCoords = null;
         finishCoords = null;
-        removeDots();
+        removeDots();   // Varför behövs denna ens liksom?? Den ska ju repaintas inne i model??? Livet suger
         clickCount = 0;
         //showMaze(maze);
     }
@@ -300,11 +296,6 @@ public class MainView extends JFrame {
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
                                 long time1, long time2, long time3) {
 
-        long start, end;
-
-        // TODO: se till så att alla 3 paneler får plats/inget knäppt mellanrum
-
-        start = System.nanoTime();
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -334,7 +325,6 @@ public class MainView extends JFrame {
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);
         label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new GridLayout(2, 1, 10, 10));
@@ -389,9 +379,6 @@ public class MainView extends JFrame {
         this.revalidate();
         this.repaint();
 
-        end = System.nanoTime();
-
-        System.out.println("Time for displaying results: " + (end - start));
     }
 
 

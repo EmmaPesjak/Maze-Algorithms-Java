@@ -34,22 +34,21 @@ xxx Printa ut tiden i gui
 
 Buggar:
 - Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
-  de inte är valid. 
-- När användaren blir omdirigerad pga invalid coordinates så har den exakt samma logic som i "restart", men av någon 
-  anledning så kan den välja koordinater (mouse-click funkar) och den skickas in i controller. men, prickarna visas
-  inte + de är invalid enligt mainmodel. dessutom visas knappen för "solve" fastän den inte ska göra det!!! ELLER:
-  Bara välja om nya koordinater? Men när jag testar det så stannar prickarna kvar. Funkar heller inte om jag tar
-  filen igen och gör om mazen :(
+  de inte är valid (händer typ 1 av 100 ggr men ändå)
 - Maze17 så är pricken för stor (testade ändra om cellsize till 3 men funkade inte, är det kanske för att min skärm är
   för liten?).
 - Kolla så att exekveringen av programmet är rätt - har det något att göra med JPanels?
 - Kirra så att error-messages dyker upp (antagligen något fel med JPanel och exekveringen?).
-
+- När man väljer koordinater utanför så skickar den ingen error och den gör pathen, men printas inte. varför true???
+- När det kommer till fel koordinater: jag har testat samma logik som i restart med då kan den inte välja nya koordinater.
+  Testat även med att showMaze(maze) igen men då blir det typ dubbelt? Så nu resettar jag bara koordinaterna och clickcount,
+  men då blir det ju inte rätt med labels med "choose start blabla"
+ 
 Features & annat:
 - Kirra storleken på bilderna så det funkar för små och stora skärmar.
 - Finslipa time-complexity.
 - Städa upp kod + kommentarer.
-- Extra halvonödiga grejer om vi vill:
-  - Istället för att helt dirigera om vid fel av koordinater, bara välja om?
-  - Load grejen?
+- MVG-grejer ???
+  - start/slut koordinater läses från maze-bilden (men typ omöjligt ju)
+  - visa längden på listan??
   
