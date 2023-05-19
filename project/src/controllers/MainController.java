@@ -55,46 +55,41 @@ public class MainController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // Run the algorithms and calculate the paths
-            mainModel.showPoints(); // Make sure that the start and finish points are showing.
             Point start = mainView.getStartCoords();
             Point end = mainView.getFinishCoords();
+            // Run the algorithms and calculate the paths
+            mainModel.showPoints(); // Make sure that the start and finish points are showing.
+            System.out.println("Start x: " + start.x);
 
             // Verify that the points are within maze or on an open path.
             if (!mainModel.checkIfValid(start, end)){
                 mainView.displayErrorMsg(Constants.ERR_COORD);
 
-                // Initiate view, allowing the user to choose new coordinates and new image.
+                // Allow the user to change coordinates.
                 mainModel.clearPoints();
-                mainView.init();
+                mainView.clearCoords();
                 return;
             }
-
-            // #TODO fixa så att panelen inte är så jäkla ful.
-            mainView.displayLoadingPanel();
 
             long startTime, endTime;
             JPanel path1, path2, path3;
 
-            startTime = System.currentTimeMillis();
+            startTime = System.nanoTime();
             path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
-            endTime = System.currentTimeMillis();
+            endTime = System.nanoTime();
             long algorithm1Time = endTime - startTime;
-            System.out.println("1: " + algorithm1Time);
 
             // Measure the execution time of the second algorithm
-            startTime = System.currentTimeMillis();
+            startTime = System.nanoTime();
             path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
-            endTime = System.currentTimeMillis();
+            endTime = System.nanoTime();
             long algorithm2Time = endTime - startTime;
-            System.out.println("2: " + algorithm2Time);
 
             // Measure the execution time of the third algorithm
-            startTime = System.currentTimeMillis();
+            startTime = System.nanoTime();
             path3 = mainModel.displayPath(start, end, Constants.ASTAR);
-            endTime = System.currentTimeMillis();
+            endTime = System.nanoTime();
             long algorithm3Time = endTime - startTime;
-            System.out.println("3: " + algorithm3Time);
 
             // HÄR VISAR DEN 0
             /*System.out.println("1List-size: " +mainModel.getListSize());
@@ -108,11 +103,8 @@ public class MainController {
             // Display the results
             SwingUtilities.invokeLater(() -> {
 
-
                 // HÄR VISAR DEN 0
                 //System.out.println("2List-size: " +mainModel.getListSize());
-
-                mainView.closeLoadingPanel();
 
                 mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
 
@@ -134,11 +126,14 @@ public class MainController {
                     mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP);
                 } else if (!astarPath){
                     mainView.displayErrorMsg(Constants.ERR_NO_PATH_ASTAR);
-                }
+                }*/
 
-                // HÄR VISAR DEN ANTAL (när man klickat OK på dialogrutan
-                System.out.println("4List-size: " +mainModel.getListSize());*/
+                // Varför 0??? Antagligen JPanel hej.
+                System.out.println("4List-size: " +mainModel.getListSize());
             });
+
+            // Printas bara när man klickar på "restart"
+            System.out.println("5List-size: " +mainModel.getListSize());
         }
     }
 
@@ -153,6 +148,7 @@ public class MainController {
         @Override
         public void actionPerformed(ActionEvent e) {
             mainModel.clearPoints();
+            mainModel.clearMazeData();
             mainView.init();
         }
     }

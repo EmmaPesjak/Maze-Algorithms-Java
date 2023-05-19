@@ -253,7 +253,7 @@ public class MainModel {
                         aStar = new AStar(maze, start, end);
                         shortestPath = aStar.solvePath();
 
-                        //listSize = shortestPath.size();
+                        listSize = shortestPath.size();
                         if (shortestPath.size() != 0){
                             //astarHasPath = true;
                             // Draw the shortest path.
@@ -319,6 +319,7 @@ public class MainModel {
      * @param path
      */
     private void drawPath(Graphics g, List<Point> path) {
+        System.out.println(path.size());
         g.setColor(Constants.COLOR_PATH);
 
         // Create Graphics 2D, so we can set the stroke thickness.
@@ -357,27 +358,24 @@ public class MainModel {
         // Create the 2D boolean array representing the maze
         maze = new boolean[mazeWidth][mazeHeight];
 
-        start = System.currentTimeMillis();  // bara för att kolla läget
+        start = System.nanoTime();  // bara för att kolla läget
 
-        // Define threshold, in this case, 85% of the pixels need to be white to be considered to be white.
+        // Define threshold, in this case, 85% of the pixels need to be white to be considered to be a white cell.
         int threshold = (int) (0.85 * (cellSize * cellSize));
-
-        // Identify the boundaries of the walls.
-        //identifyBoundaries();
 
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
 
                 // Start/end coordinates of the cell.
-                int startX = x * cellSize;
-                int startY = y * cellSize;
-                int endX = startX + cellSize;
-                int endY = startY + cellSize;
+                int startXCell = x * cellSize;
+                int startYCell = y * cellSize;
+                int endXCell = startXCell + cellSize;
+                int endYCell = startYCell + cellSize;
 
                 int whiteCount = 0;
 
-                for (int i = startX; i < endX; i++) {
-                    for (int j = startY; j < endY; j++) {
+                for (int i = startXCell; i < endXCell; i++) {
+                    for (int j = startYCell; j < endYCell; j++) {
                         if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
                             whiteCount++;
                         }
@@ -402,7 +400,7 @@ public class MainModel {
             }
         }
 
-        end = System.currentTimeMillis();
+        end = System.nanoTime();
 
         System.out.println("Total for creating a maze: " + (end - start));
         System.out.println("Amount of cells: " + (maze.length * maze[0].length));
@@ -493,13 +491,20 @@ public class MainModel {
      */
     public void clearPoints() {
         removePoints();
-        astarHasPath = false;
-        heapHasPath = false;
-        dequeHasPath = false;
         startX = -1;
         startY = -1;
         endX = -1;
         endY = -1;
+    }
+
+    public void clearMazeData(){
+        astarHasPath = false;
+        heapHasPath = false;
+        dequeHasPath = false;
+        minX = -1;
+        minY = -1;
+        maxX = -1;
+        maxY = -1;
     }
 
 

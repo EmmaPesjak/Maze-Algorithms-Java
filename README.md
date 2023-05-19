@@ -32,15 +32,24 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
 
 xxx Printa ut tiden i gui
 
-Bug:
-Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
-de inte är valid. När man testar köra om så kan man inte välja prickar. 
+Buggar:
+- Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
+  de inte är valid. 
+- När användaren blir omdirigerad pga invalid coordinates så har den exakt samma logic som i "restart", men av någon 
+  anledning så kan den välja koordinater (mouse-click funkar) och den skickas in i controller. men, prickarna visas
+  inte + de är invalid enligt mainmodel. dessutom visas knappen för "solve" fastän den inte ska göra det!!! ELLER:
+  Bara välja om nya koordinater? Men när jag testar det så stannar prickarna kvar. Funkar heller inte om jag tar
+  filen igen och gör om mazen :(
+- Maze17 så är pricken för stor (testade ändra om cellsize till 3 men funkade inte, är det kanske för att min skärm är
+  för liten?).
+- Kolla så att exekveringen av programmet är rätt - har det något att göra med JPanels?
+- Kirra så att error-messages dyker upp (antagligen något fel med JPanel och exekveringen?).
 
-- Se till så att användaren dirigeras om till start om koordinaterna är fel (just nu dirigeras den om, men de kan inte 
-  välja koordinater på nytt FASTÄN den gör exakt som vid restart, och varför visas solve-button direkt???)
-- Kirra storleken på framen och bilderna så pack() blir fint
-- Kirra load grejen
-- Kirra exekveringen av programmet så att errors på null path visas och sånt mög
-- Kolla time complexity
-- Städa upp kod + kommentarer
-- Kirra MVG grejer om vi pallar: välja om koordinater istället för att dirigeras om till att välja fil
+Features & annat:
+- Kirra storleken på bilderna så det funkar för små och stora skärmar.
+- Finslipa time-complexity.
+- Städa upp kod + kommentarer.
+- Extra halvonödiga grejer om vi vill:
+  - Istället för att helt dirigera om vid fel av koordinater, bara välja om?
+  - Load grejen?
+  

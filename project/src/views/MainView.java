@@ -2,6 +2,8 @@ package views;
 
 import support.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,7 +24,7 @@ public class MainView extends JFrame {
     private final JPanel explanationPanel = new JPanel();
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
-
+    private List<Component> dotComponents;
     private final JPanel loadingPanel = new JPanel();
     private JPanel maze;
 
@@ -36,6 +38,7 @@ public class MainView extends JFrame {
         this.restartListener = restartListener;
         init();
     }
+
 
     /**
      * Initiator for setting up the GUI.
@@ -98,6 +101,7 @@ public class MainView extends JFrame {
      * @param mazeArg is the maze.
      */
     public void showMaze(JPanel mazeArg) {
+        dotComponents = new ArrayList<>();  // to store the dots representing start and finish.
         this.maze = mazeArg;
         panel.removeAll(); // Clear the panel.
 
@@ -133,7 +137,10 @@ public class MainView extends JFrame {
                     panel.revalidate();
                     addDot(maze, finishCoords, false);
                 }
+
+                System.out.println("e: " + e.getPoint());
             }
+
 
             // Not needed by the application but have to be overridden.
             @Override
@@ -158,6 +165,10 @@ public class MainView extends JFrame {
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
+    }
+
+    private void addListener(){
+
     }
 
     /**
@@ -191,6 +202,8 @@ public class MainView extends JFrame {
         int dotY = point.y - dot.getHeight() / 2;
         dot.setLocation(dotX, dotY);
 
+        dotComponents.add(dot); // Add the dot component to the list
+
         maze.add(dot);
         maze.revalidate();
         maze.repaint();
@@ -201,6 +214,7 @@ public class MainView extends JFrame {
      * @return the coordinates.
      */
     public Point getStartCoords() {
+        System.out.println("start: " +startCoords);
         return startCoords;
     }
 
@@ -210,6 +224,35 @@ public class MainView extends JFrame {
      */
     public Point getFinishCoords() {
         return finishCoords;
+    }
+
+    /**
+     * Reset the coordinates
+     */
+    public void clearCoords(){
+        startCoords = null;
+        finishCoords = null;
+        removeDots();
+        clickCount = 0;
+        //showMaze(maze);
+    }
+
+    public void removeDots() {
+        for (Component dot : dotComponents) {
+            maze.remove(dot);
+        }
+        maze.revalidate();
+        maze.repaint();
+    }
+
+    /**
+     * Test pga när den dirigeras om för att välja nya coordinater (samma som restart) så vill den inte. har det något
+     * med att remove'a innan man sätter tillbaka de??
+     */
+    public void removeMouseListeners() {
+        for (MouseListener listener : maze.getMouseListeners()) {
+            maze.removeMouseListener(listener);
+        }
     }
 
     public void displayLoadingPanel() {
@@ -261,7 +304,7 @@ public class MainView extends JFrame {
 
         // TODO: se till så att alla 3 paneler får plats/inget knäppt mellanrum
 
-        start = System.currentTimeMillis();
+        start = System.nanoTime();
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -346,7 +389,7 @@ public class MainView extends JFrame {
         this.revalidate();
         this.repaint();
 
-        end = System.currentTimeMillis();
+        end = System.nanoTime();
 
         System.out.println("Time for displaying results: " + (end - start));
     }
