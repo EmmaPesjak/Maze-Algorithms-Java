@@ -54,3 +54,10 @@ Features & annat:
   
 
 emma fattar inte nya calculateheuristicvalue i AStar?
+
+bugg med OK knapp
+fixa så man kan go back till start från pickingen
+
+infoknapp på startsidan där vi förklarar hur bilden måste vara, smala vägar/storlek/upplösning
+
+arv för att minska redundans i algoritmklasserna och mazepoint?

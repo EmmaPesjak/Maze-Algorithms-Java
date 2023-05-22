@@ -147,24 +147,13 @@ public class AStar {
      * @param end is the end point.
      * @return the heuristic value.
      */
-    /*private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
+    private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
         // Use the absolute value of the difference in distance.
         int differenceX = Math.abs(point.getPoint().x - end.getPoint().x);
         int differenceY = Math.abs(point.getPoint().y - end.getPoint().y);
         // Sum up the x and y differences and return it as the heuristic value.
         return differenceX + differenceY;
-    }*/
-
-    private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
-        int differenceX = Math.abs(point.getPoint().x - end.getPoint().x);
-        int differenceY = Math.abs(point.getPoint().y - end.getPoint().y);
-        int minDifference = Math.min(differenceX, differenceY);
-        int maxDifference = Math.max(differenceX, differenceY);
-        // Calculate the diagonal distance.
-        // Diagonal distance = minimum of (differenceX, differenceY) * sqrt(2) + (maximum of (differenceX, differenceY) - minimum of (differenceX, differenceY))
-        return (int) (minDifference * Math.sqrt(2) + (maxDifference - minDifference));
     }
-
 
     /**
      * Generates the final shortest path by reconstructing it from the start point to the end point.

@@ -25,7 +25,6 @@ public class MainView extends JFrame {
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
     private List<Component> dotComponents;
-    private final JPanel loadingPanel = new JPanel();
     private JPanel maze;
 
     /**
@@ -140,7 +139,6 @@ public class MainView extends JFrame {
                 }
             }
 
-
             // Not needed by the application but have to be overridden.
             @Override
             public void mousePressed(MouseEvent e) {}
@@ -165,7 +163,6 @@ public class MainView extends JFrame {
         this.revalidate();
         this.repaint();
     }
-
 
     /**
      * Method for adding a dot where the user presses.
@@ -210,7 +207,6 @@ public class MainView extends JFrame {
      * @return the coordinates.
      */
     public Point getStartCoords() {
-        System.out.println("start: " +startCoords);
         return startCoords;
     }
 
@@ -239,55 +235,6 @@ public class MainView extends JFrame {
         }
         maze.revalidate();
         maze.repaint();
-    }
-
-    /**
-     * Test pga när den dirigeras om för att välja nya coordinater (samma som restart) så vill den inte. har det något
-     * med att remove'a innan man sätter tillbaka de??
-     */
-    public void removeMouseListeners() {
-        for (MouseListener listener : maze.getMouseListeners()) {
-            maze.removeMouseListener(listener);
-        }
-    }
-
-    public void displayLoadingPanel() {
-
-        // #TODO Vartfan kommer den svarta bakgrunden från?????? VARFÖR BLIR ALLT SÅ FULT ??? och, varför funkar inte
-        //  animeringen på min gif :(((( funkade fan innan.
-
-        // Clear the current content
-        panel.removeAll(); // Clear the panel.
-        explanationPanel.removeAll(); // Clear the panel.
-
-        panel.setBackground(Constants.COLOR_BACKGROUND);
-
-        panel.setLayout(new BorderLayout());
-        panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
-
-        // Create a label to display the loading GIF
-        JLabel loadingLabel = new JLabel(new ImageIcon("project/src/support/spinner.gif"));
-        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        JLabel textLoadingLabel = new JLabel(Constants.LOADING);
-        textLoadingLabel.setFont(Constants.FONT_BIG);
-        textLoadingLabel.setForeground(Constants.COLOR_TEXT);
-
-        // Add the label to the panel
-        panel.add(loadingLabel, BorderLayout.NORTH);
-        panel.add(textLoadingLabel, BorderLayout.SOUTH);
-
-        // Add the loading panel to the view
-        this.pack(); // To get the right size for the frame.
-        this.revalidate();
-        this.repaint();
-    }
-
-    public void closeLoadingPanel() {
-        // Remove the loading panel from the view
-        remove(loadingPanel);
-        revalidate();
-        repaint();
     }
 
     /**
@@ -380,7 +327,6 @@ public class MainView extends JFrame {
         this.repaint();
 
     }
-
 
     /**
      * Method for displaying error messages.
