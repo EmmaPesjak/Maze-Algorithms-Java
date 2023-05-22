@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The program's main controller. Responsible for the communication between views and models,
@@ -18,8 +17,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class MainController {
 
-    private final MainModel mainModel = new MainModel();
+    private final MainModel mainModel = new MainModel(this::rePick);
     private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(), new RestartButtonListener());
+
+    // för ifall algosarna inte hade en path så får man välja om
+    private void rePick() throws IOException {
+        mainView.init();  // fråga mig inte varför men init måste köras annars blir det ingen bild.
+        String file = mainView.getFileName();
+        System.out.println("WOHOOOOO!");
+        JPanel img = mainModel.getMaze(file);
+        mainView.showMaze(img);
+        mainView.displayErrorMsg(Constants.ERR_NO_PATH);
+    }
 
     /**
      *  Inner class responsible for listening to the select maze button.
@@ -91,6 +100,8 @@ public class MainController {
             endTime = System.nanoTime();
             long algorithm3Time = endTime - startTime;
 
+
+
             // HÄR VISAR DEN 0
             /*System.out.println("1List-size: " +mainModel.getListSize());
             boolean heapPath = mainModel.checkIfPath(Constants.DIJK_HEAP);
@@ -107,7 +118,7 @@ public class MainController {
                 //System.out.println("2List-size: " +mainModel.getListSize());
 
                 mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
-
+                System.out.println(mainModel.hasPath());
                 // HUR KAN DE VISA 0 OM PANELEN VISAR PATHSEN???
                 // HÄR VISAR DEN 0
                 /*System.out.println("3List-size: " +mainModel.getListSize());

@@ -387,7 +387,10 @@ public class MainView extends JFrame {
      * @param errorMsg is the error message string.
      */
     public void displayErrorMsg (String errorMsg) {
+
         JOptionPane.showMessageDialog(this, errorMsg);
+        this.revalidate();
+        this.repaint();
     }
 
 }
