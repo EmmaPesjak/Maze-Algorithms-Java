@@ -57,11 +57,6 @@ public class AStar extends BaseAlgorithm {
             // Poll the point at the head of the queue.
             MazePointAStar currentPoint = openSet.poll();
 
-            // If the current point has already been visited, skip it.
-            if (visited[currentPoint.getPoint().x][currentPoint.getPoint().y]) {
-                continue;
-            }
-
             // Mark the current point as visited.
             visited[currentPoint.getPoint().x][currentPoint.getPoint().y] = true;
 

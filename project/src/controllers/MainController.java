@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,7 +21,10 @@ public class MainController {
     private final MainModel mainModel = new MainModel(this::rePick);
     private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(), new RestartButtonListener());
 
-    // för ifall algosarna inte hade en path så får man välja om
+    /**
+     * Responsible for redirecting the user to change coordinates if no valid path was found.
+     * @throws IOException exception.
+     */
     private void rePick() throws IOException {
         mainView.init();
         String file = mainView.getFileName();
@@ -65,7 +69,6 @@ public class MainController {
 
             Point start = mainView.getStartCoords();
             Point end = mainView.getFinishCoords();
-            // Run the algorithms and calculate the paths
             mainModel.showPoints(); // Make sure that the start and finish points are showing.
 
             // Verify that the points are within maze or on an open path.
@@ -79,30 +82,33 @@ public class MainController {
             }
 
             long startTime, endTime;
-            JPanel path1, path2, path3;
+            JPanel heapPath, dequePath, aStarPath;
 
+
+            // Run the algorithms and calculate the paths
             startTime = System.nanoTime();
-            path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
+            heapPath = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
             endTime = System.nanoTime();
-            long algorithm1Time = (endTime - startTime) / 1000; // To micro seconds.
+            long heapTime = (endTime - startTime) / 1000; // To micro seconds.
 
             // Measure the execution time of the second algorithm
             startTime = System.nanoTime();
-            path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
+            dequePath = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
             endTime = System.nanoTime();
-            long algorithm2Time = (endTime - startTime) / 1000; // To micro seconds.
+            long dequeTime = (endTime - startTime) / 1000; // To micro seconds.
 
             // Measure the execution time of the third algorithm
             startTime = System.nanoTime();
-            path3 = mainModel.displayPath(start, end, Constants.ASTAR);
+            aStarPath = mainModel.displayPath(start, end, Constants.ASTAR);
             endTime = System.nanoTime();
-            long algorithm3Time = (endTime - startTime) / 1000; // To micro seconds.
+            long aStarTime = (endTime - startTime) / 1000; // To micro seconds.
 
             // Display the results
             SwingUtilities.invokeLater(() -> {
-                mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
+                mainView.displayResults(heapPath, dequePath, aStarPath, heapTime, dequeTime, aStarTime);
             });
         }
+
     }
 
     /**

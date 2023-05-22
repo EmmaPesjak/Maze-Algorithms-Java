@@ -44,7 +44,7 @@ public class MainView extends JFrame {
     public void init() {
         panel.removeAll(); // Clear the panel.
         this.setResizable(false);
-        this.setSize(1000, 600); // Annan storlek?
+        this.setSize(1000, 600);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel.setBackground(Constants.COLOR_BACKGROUND);
@@ -53,20 +53,26 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 100)));
 
-        JLabel title = new JLabel(Constants.TITLE);
+        /*JLabel title = new JLabel(Constants.TITLE);
         title.setFont(Constants.FONT_BIG);
         title.setForeground(Constants.COLOR_TEXT);
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);*/
+
+        JLabel title = createLabel(Constants.TITLE, Constants.FONT_BIG);
+
         panel.add(title);
 
         panel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        JLabel textLabel = new JLabel(Constants.ENTER_NAME);
+        /*JLabel textLabel = new JLabel(Constants.ENTER_NAME);
         textLabel.setForeground(Constants.COLOR_TEXT);
         textLabel.setFont(Constants.FONT_TEXT);
         textLabel.setHorizontalAlignment(JLabel.CENTER);
-        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);*/
+
+        JLabel textLabel = createLabel(Constants.ENTER_NAME, Constants.FONT_TEXT);
+
         panel.add(textLabel);
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -225,6 +231,14 @@ public class MainView extends JFrame {
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
                                 long time1, long time2, long time3) {
 
+        String s1 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>Computed in: " + time1 + " μs</div></html>";
+        String s2 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>Computed in: " + time2 + " μs</div></html>";
+        String s3 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>Computed in: " + time3 + " μs</div></html>";
+        JLabel heapLbl = createLabel(s1, Constants.FONT_TEXT);
+        JLabel dequeLbl = createLabel(s2, Constants.FONT_TEXT);
+        JLabel aStarLbl = createLabel(s3, Constants.FONT_TEXT);
+
+
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -249,12 +263,6 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>Computed in: " + time1 + " μs</div></html>");
-        label1.setForeground(Constants.COLOR_TEXT);
-        label1.setFont(Constants.FONT_TEXT);
-        label1.setHorizontalAlignment(JLabel.CENTER);
-        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new GridLayout(2, 1, 10, 10));
         JPanel labelsPanel = new JPanel();
@@ -266,24 +274,12 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>Computed in: " + time2 + " μs</div></html>");
-        label2.setForeground(Constants.COLOR_TEXT);
-        label2.setFont(Constants.FONT_TEXT);
-        label2.setHorizontalAlignment(JLabel.CENTER);
-        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JPanel eastPanel = new JPanel();
         eastPanel.setLayout(new BorderLayout());
         eastPanel.setBackground(Constants.COLOR_BACKGROUND);
         eastPanel.add(mazeAStar, BorderLayout.WEST);
         eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
         panel.add(eastPanel, BorderLayout.EAST);
-
-        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>Computed in: " + time3 + " μs</div></html>");
-        label3.setForeground(Constants.COLOR_TEXT);
-        label3.setFont(Constants.FONT_TEXT);
-        label3.setHorizontalAlignment(JLabel.CENTER);
-        label3.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         southPanel.setBackground(Constants.COLOR_BACKGROUND);
 
@@ -294,9 +290,9 @@ public class MainView extends JFrame {
         buttonPanel.add(restartButton);
         restartButton.addActionListener(restartListener);
 
-        labelsPanel.add(label1);
-        labelsPanel.add(label2);
-        labelsPanel.add(label3);
+        labelsPanel.add(heapLbl);
+        labelsPanel.add(dequeLbl);
+        labelsPanel.add(aStarLbl);
         labelsPanel.setBackground(Constants.COLOR_BACKGROUND);
 
         southPanel.add(labelsPanel);
@@ -318,5 +314,20 @@ public class MainView extends JFrame {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(this, errorMsg);
         });
+    }
+
+    /**
+     * Creates a label with specified properties.
+     * @param text The label text.
+     * @param font The font of the label.
+     * @return The created label.
+     */
+    private JLabel createLabel(String text, Font font) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(Constants.COLOR_TEXT);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
     }
 }

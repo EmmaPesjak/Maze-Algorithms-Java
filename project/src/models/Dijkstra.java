@@ -53,11 +53,6 @@ public class Dijkstra extends BaseAlgorithm {
             // Get the current point's coordinates.
             Point currentCoordinates = currentPoint.getPoint();
 
-            // If the current point has already been visited, skip it.
-            if (visited[currentCoordinates.x][currentCoordinates.y]) {
-                continue;
-            }
-
             // Mark the current point as visited.
             visited[currentCoordinates.x][currentCoordinates.y] = true;
 
@@ -115,11 +110,6 @@ public class Dijkstra extends BaseAlgorithm {
         while (!openSet.isEmpty()) {
             // Get the point at the front of the deque.
             MazePointDijkstra currentPoint = openSet.pollFirst();
-
-            // If the current point has already been visited, skip it.
-            if (visited[currentPoint.getPoint().x][currentPoint.getPoint().y]) {
-                continue;
-            }
 
             // Mark the current point as visited.
             visited[currentPoint.getPoint().x][currentPoint.getPoint().y] = true;

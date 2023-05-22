@@ -36,6 +36,7 @@ public abstract class BaseAlgorithm {
             currentPoint = currentPoint.getPrevious();
         }
         // Reverse the path so it begins at the start.
+        // #TODO Ska vi ha denna???
         Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.
         return shortestPointPath;
     }
@@ -52,19 +53,17 @@ public abstract class BaseAlgorithm {
         int x = point.getPoint().x;
         int y = point.getPoint().y;
 
-        // Ensure that we are within the bounds of the 2D array (avoid ArrayIndexOutOfBounds exceptions).
-        // Add neighbours in all directions if so.
-        if (x > 0 && maze[x - 1][y]) {
-            neighbours.add((T) mazePoints[x - 1][y]); // Left neighbour.
-        }
-        if (x < maze.length - 1 && maze[x + 1][y]) {
-            neighbours.add((T) mazePoints[x + 1][y]); // Right neighbour.
-        }
-        if (y > 0 && maze[x][y - 1]) {
-            neighbours.add((T) mazePoints[x][y - 1]); // Above neighbour.
-        }
-        if (y < maze[0].length - 1 && maze[x][y + 1]) {
-            neighbours.add((T) mazePoints[x][y + 1]); // Below neighbour.
+        // Define the offsets for neighboring cells.
+        int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Left, Right, Above, Below
+
+        // Add neighbors in all directions if they are within bounds and valid.
+        for (int[] offset : offsets) {
+            int newX = x + offset[0];
+            int newY = y + offset[1];
+
+            if (newX >= 0 && newX < maze.length && newY >= 0 && newY < maze[0].length && maze[newX][newY]) {
+                neighbours.add((T) mazePoints[newX][newY]);
+            }
         }
 
         return neighbours;
