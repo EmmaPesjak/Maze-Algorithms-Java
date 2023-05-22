@@ -139,7 +139,6 @@ public class MainView extends JFrame {
                 }
             }
 
-
             // Not needed by the application but have to be overridden.
             @Override
             public void mousePressed(MouseEvent e) {}
@@ -208,7 +207,6 @@ public class MainView extends JFrame {
      * @return the coordinates.
      */
     public Point getStartCoords() {
-        System.out.println("start: " +startCoords);
         return startCoords;
     }
 

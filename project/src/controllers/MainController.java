@@ -24,7 +24,6 @@ public class MainController {
     private void rePick() throws IOException {
         mainView.init();  // fråga mig inte varför men init måste köras annars blir det ingen bild.
         String file = mainView.getFileName();
-        System.out.println("WOHOOOOO!");
         JPanel img = mainModel.getMaze(file);
         mainView.showMaze(img);
         mainView.displayErrorMsg(Constants.ERR_NO_PATH);
@@ -68,7 +67,6 @@ public class MainController {
             Point end = mainView.getFinishCoords();
             // Run the algorithms and calculate the paths
             mainModel.showPoints(); // Make sure that the start and finish points are showing.
-            System.out.println("Start x: " + start.x);
 
             // Verify that the points are within maze or on an open path.
             if (!mainModel.checkIfValid(start, end)){
