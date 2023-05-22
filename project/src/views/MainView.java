@@ -2,6 +2,8 @@ package views;
 
 import support.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,8 +24,9 @@ public class MainView extends JFrame {
     private final JPanel explanationPanel = new JPanel();
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
-
+    private List<Component> dotComponents;
     private final JPanel loadingPanel = new JPanel();
+    private JPanel maze;
 
     /**
      * Constructor which initiates the GUI and sets an action listener.
@@ -35,6 +38,7 @@ public class MainView extends JFrame {
         this.restartListener = restartListener;
         init();
     }
+
 
     /**
      * Initiator for setting up the GUI.
@@ -94,9 +98,11 @@ public class MainView extends JFrame {
 
     /**
      * Shows the selected maze and lets the user pick start and finish coordinates.
-     * @param maze is the maze.
+     * @param mazeArg is the maze.
      */
-    public void showMaze(JPanel maze) {
+    public void showMaze(JPanel mazeArg) {
+        dotComponents = new ArrayList<>();  // to store the dots representing start and finish.
+        this.maze = mazeArg;
         panel.removeAll(); // Clear the panel.
 
         coordLabel.setFont(Constants.FONT_SMALL_TEXT);
@@ -105,6 +111,7 @@ public class MainView extends JFrame {
         explanationLabel.setFont(Constants.FONT_SMALL_TEXT);
         explanationLabel.setForeground(Constants.COLOR_TEXT);
         explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        clickCount = 0;
 
         maze.setLayout(null); // Set layout manager to null for absolute positioning when adding dots.
 
@@ -133,6 +140,7 @@ public class MainView extends JFrame {
                 }
             }
 
+
             // Not needed by the application but have to be overridden.
             @Override
             public void mousePressed(MouseEvent e) {}
@@ -157,6 +165,7 @@ public class MainView extends JFrame {
         this.revalidate();
         this.repaint();
     }
+
 
     /**
      * Method for adding a dot where the user presses.
@@ -189,6 +198,8 @@ public class MainView extends JFrame {
         int dotY = point.y - dot.getHeight() / 2;
         dot.setLocation(dotX, dotY);
 
+        dotComponents.add(dot); // Add the dot component to the list
+
         maze.add(dot);
         maze.revalidate();
         maze.repaint();
@@ -199,6 +210,7 @@ public class MainView extends JFrame {
      * @return the coordinates.
      */
     public Point getStartCoords() {
+        System.out.println("start: " +startCoords);
         return startCoords;
     }
 
@@ -208,6 +220,35 @@ public class MainView extends JFrame {
      */
     public Point getFinishCoords() {
         return finishCoords;
+    }
+
+    /**
+     * Reset the coordinates
+     */
+    public void clearCoords(){
+        startCoords = null;
+        finishCoords = null;
+        removeDots();   // Varför behövs denna ens liksom?? Den ska ju repaintas inne i model??? Livet suger
+        clickCount = 0;
+        //showMaze(maze);
+    }
+
+    public void removeDots() {
+        for (Component dot : dotComponents) {
+            maze.remove(dot);
+        }
+        maze.revalidate();
+        maze.repaint();
+    }
+
+    /**
+     * Test pga när den dirigeras om för att välja nya coordinater (samma som restart) så vill den inte. har det något
+     * med att remove'a innan man sätter tillbaka de??
+     */
+    public void removeMouseListeners() {
+        for (MouseListener listener : maze.getMouseListeners()) {
+            maze.removeMouseListener(listener);
+        }
     }
 
     public void displayLoadingPanel() {
@@ -252,13 +293,9 @@ public class MainView extends JFrame {
     /**
      * Displays the result of the solves mazes.
      */
-    public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar) {
+    public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
+                                long time1, long time2, long time3) {
 
-        long start, end;
-
-        // TODO: se till så att alla 3 paneler får plats/inget knäppt mellanrum
-
-        start = System.currentTimeMillis();
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
@@ -283,7 +320,7 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel(Constants.TEXT_D_HEAP);
+        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>" + time1 + " ns</div></html>");
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);
@@ -300,7 +337,7 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel(Constants.TEXT_D_DEQ);
+        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>" + time2 + " ns</div></html>");
         label2.setForeground(Constants.COLOR_TEXT);
         label2.setFont(Constants.FONT_TEXT);
         label2.setHorizontalAlignment(JLabel.CENTER);
@@ -313,7 +350,7 @@ public class MainView extends JFrame {
         eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
         panel.add(eastPanel, BorderLayout.EAST);
 
-        JLabel label3 = new JLabel(Constants.TEXT_ASTAR);
+        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>" + time3 + " ns</div></html>");
         label3.setForeground(Constants.COLOR_TEXT);
         label3.setFont(Constants.FONT_TEXT);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -342,10 +379,8 @@ public class MainView extends JFrame {
         this.revalidate();
         this.repaint();
 
-        end = System.currentTimeMillis();
-
-        System.out.println("Time for displaying results: " + (end - start));
     }
+
 
     /**
      * Method for displaying error messages.
@@ -354,4 +389,5 @@ public class MainView extends JFrame {
     public void displayErrorMsg (String errorMsg) {
         JOptionPane.showMessageDialog(this, errorMsg);
     }
+
 }

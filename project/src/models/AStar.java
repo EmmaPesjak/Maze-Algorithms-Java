@@ -54,11 +54,14 @@ public class AStar {
         // Get the start and end.
         MazePointAStar startMazePoint = mazePoints[start.x][start.y];
         MazePointAStar endMazePoint = mazePoints[end.x][end.y];
+
         // Create a priority queue for prioritizing the points by distance and heuristic. These points have
         // not yet been visited but are considered in the order of the priority.
         PriorityQueue<MazePointAStar> openSet = new PriorityQueue<>();
-        // Create an array for the already visited points.
-        List<MazePointAStar> closedSet = new ArrayList<>();
+
+        // Create a boolean 2d-array for the already visited points.
+        boolean[][] visited = new boolean[maze.length][maze[0].length];
+
         // Initial distance is 0.
         startMazePoint.setDistance(0);
         // Set the heuristic value.
@@ -70,8 +73,15 @@ public class AStar {
         while (!openSet.isEmpty()) {
             // Poll the point at the head of the queue.
             MazePointAStar currentPoint = openSet.poll();
-            // This has now been visited, add to the closed set.
-            closedSet.add(currentPoint);
+
+            // If the current point has already been visited, skip it.
+            if (visited[currentPoint.getPoint().x][currentPoint.getPoint().y]) {
+                continue;
+            }
+
+            // Mark the current point as visited.
+            visited[currentPoint.getPoint().x][currentPoint.getPoint().y] = true;
+
             // Check if we have reached our goal, if so return the shortest path.
             if (currentPoint == endMazePoint) {
                 return generateFinalPath(currentPoint);
@@ -80,20 +90,21 @@ public class AStar {
             // Otherwise continue traversing the maze, adding available neighbours to the
             // open set (prio queue).
             List<MazePointAStar> neighbours = getNeighbours(currentPoint);
-            for (MazePointAStar neighbour : neighbours) {
+            for (MazePointAStar neighbor : neighbours) {
                 // Check if they are in the closed set (already visited), do not add.
-                if (closedSet.contains(neighbour)) {
+                if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
                     continue;
                 }
+
                 // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
                 int newDistance = currentPoint.getDistance() + 1;
                 // If the neighbour's current distance is higher, we update its previous point to the current point
                 // and calculate and set the new distance and heuristics. Then we add it to the open set.
-                if (newDistance < neighbour.getDistance()) {
-                    neighbour.setPrevious(currentPoint);
-                    neighbour.setDistance(newDistance);
-                    neighbour.setHeuristicValue(calculateTheHeuristicValue(neighbour, endMazePoint));
-                    openSet.add(neighbour);
+                if (newDistance < neighbor.getDistance()) {
+                    neighbor.setPrevious(currentPoint);
+                    neighbor.setDistance(newDistance);
+                    neighbor.setHeuristicValue(calculateTheHeuristicValue(neighbor, endMazePoint));
+                    openSet.add(neighbor);
                 }
             }
         }
@@ -131,18 +142,29 @@ public class AStar {
     /**
      * Method for calculating the heuristic value between a point and the end point. The heuristic
      * value is an estimation of the remaining distance from the current point to the goal point,
-     * not taking the wall obstacles of the maze into consideration.
+     * not taking the wall obstacles of the maze into consideration and allowing diagonal movement.
      * @param point is the current point.
      * @param end is the end point.
      * @return the heuristic value.
      */
-    private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
+    /*private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
         // Use the absolute value of the difference in distance.
         int differenceX = Math.abs(point.getPoint().x - end.getPoint().x);
         int differenceY = Math.abs(point.getPoint().y - end.getPoint().y);
         // Sum up the x and y differences and return it as the heuristic value.
         return differenceX + differenceY;
+    }*/
+
+    private int calculateTheHeuristicValue(MazePointAStar point, MazePointAStar end) {
+        int differenceX = Math.abs(point.getPoint().x - end.getPoint().x);
+        int differenceY = Math.abs(point.getPoint().y - end.getPoint().y);
+        int minDifference = Math.min(differenceX, differenceY);
+        int maxDifference = Math.max(differenceX, differenceY);
+        // Calculate the diagonal distance.
+        // Diagonal distance = minimum of (differenceX, differenceY) * sqrt(2) + (maximum of (differenceX, differenceY) - minimum of (differenceX, differenceY))
+        return (int) (minDifference * Math.sqrt(2) + (maxDifference - minDifference));
     }
+
 
     /**
      * Generates the final shortest path by reconstructing it from the start point to the end point.

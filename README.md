@@ -28,7 +28,27 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
   bättre om man har olika graph strukturer och mer flexibel, men i vårt fall är det mög. dessutom så fick vi ner tiden
   när vi bara genererar maze 1 gång. 
 
-Kirra storleken på framen och bilderna så pack() blir fint. Hur ska vi göra?? krymper man bilderna så försvinner väggarna!
-Error msg om det inte fanns någon path.
-Se till så att display results alltid visas dirr efter. Nu tar det typ 42 år.
-VARFÖR PRINTAS SYSTEM.OUT GREJERNA FLERA GÅNGER I SWITCH??? DEN EXITAR JU INTE
+
+
+xxx Printa ut tiden i gui
+
+Buggar:
+- Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
+  de inte är valid (händer typ 1 av 100 ggr men ändå)
+- Maze17 så är pricken för stor (testade ändra om cellsize till 3 men funkade inte, är det kanske för att min skärm är
+  för liten?).
+- Kolla så att exekveringen av programmet är rätt - har det något att göra med JPanels?
+- Kirra så att error-messages dyker upp (antagligen något fel med JPanel och exekveringen?).
+- När man väljer koordinater utanför så skickar den ingen error och den gör pathen, men printas inte. varför true???
+- När det kommer till fel koordinater: jag har testat samma logik som i restart med då kan den inte välja nya koordinater.
+  Testat även med att showMaze(maze) igen men då blir det typ dubbelt? Så nu resettar jag bara koordinaterna och clickcount,
+  men då blir det ju inte rätt med labels med "choose start blabla"
+ 
+Features & annat:
+- Kirra storleken på bilderna så det funkar för små och stora skärmar.
+- Finslipa time-complexity.
+- Städa upp kod + kommentarer.
+- MVG-grejer ???
+  - start/slut koordinater läses från maze-bilden (men typ omöjligt ju)
+  - visa längden på listan??
+  

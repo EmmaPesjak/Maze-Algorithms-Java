@@ -27,12 +27,20 @@ public class MainModel {
     private JPanel panel;
 
     private boolean[][] maze;
-    private Point start;
-    private Point end;
     private int scale;
     private final int cellSize = 5;
 
-    int minX, minY, maxX, maxY;
+    private int minX, minY, maxX, maxY;
+    private boolean heapHasPath = false;
+    private boolean dequeHasPath = false;
+    private boolean astarHasPath = false;
+
+    List<Point> shortestPath;
+    Dijkstra dijkstra;
+    AStar aStar;
+
+    // Temporärt sket
+    int listSize;
 
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
@@ -81,23 +89,8 @@ public class MainModel {
         return panel;
     }
 
-    /**
-     * Check if the start and finish coordinates are within maze/not at a wall.
-     * @param startPoint start-point.
-     * @param finish end-point.
-     * @return whether it's valid or not.
-     */
-    public boolean checkIfValid(Point startPoint, Point finish){
-        // Check so that the start/finish points are within boundaries
-        if (!maze[startPoint.x / cellSize][startPoint.y / cellSize]) {
-            return false;
-        }
 
-        return maze[finish.x / cellSize][finish.y / cellSize];
-    }
-
-    public JPanel displayPath(Point startPoint, Point finish, String algo){
-
+    /*public JPanel displayPath(Point startPoint, Point finish, String algo) {
         // Adjust the start and end coordinates to match the cell size
         startX = startPoint.x / cellSize;
         startY = startPoint.y / cellSize;
@@ -107,10 +100,89 @@ public class MainModel {
         start = new Point(startX, startY);
         end = new Point(endX, endY);
 
+        boolean hasPath = false;
+        List<Point> shortestPath = null;
+        Dijkstra dijkstra;
+
+        // Draw the calculated paths.
+        switch (algo) {
+            case Constants.DIJK_HEAP -> {
+                System.out.println("DIJK HEAP: Varför printas denna efter algoritmerna???");
+                dijkstra = new Dijkstra(maze, start, end);
+                shortestPath = dijkstra.solveHeapPath();
+            }
+            case Constants.DIJK_DEQ -> {
+                System.out.println("DIJK DEQ: Varför printas denna efter algoritmerna???");
+                dijkstra = new Dijkstra(maze, start, end);
+                shortestPath = dijkstra.solveDequeuePath();
+            }
+            case Constants.ASTAR -> {
+                System.out.println("A*: Varför printas denna efter algoritmerna???");
+                AStar aStar = new AStar(maze, start, end);
+                shortestPath = aStar.solvePath();
+            }
+        }
+
+        if (shortestPath != null && shortestPath.size() > 0) {
+            hasPath = true;
+        }
+
+        if (hasPath) {
+            // Create and return the panel.
+            JPanel panel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    // Scale and draw the binary image on the panel.
+                    g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
+
+                    // Draw the start and end points.
+                    if (showPoints && startX != -1) {
+                        // Adjust the coordinates to the cell-size of maze.
+                        int scaledStartX = startX * cellSize * scale + cellSize / 2;
+                        int scaledStartY = startY * cellSize * scale + cellSize / 2;
+                        int scaledEndX = endX * cellSize * scale + cellSize / 2;
+                        int scaledEndY = endY * cellSize * scale + cellSize / 2;
+
+                        g.setColor(Constants.COLOR_START);
+                        g.fillOval(scaledStartX - 5, scaledStartY - 5, 10, 10); // -5 to center.
+                        g.setColor(Constants.COLOR_END);
+                        g.fillOval(scaledEndX - 5, scaledEndY - 5, 10, 10); // -5 to center.
+                    }
+                }
+            };
+
+            // Set the preferred size of the panel.
+            panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+            // Wrap the path drawing code in SwingUtilities.invokeLater.
+            SwingUtilities.invokeLater(panel::repaint);
+
+            return panel;
+        } else {
+            // No shortest path available
+            return null;
+        }
+    }*/
+
+
+
+    public JPanel displayPath(Point startPoint, Point finish, String algo){
+
+        // Adjust the start and end coordinates to match the cell size
+        startX = startPoint.x / cellSize;
+        startY = startPoint.y / cellSize;
+        endX = finish.x / cellSize;
+        endY = finish.y / cellSize;
+
+        Point start = new Point(startX, startY);
+        Point end = new Point(endX, endY);
+
         // Create a custom JPanel to display the binary image.
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
+
                 super.paintComponent(g);
 
                 // Scale and draw the binary image on the panel.
@@ -132,40 +204,48 @@ public class MainModel {
 
                 }
 
-                Dijkstra dijkstra = new Dijkstra(maze, start, end);
 
                 // Draw the calculated paths.
                 switch (algo) {
                     case (Constants.DIJK_HEAP) -> {
-                        System.out.println("DIJK HEAP: Varför printas denna efter algoritmerna???");
-
-                        List<Point> shortestPath = dijkstra.solveHeapPath();
+                        dijkstra = new Dijkstra(maze, start, end);
+                        //System.out.println("DIJK HEAP: Varför printas denna efter algoritmerna???");
+                        shortestPath = dijkstra.solveHeapPath();
+                        //listSize = shortestPath.size();
 
                         if (shortestPath.size() != 0){
+                            //heapHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
                     }
                     case (Constants.DIJK_DEQ) -> {
-                        System.out.println("DIJK DEQ: Varför printas denna efter algoritmerna???");
+                        dijkstra = new Dijkstra(maze, start, end);
+                        //System.out.println("DIJK DEQ: Varför printas denna efter algoritmerna???");
 
-                        List<Point> shortestPath = dijkstra.solveDequeuePath();
+                        shortestPath = dijkstra.solveDequeuePath();
 
+                        //listSize = shortestPath.size();
                         if (shortestPath.size() != 0){
+                            //dequeHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
+
                     }
                     case (Constants.ASTAR) -> {
-                        System.out.println("A*: Varför printas denna efter algoritmerna???");
+                        //System.out.println("A*: Varför printas denna efter algoritmerna???");
                         // Solve the maze with the A* algorithm and get a list of points with the path.
-                        AStar aStar = new AStar(maze, start, end);
-                        List<Point> shortestPath = aStar.solvePath();
+                        aStar = new AStar(maze, start, end);
+                        shortestPath = aStar.solvePath();
 
+                        listSize = shortestPath.size();
                         if (shortestPath.size() != 0){
+                            //astarHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
+
                     }
                 }
             }
@@ -173,12 +253,15 @@ public class MainModel {
 
         // Set the preferred size of the panel
         panel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        //System.out.println("panel.setPreferredSize(new Dimension(panelWidth, panelHeight))");
 
         // Wrap the path drawing code in SwingUtilities.invokeLater
         SwingUtilities.invokeLater(() -> {
+            //System.out.println("panel.repaint();");
             panel.repaint();
         });
 
+        //System.out.println("Before returning: " +heapHasPath);
         return panel;
     }
 
@@ -187,7 +270,8 @@ public class MainModel {
      * @param g is the graphics.
      * @param path is the path list of points.
      */
-    private void drawPath(Graphics g, List<Point> path) {
+    /*private void drawPath(Graphics g, List<Point> path) {
+        //System.out.println("draw path is being called");
         g.setColor(Constants.COLOR_PATH);
 
         // Create Graphics 2D, so we can set the stroke thickness.
@@ -208,7 +292,43 @@ public class MainModel {
 
             g2d.drawLine((int) startX, (int) startY, (int) endX, (int) endY);
         }
+    }*/
+
+    /**
+     * Bättre time complexity ???
+     * In this modified drawPath method, we create two arrays, xPoints and yPoints, to store the
+     * x and y coordinates of the points in the path. Instead of drawing individual lines between points,
+     * we pass these arrays to the drawPolyline method of the Graphics2D object. This method draws a polyline
+     * connecting all the points in a single method call, resulting in better performance and reduced time
+     * complexity compared to drawing individual lines.
+     * @param g
+     * @param path
+     */
+    private void drawPath(Graphics g, List<Point> path) {
+        System.out.println(path.size());
+        g.setColor(Constants.COLOR_PATH);
+
+        // Create Graphics 2D, so we can set the stroke thickness.
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Set the thickness for the path lines.
+        g2d.setStroke(new BasicStroke(3));
+
+        int numPoints = path.size();
+        int[] xPoints = new int[numPoints];
+        int[] yPoints = new int[numPoints];
+
+        // Populate the x and y coordinate arrays for drawing the polyline.
+        for (int i = 0; i < numPoints; i++) {
+            Point point = path.get(i);
+            xPoints[i] = (int) (point.x * cellSize * scale + cellSize / 2.0);
+            yPoints[i] = (int) (point.y * cellSize * scale + cellSize / 2.0);
+        }
+
+        // Draw the polyline representing the path.
+        g2d.drawPolyline(xPoints, yPoints, numPoints);
     }
+
 
     /**
      * Generate a 2d-boolean array to represent the maze.
@@ -224,27 +344,24 @@ public class MainModel {
         // Create the 2D boolean array representing the maze
         maze = new boolean[mazeWidth][mazeHeight];
 
-        start = System.currentTimeMillis();  // bara för att kolla läget
+        start = System.nanoTime();  // bara för att kolla läget
 
-        // Define threshold, in this case, 85% of the pixels need to be white to be considered to be white.
+        // Define threshold, in this case, 85% of the pixels need to be white to be considered to be a white cell.
         int threshold = (int) (0.85 * (cellSize * cellSize));
-
-        // Identify the boundaries of the walls.
-        //identifyBoundaries();
 
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
 
                 // Start/end coordinates of the cell.
-                int startX = x * cellSize;
-                int startY = y * cellSize;
-                int endX = startX + cellSize;
-                int endY = startY + cellSize;
+                int startXCell = x * cellSize;
+                int startYCell = y * cellSize;
+                int endXCell = startXCell + cellSize;
+                int endYCell = startYCell + cellSize;
 
                 int whiteCount = 0;
 
-                for (int i = startX; i < endX; i++) {
-                    for (int j = startY; j < endY; j++) {
+                for (int i = startXCell; i < endXCell; i++) {
+                    for (int j = startYCell; j < endYCell; j++) {
                         if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
                             whiteCount++;
                         }
@@ -269,9 +386,7 @@ public class MainModel {
             }
         }
 
-        end = System.currentTimeMillis();
-
-        System.out.println("Total for creating a maze: " + (end - start));
+        end = System.nanoTime();
 
         System.out.println("Total for creating a maze: " + (end - start));
         System.out.println("Amount of cells: " + (maze.length * maze[0].length));
@@ -322,6 +437,36 @@ public class MainModel {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
+    /**
+     * Check if the start and finish coordinates are within maze/not at a wall.
+     * @param startPoint start-point.
+     * @param finish end-point.
+     * @return whether it's valid or not.
+     */
+    public boolean checkIfValid(Point startPoint, Point finish){
+        // Check so that the start/finish points are within boundaries
+        return maze[startPoint.x / cellSize][startPoint.y / cellSize] || !maze[finish.x / cellSize][finish.y / cellSize];
+    }
+
+    public int getListSize(){
+        return listSize;
+    }
+
+    public boolean checkIfPath(String algo){
+        System.out.println("checking in checkIfPath");
+        switch (algo){
+            case Constants.DIJK_HEAP -> {
+                return heapHasPath;
+            }
+            case Constants.DIJK_DEQ -> {
+                return dequeHasPath;
+            }
+            case Constants.ASTAR -> {
+                return astarHasPath;
+            }
+        }
+        return false;
+    }
 
     /**
      * Method for removing the start and finish points.
@@ -347,6 +492,16 @@ public class MainModel {
         startY = -1;
         endX = -1;
         endY = -1;
+    }
+
+    public void clearMazeData(){
+        astarHasPath = false;
+        heapHasPath = false;
+        dequeHasPath = false;
+        minX = -1;
+        minY = -1;
+        maxX = -1;
+        maxY = -1;
     }
 
 

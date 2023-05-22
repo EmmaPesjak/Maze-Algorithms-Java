@@ -37,14 +37,18 @@ public class Dijkstra {
     public List<Point> solveHeapPath() {
         // Convert the 2D array to a 2D array of MazePointDijkstras.
         convertToMazePoints();
+
         // Get the start and end.
         MazePointDijkstra startMazePoint = mazePoints[start.x][start.y];
         MazePointDijkstra endMazePoint = mazePoints[end.x][end.y];
+
         // Create a priority queue for prioritizing the points by distance. These points have
         // not yet been visited but are considered in the order of the priority.
         PriorityQueue<MazePointDijkstra> openSet = new PriorityQueue<>();
-        // Create an array for the already visited points.
-        List<MazePointDijkstra> closedSet = new ArrayList<>();
+
+        // Create a boolean array for storing the visited points.
+        // Ändrade till boolean[][] för att få O(1) i time complexity.
+        boolean[][] visited = new boolean[maze.length][maze[0].length];
         // Initial distance is 0.
         startMazePoint.setDistance(0);
         // Add to the priority queue.
@@ -54,8 +58,18 @@ public class Dijkstra {
         while (!openSet.isEmpty()) {
             // Poll the point at the head of the queue.
             MazePointDijkstra currentPoint = openSet.poll();
-            // This has now been visited, add to the closed set.
-            closedSet.add(currentPoint);
+
+            // Get the current point's coordinates.
+            Point currentCoordinates = currentPoint.getPoint();
+
+            // If the current point has already been visited, skip it.
+            if (visited[currentCoordinates.x][currentCoordinates.y]) {
+                continue;
+            }
+
+            // Mark the current point as visited.
+            visited[currentCoordinates.x][currentCoordinates.y] = true;
+
             // Check if we have reached our goal, if so return the shortest path.
             if (currentPoint == endMazePoint) {
                 return generateFinalPath(currentPoint);
@@ -66,7 +80,7 @@ public class Dijkstra {
             List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
             for (MazePointDijkstra neighbor : neighbors) {
                 // Check if they are in the closed set (already visited), do not add.
-                if (closedSet.contains(neighbor)) {
+                if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
                     continue;
                 }
                 // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
@@ -97,8 +111,9 @@ public class Dijkstra {
 
         // Initialize a deque to store points to be visited.
         Deque<MazePointDijkstra> openSet = new ArrayDeque<>();
-        // Create a set for storing the closed set (already visited points).
-        Set<MazePointDijkstra> closedSet = new HashSet<>();
+
+        // Create a boolean array for storing the visited points.
+        boolean[][] visited = new boolean[maze.length][maze[0].length];
 
         // Initialize distance of start point to 0.
         startMazePoint.setDistance(0);
@@ -111,12 +126,13 @@ public class Dijkstra {
             MazePointDijkstra currentPoint = openSet.pollFirst();
 
             // If the current point has already been visited, skip it.
-            if (closedSet.contains(currentPoint)) {
+            if (visited[currentPoint.getPoint().x][currentPoint.getPoint().y]) {
                 continue;
             }
 
             // Mark the current point as visited.
-            closedSet.add(currentPoint);
+            visited[currentPoint.getPoint().x][currentPoint.getPoint().y] = true;
+
 
             // Check if we have reached the end, if so, return the shortest path.
             if (currentPoint == endMazePoint) {
@@ -128,6 +144,10 @@ public class Dijkstra {
 
             // Process the neighbors.
             for (MazePointDijkstra neighbor : neighbors) {
+                // Check if they are in the closed set (already visited), do not add.
+                if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
+                    continue;
+                }
                 // Calculate the new distance from the start point to the neighbor.
                 int tentativeDistance = currentPoint.getDistance() + 1;
 
