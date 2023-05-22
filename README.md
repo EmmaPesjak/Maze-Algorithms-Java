@@ -52,3 +52,5 @@ Features & annat:
   - start/slut koordinater läses från maze-bilden (men typ omöjligt ju)
   - visa längden på listan??
   
+
+emma fattar inte nya calculateheuristicvalue i AStar?

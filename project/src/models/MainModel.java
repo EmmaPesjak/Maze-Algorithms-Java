@@ -3,6 +3,7 @@ package models;
 // Detta blir ju typ vår MazeGenerator/solver
 
 import support.Constants;
+import support.RePickWhenNoPath;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,10 @@ import java.util.List;
  * Main model class, responsible for handling the application's data and performing calculations.
  */
 public class MainModel {
+
+    public MainModel(RePickWhenNoPath rePick) {
+        this.rePick = rePick;
+    }
 
     private int panelWidth;
     private int panelHeight;
@@ -41,6 +46,10 @@ public class MainModel {
 
     // Temporärt sket
     int listSize;
+
+
+    private final RePickWhenNoPath rePick;
+
 
     public JPanel getMaze(String fileName) throws IOException {
         // Get the image.
@@ -71,7 +80,6 @@ public class MainModel {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
                 // Scale and draw the binary image on the panel.
                 g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
             }
@@ -212,6 +220,14 @@ public class MainModel {
                         //System.out.println("DIJK HEAP: Varför printas denna efter algoritmerna???");
                         shortestPath = dijkstra.solveHeapPath();
                         //listSize = shortestPath.size();
+
+                        if (shortestPath.size() == 0) {
+                            try {
+                                rePick.rePick();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
 
                         if (shortestPath.size() != 0){
                             //heapHasPath = true;
@@ -425,6 +441,36 @@ public class MainModel {
                 }
             }
         }
+
+        // Now we need to avoid that the algorithms try to cheat and go around the maze instead of
+        // through. This is to enable different kinds of mazes in the program where maybe the borders
+        // are hard to tell.
+
+        // Find the corners of the maze.
+        int cornerX1 = minX;
+        int cornerY1 = minY;
+        int cornerX2 = minX;
+        int cornerY2 = maxY;
+        int cornerX3 = maxX;
+        int cornerY3 = minY;
+        int cornerX4 = maxX;
+        int cornerY4 = maxY;
+
+        // Create an invisible border by setting the cells from each corner to the nearest
+        // edge as false.
+        for (int x = cornerX1; x >= 0; x--) {
+            maze[x][cornerY1] = false;
+        }
+        for (int y = cornerY2; y < mazeHeight; y++) {
+            maze[cornerX2][y] = false;
+        }
+        for (int x = cornerX3; x < mazeWidth; x++) {
+            maze[x][cornerY3] = false;
+        }
+        for (int y = cornerY4; y >= 0; y--) {
+            maze[cornerX4][y] = false;
+        }
+
     }
 
     /**
@@ -503,28 +549,4 @@ public class MainModel {
         maxX = -1;
         maxY = -1;
     }
-
-
-
-    //
-    //TODO kommenterar bort binaryImage, ska vi radera den helt?
-//        // Iterate over the pixels of the image.
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                // Get the RGB value of the pixel.
-//                int rgb = image.getRGB(x, y);
-//
-//                // Extract the red, green, and blue components.
-//                int red = (rgb >> 16) & 0xFF;
-//                int green = (rgb >> 8) & 0xFF;
-//                int blue = rgb & 0xFF;
-//
-//                // Compute the grayscale value of the pixel.
-//                int grayscale = (red + green + blue) / 3;
-//
-//                // Set the grayscale value as the RGB value for the binary image.
-//                int binaryRGB = (grayscale << 16) | (grayscale << 8) | grayscale;
-//                binaryImage.setRGB(x, y, binaryRGB);
-//            }
-//        }
 }
