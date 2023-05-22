@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Abstract class for A* and Dijkstra's algorithms, containing common methods and attributes.
+ */
 public abstract class BaseAlgorithm {
     protected final boolean[][] maze;
     protected final Point start;
@@ -18,6 +21,11 @@ public abstract class BaseAlgorithm {
         this.mazePoints = new BaseMazePoint[maze.length][maze[0].length];
     }
 
+    /**
+     * Generates the final shortest path by reconstructing it from the start point to the end point.
+     * @param endPoint is the end point.
+     * @return the path as an array of points.
+     */
     protected List<Point> generateFinalPath(BaseMazePoint endPoint) {
         List<Point> shortestPointPath = new ArrayList<>(); // Create an array for the points.
         // Set the current point as the end point to begin.
@@ -32,6 +40,11 @@ public abstract class BaseAlgorithm {
         return shortestPointPath;
     }
 
+    /**
+     * Creates an array of neighbouring MazePoints.
+     * @param point is the current point.
+     * @return an array of neighbouring MazePoints.
+     */
     protected <T extends BaseMazePoint> List<T> getNeighbours(T point) {
         List<T> neighbours = new ArrayList<>();
 
@@ -56,5 +69,11 @@ public abstract class BaseAlgorithm {
 
         return neighbours;
     }
+
+    /**
+     * Iterates over the maze 2D array, creating MazePoints for each point in the maze,
+     * which are stored in the mazePoints 2D array.
+     */
+    protected abstract void convertToMazePoints();
 
 }

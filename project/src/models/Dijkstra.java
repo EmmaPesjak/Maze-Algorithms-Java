@@ -10,11 +10,6 @@ import java.util.List;
  */
 public class Dijkstra extends BaseAlgorithm {
 
-    //private final boolean[][] maze;
-    //private final MazePointDijkstra[][] mazePoints;
-    //private final Point start;
-    //private final Point end;
-
     /**
      * Constructor, sets the maze 2D array, start and end points and initiates a 2D array with
      * MazePointDijkstras with the same size as the original array.
@@ -24,11 +19,6 @@ public class Dijkstra extends BaseAlgorithm {
      */
     public Dijkstra(boolean[][] maze, Point start, Point end) {
         super(maze, start, end);
-        //this.mazePoints = new MazePointDijkstra[maze.length][maze[0].length];
-        /*this.maze = maze;
-        this.mazePoints = new MazePointDijkstra[maze.length][maze[0].length];
-        this.start = start;
-        this.end = end;*/
     }
 
     /**
@@ -49,7 +39,6 @@ public class Dijkstra extends BaseAlgorithm {
         PriorityQueue<MazePointDijkstra> openSet = new PriorityQueue<>();
 
         // Create a boolean array for storing the visited points.
-        // Ändrade till boolean[][] för att få O(1) i time complexity.
         boolean[][] visited = new boolean[maze.length][maze[0].length];
         // Initial distance is 0.
         startMazePoint.setDistance(0);
@@ -166,61 +155,14 @@ public class Dijkstra extends BaseAlgorithm {
     }
 
     /**
-     * Iterates over the maze 2D array, creating MazePointDijkstras for each point in the maze,
-     * which are stored in the mazePoints 2D array. The MazePointDijkstras are then used
-     * during the algorithm path finding to store and update distance and previous point.
+     * {@inheritDoc}
      */
-    private void  convertToMazePoints() {
+    @Override
+    protected void  convertToMazePoints() {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
                 mazePoints[i][j] = new MazePointDijkstra(new Point(i, j));
             }
         }
     }
-
-    /**
-     * Creates an array of neighbouring MazePointDijkstras.
-     * @param point is the current point.
-     * @return an array of neighbouring MazePointDijkstras.
-     */
-    /*private List<MazePointDijkstra> getNeighbors(MazePointDijkstra point) {
-        List<MazePointDijkstra> neighbors = new ArrayList<>();// Create an array for the neighbours.
-        // Get the x and y coordinates.
-        int x = point.getPoint().x;
-        int y = point.getPoint().y;
-        // Ensure that we are within the bounds of the 2D array (avoid ArrayIndexOutOfBounds exceptions).
-        // Add neighbours in all directions if so.
-        if (x > 0 && maze[x - 1][y]) {
-            neighbors.add(mazePoints[x - 1][y]); // Left neighbour.
-        }
-        if (x < maze.length - 1 && maze[x + 1][y]) {
-            neighbors.add(mazePoints[x + 1][y]); // Right neighbour.
-        }
-        if (y > 0 && maze[x][y - 1]) {
-            neighbors.add(mazePoints[x][y - 1]); // Above neighbour.
-        }
-        if (y < maze[0].length - 1 && maze[x][y + 1]) {
-            neighbors.add(mazePoints[x][y + 1]); // Below neighbour.
-        }
-        return neighbors;
-    }*/
-
-    /**
-     * Generates the final shortest path by reconstructing it from the start point to the end point.
-     * @param endPoint is the end point.
-     * @return the path as an array of points.
-     */
-    /*private List<Point> generateFinalPath(MazePointDijkstra endPoint) {
-        List<Point> shortestPointPath = new ArrayList<>(); // Create an array for the points.
-        // Set the current point as the end point to begin.
-        MazePointDijkstra currentPoint = endPoint;
-        // Loop over, adding the point to the array, continuing to the previous point.
-        while (currentPoint != null) {
-            shortestPointPath.add(currentPoint.getPoint());
-            currentPoint = (MazePointDijkstra) currentPoint.getPrevious();
-        }
-        // Reverse the path so it begins at the start.
-        Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.
-        return shortestPointPath;
-    }*/
 }
