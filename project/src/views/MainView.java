@@ -53,23 +53,11 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 100)));
 
-        /*JLabel title = new JLabel(Constants.TITLE);
-        title.setFont(Constants.FONT_BIG);
-        title.setForeground(Constants.COLOR_TEXT);
-        title.setHorizontalAlignment(JLabel.CENTER);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);*/
-
         JLabel title = createLabel(Constants.TITLE, Constants.FONT_BIG);
 
         panel.add(title);
 
         panel.add(Box.createRigidArea(new Dimension(0, 50)));
-
-        /*JLabel textLabel = new JLabel(Constants.ENTER_NAME);
-        textLabel.setForeground(Constants.COLOR_TEXT);
-        textLabel.setFont(Constants.FONT_TEXT);
-        textLabel.setHorizontalAlignment(JLabel.CENTER);
-        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);*/
 
         JLabel textLabel = createLabel(Constants.ENTER_NAME, Constants.FONT_TEXT);
 
@@ -231,13 +219,21 @@ public class MainView extends JFrame {
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
                                 long time1, long time2, long time3) {
 
-        String s1 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>Computed in: " + time1 + " μs</div></html>";
-        String s2 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>Computed in: " + time2 + " μs</div></html>";
-        String s3 = "<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>Computed in: " + time3 + " μs</div></html>";
+        String s1 = Constants.HTML_RESULT_START + Constants.TEXT_D_HEAP + Constants.HTML_RESULT_MID + time1 + Constants.HTML_RESULT_END;
+        String s2 = Constants.HTML_RESULT_START + Constants.TEXT_D_DEQ + Constants.HTML_RESULT_MID + time2 + Constants.HTML_RESULT_END;
+        String s3 = Constants.HTML_RESULT_START + Constants.TEXT_ASTAR + Constants.HTML_RESULT_MID + time3 + Constants.HTML_RESULT_END;
         JLabel heapLbl = createLabel(s1, Constants.FONT_TEXT);
         JLabel dequeLbl = createLabel(s2, Constants.FONT_TEXT);
         JLabel aStarLbl = createLabel(s3, Constants.FONT_TEXT);
 
+        JPanel centerPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeDijkstraTwo);
+
+        JPanel westPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeDijkstraOne);
+
+        JPanel eastPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeAStar);
 
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
@@ -252,34 +248,34 @@ public class MainView extends JFrame {
 
         panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.setBackground(Constants.COLOR_BACKGROUND);
+        //JPanel centerPanel = new JPanel();
+        //centerPanel.setLayout(new BorderLayout());
+        //centerPanel.setBackground(Constants.COLOR_BACKGROUND);
 
-        JPanel westPanel = new JPanel();
-        westPanel.setLayout(new BorderLayout());
-        westPanel.setBackground(Constants.COLOR_BACKGROUND);
-        westPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        westPanel.add(mazeDijkstraOne);
-        panel.add(westPanel, BorderLayout.WEST);
+        //JPanel westPanel = new JPanel();
+        //westPanel.setLayout(new BorderLayout());
+        //westPanel.setBackground(Constants.COLOR_BACKGROUND);
+        //westPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
+        //westPanel.add(mazeDijkstraOne);
+        //panel.add(westPanel, BorderLayout.WEST);
 
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new GridLayout(2, 1, 10, 10));
         JPanel labelsPanel = new JPanel();
         labelsPanel.setLayout(new GridLayout(1, 3, 10, 5));
 
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        centerPanel.add(mazeDijkstraTwo);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
+        //centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
+        //centerPanel.add(mazeDijkstraTwo);
+        //centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
 
-        panel.add(centerPanel, BorderLayout.CENTER);
+        //panel.add(centerPanel, BorderLayout.CENTER);
 
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new BorderLayout());
-        eastPanel.setBackground(Constants.COLOR_BACKGROUND);
-        eastPanel.add(mazeAStar, BorderLayout.WEST);
-        eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
-        panel.add(eastPanel, BorderLayout.EAST);
+        //JPanel eastPanel = new JPanel();
+        //eastPanel.setLayout(new BorderLayout());
+        //eastPanel.setBackground(Constants.COLOR_BACKGROUND);
+        //eastPanel.add(mazeAStar, BorderLayout.WEST);
+        //eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
+        //panel.add(eastPanel, BorderLayout.EAST);
 
         southPanel.setBackground(Constants.COLOR_BACKGROUND);
 
@@ -299,6 +295,9 @@ public class MainView extends JFrame {
         southPanel.add(buttonPanel);
 
         panel.add(southPanel, BorderLayout.SOUTH);
+        panel.add(westPanel, BorderLayout.WEST);
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(eastPanel, BorderLayout.EAST);
 
         this.pack(); // To get the right size for the frame.
         this.revalidate();
@@ -329,5 +328,17 @@ public class MainView extends JFrame {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
+    }
+
+    private JPanel createCustomPanel(LayoutManager layout, Component... components) {
+        JPanel panel = new JPanel();
+        panel.setLayout(layout);
+        panel.setBackground(Constants.COLOR_BACKGROUND);
+
+        for (Component component : components) {
+            panel.add(component);
+        }
+
+        return panel;
     }
 }

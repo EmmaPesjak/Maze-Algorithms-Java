@@ -48,4 +48,7 @@ public interface Constants {
     String TEXT_D_DEQ = "Dijkstra with dequeue";
     String TEXT_ASTAR = "A*";
     String RESTART_BUTTON = "Run new maze";
+    String HTML_RESULT_START = "<html><div style='text-align:center; line-height: 1.0'>";
+    String HTML_RESULT_MID = "<br>Computed in: ";
+    String HTML_RESULT_END = " μs</div></html>";
 }
