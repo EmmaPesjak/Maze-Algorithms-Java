@@ -346,11 +346,4 @@ public class MainModel {
         endX = -1;
         endY = -1;
     }
-
-    public void clearMazeData(){
-        minX = -1;
-        minY = -1;
-        maxX = -1;
-        maxY = -1;
-    }
 }

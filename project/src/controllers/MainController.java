@@ -22,7 +22,7 @@ public class MainController {
 
     // för ifall algosarna inte hade en path så får man välja om
     private void rePick() throws IOException {
-        mainView.init();  // fråga mig inte varför men init måste köras annars blir det ingen bild.
+        mainView.init();
         String file = mainView.getFileName();
         JPanel img = mainModel.getMaze(file);
         mainView.showMaze(img);
@@ -70,11 +70,11 @@ public class MainController {
 
             // Verify that the points are within maze or on an open path.
             if (!mainModel.checkIfValid(start, end)){
-                mainView.displayErrorMsg(Constants.ERR_COORD);
-
-                // Allow the user to change coordinates.
-                mainModel.clearPoints();
-                mainView.clearCoords();
+                try {
+                    rePick();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 return;
             }
 
@@ -84,25 +84,24 @@ public class MainController {
             startTime = System.nanoTime();
             path1 = mainModel.displayPath(start, end, Constants.DIJK_HEAP);
             endTime = System.nanoTime();
-            long algorithm1Time = endTime - startTime;
+            long algorithm1Time = (endTime - startTime) / 1000; // To micro seconds.
 
             // Measure the execution time of the second algorithm
             startTime = System.nanoTime();
             path2 = mainModel.displayPath(start, end, Constants.DIJK_DEQ);
             endTime = System.nanoTime();
-            long algorithm2Time = endTime - startTime;
+            long algorithm2Time = (endTime - startTime) / 1000; // To micro seconds.
 
             // Measure the execution time of the third algorithm
             startTime = System.nanoTime();
             path3 = mainModel.displayPath(start, end, Constants.ASTAR);
             endTime = System.nanoTime();
-            long algorithm3Time = endTime - startTime;
+            long algorithm3Time = (endTime - startTime) / 1000; // To micro seconds.
 
             // Display the results
             SwingUtilities.invokeLater(() -> {
                 mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
             });
-
         }
     }
 
@@ -117,7 +116,6 @@ public class MainController {
         @Override
         public void actionPerformed(ActionEvent e) {
             mainModel.clearPoints();
-            mainModel.clearMazeData();
             mainView.init();
         }
     }

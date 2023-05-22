@@ -19,6 +19,7 @@ public interface Constants {
     // Fonts.
     Font FONT_BIG = new Font(Font.MONOSPACED, Font.BOLD, 52);
     Font FONT_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 28);
+    Font FONT_MEDIUM = new Font(Font.MONOSPACED, Font.PLAIN, 36);
     Font FONT_SMALL_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 18);
     Font FONT_BUTTON = new Font(Font.MONOSPACED, Font.BOLD, 32);
 
@@ -29,7 +30,6 @@ public interface Constants {
     // Error messages.
     String ERR_NO_FILE_NAME = "Please enter a file name.";
     String ERR_NO_VALID_FILE = "Please enter a valid file name or make sure that the file exists.";
-    String ERR_COORD = "Please enter start- and finish-coordinates within maze on open path.";
     String ERR_NO_PATH = "No valid paths found. Please re-pick start- and finish-coordinates within maze on open path.";
 
     // Algorithms

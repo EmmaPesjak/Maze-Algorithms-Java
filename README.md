@@ -18,9 +18,6 @@
 
 
 
-Ska vi typ skriva ut hur lång shortest path blev i GUIt?
-
-Ska vi ta tiden på varje algo och printa ut i GUIt?
 
 # TODO'S:
 
@@ -30,13 +27,7 @@ Ska vi ta tiden på varje algo och printa ut i GUIt?
 
 
 
-xxx Printa ut tiden i gui
-
 Buggar:
-- Ibland när man kör om flera gånger så blir det knäppt med att sätta koordinater - fastän de är "valid" så säger den att
-  de inte är valid (händer typ 1 av 100 ggr men ändå)
-- Maze17 så är pricken för stor (testade ändra om cellsize till 3 men funkade inte, är det kanske för att min skärm är
-  för liten?).
 - Kolla så att exekveringen av programmet är rätt - har det något att göra med JPanels?
 - Kirra så att error-messages dyker upp (antagligen något fel med JPanel och exekveringen?).
 - När man väljer koordinater utanför så skickar den ingen error och den gör pathen, men printas inte. varför true???
@@ -45,19 +36,16 @@ Buggar:
   men då blir det ju inte rätt med labels med "choose start blabla"
  
 Features & annat:
-- Kirra storleken på bilderna så det funkar för små och stora skärmar.
 - Finslipa time-complexity.
 - Städa upp kod + kommentarer.
 - MVG-grejer ???
-  - start/slut koordinater läses från maze-bilden (men typ omöjligt ju)
-  - visa längden på listan??
   
 
-emma fattar inte nya calculateheuristicvalue i AStar?
 
-bugg med OK knapp
 fixa så man kan go back till start från pickingen
 
-infoknapp på startsidan där vi förklarar hur bilden måste vara, smala vägar/storlek/upplösning
 
 arv för att minska redundans i algoritmklasserna och mazepoint?
+
+
+Emma imorgon: kolla igenom all kod + readme
