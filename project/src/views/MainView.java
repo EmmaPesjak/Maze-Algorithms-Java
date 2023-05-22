@@ -27,9 +27,9 @@ public class MainView extends JFrame {
 
     /**
      * Constructor which initiates the GUI and sets action listeners.
-     * @param selectListener
-     * @param solveListener
-     * @param restartListener
+     * @param selectListener listener for selecting file.
+     * @param solveListener listener for solving maze.
+     * @param restartListener listener for restarting path-solver.
      */
     public MainView(ActionListener selectListener, ActionListener solveListener, ActionListener restartListener) {
         this.selectListener = selectListener;
@@ -39,7 +39,7 @@ public class MainView extends JFrame {
     }
 
     /**
-     * Initiator for setting up the GUI.
+     * Initialize GUI.
      */
     public void init() {
         panel.removeAll(); // Clear the panel.
@@ -47,20 +47,28 @@ public class MainView extends JFrame {
         this.setSize(1000, 600);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setupMainPanel();
+
+        this.add(panel);
+        this.revalidate();
+        this.repaint();
+    }
+
+    /**
+     * Set up attributes for the panel.
+     */
+    private void setupMainPanel() {
         panel.setBackground(Constants.COLOR_BACKGROUND);
-
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.add(Box.createRigidArea(new Dimension(0, 100)));
 
         JLabel title = createLabel(Constants.TITLE, Constants.FONT_BIG);
-
         panel.add(title);
 
         panel.add(Box.createRigidArea(new Dimension(0, 50)));
 
         JLabel textLabel = createLabel(Constants.ENTER_NAME, Constants.FONT_TEXT);
-
         panel.add(textLabel);
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -74,10 +82,6 @@ public class MainView extends JFrame {
         final CustomButton selectButton = new CustomButton(Constants.SELECT_BUTTON);
         selectButton.addActionListener(selectListener);
         panel.add(selectButton);
-
-        this.add(panel);
-        this.revalidate();
-        this.repaint();
     }
 
     /**
@@ -219,6 +223,7 @@ public class MainView extends JFrame {
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
                                 long time1, long time2, long time3) {
 
+        // Create labels to display the execution times and names of corresponding algorithm.
         String s1 = Constants.HTML_RESULT_START + Constants.TEXT_D_HEAP + Constants.HTML_RESULT_MID + time1 + Constants.HTML_RESULT_END;
         String s2 = Constants.HTML_RESULT_START + Constants.TEXT_D_DEQ + Constants.HTML_RESULT_MID + time2 + Constants.HTML_RESULT_END;
         String s3 = Constants.HTML_RESULT_START + Constants.TEXT_ASTAR + Constants.HTML_RESULT_MID + time3 + Constants.HTML_RESULT_END;
@@ -226,6 +231,11 @@ public class MainView extends JFrame {
         JLabel dequeLbl = createLabel(s2, Constants.FONT_TEXT);
         JLabel aStarLbl = createLabel(s3, Constants.FONT_TEXT);
 
+        mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
+        mazeDijkstraTwo.setBackground(Constants.COLOR_BACKGROUND);
+        mazeAStar.setBackground(Constants.COLOR_BACKGROUND);
+
+        // Create panels that will contain the paths.
         JPanel centerPanel = createCustomPanel(new BorderLayout(),
                 Box.createRigidArea(new Dimension(10, 0)), mazeDijkstraTwo);
 
@@ -240,59 +250,16 @@ public class MainView extends JFrame {
         explanationPanel.removeAll(); // Clear the panel.
 
         panel.setBackground(Constants.COLOR_BACKGROUND);
-        mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
-        mazeDijkstraTwo.setBackground(Constants.COLOR_BACKGROUND);
-        mazeAStar.setBackground(Constants.COLOR_BACKGROUND);
-
         panel.setLayout(new BorderLayout());
-
         panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
 
-        //JPanel centerPanel = new JPanel();
-        //centerPanel.setLayout(new BorderLayout());
-        //centerPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        //JPanel westPanel = new JPanel();
-        //westPanel.setLayout(new BorderLayout());
-        //westPanel.setBackground(Constants.COLOR_BACKGROUND);
-        //westPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        //westPanel.add(mazeDijkstraOne);
-        //panel.add(westPanel, BorderLayout.WEST);
-
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new GridLayout(2, 1, 10, 10));
-        JPanel labelsPanel = new JPanel();
-        labelsPanel.setLayout(new GridLayout(1, 3, 10, 5));
-
-        //centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        //centerPanel.add(mazeDijkstraTwo);
-        //centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
-
-        //panel.add(centerPanel, BorderLayout.CENTER);
-
-        //JPanel eastPanel = new JPanel();
-        //eastPanel.setLayout(new BorderLayout());
-        //eastPanel.setBackground(Constants.COLOR_BACKGROUND);
-        //eastPanel.add(mazeAStar, BorderLayout.WEST);
-        //eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
-        //panel.add(eastPanel, BorderLayout.EAST);
-
-        southPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Constants.COLOR_BACKGROUND);
-
         final CustomButton restartButton = new CustomButton(Constants.RESTART_BUTTON);
-        buttonPanel.add(restartButton);
         restartButton.addActionListener(restartListener);
 
-        labelsPanel.add(heapLbl);
-        labelsPanel.add(dequeLbl);
-        labelsPanel.add(aStarLbl);
-        labelsPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        southPanel.add(labelsPanel);
-        southPanel.add(buttonPanel);
+        // Create panels to display buttons and labels.
+        JPanel labelsPanel = createCustomPanel(new GridLayout(1, 3, 10, 5), heapLbl, dequeLbl, aStarLbl);
+        JPanel buttonPanel = createCustomPanel(null, restartButton);
+        JPanel southPanel = createCustomPanel(new GridLayout(2, 1, 10, 10), labelsPanel, buttonPanel);
 
         panel.add(southPanel, BorderLayout.SOUTH);
         panel.add(westPanel, BorderLayout.WEST);
