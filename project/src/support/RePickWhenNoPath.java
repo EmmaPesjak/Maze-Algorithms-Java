@@ -8,5 +8,8 @@ import java.io.IOException;
  */
 public interface RePickWhenNoPath {
 
+    /**
+     * Lets the user re-pick start and finish points.
+     */
     void rePick() throws IOException;
 }

@@ -221,20 +221,21 @@ public class MainModel {
                         shortestPath = dijkstra.solveHeapPath();
                         //listSize = shortestPath.size();
 
+                        // If no path was found
                         if (shortestPath.size() == 0) {
                             try {
                                 rePick.rePick();
+                                return;
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                         }
 
-                        if (shortestPath.size() != 0){
-                            //heapHasPath = true;
-                            // Draw the shortest path.
-                            drawPath(g, shortestPath);
-                        }
+                        // Draw the shortest path.
+                        drawPath(g, shortestPath);
                     }
+
+
                     case (Constants.DIJK_DEQ) -> {
                         dijkstra = new Dijkstra(maze, start, end);
                         //System.out.println("DIJK DEQ: Varför printas denna efter algoritmerna???");
@@ -446,6 +447,8 @@ public class MainModel {
         // through. This is to enable different kinds of mazes in the program where maybe the borders
         // are hard to tell.
 
+        //TODO: Är detta onödigt?
+
         // Find the corners of the maze.
         int cornerX1 = minX;
         int cornerY1 = minY;
@@ -498,21 +501,21 @@ public class MainModel {
         return listSize;
     }
 
-    public boolean checkIfPath(String algo){
-        System.out.println("checking in checkIfPath");
-        switch (algo){
-            case Constants.DIJK_HEAP -> {
-                return heapHasPath;
-            }
-            case Constants.DIJK_DEQ -> {
-                return dequeHasPath;
-            }
-            case Constants.ASTAR -> {
-                return astarHasPath;
-            }
-        }
-        return false;
-    }
+//    public boolean checkIfPath(String algo){
+//        System.out.println("checking in checkIfPath");
+//        switch (algo){
+//            case Constants.DIJK_HEAP -> {
+//                return heapHasPath;
+//            }
+//            case Constants.DIJK_DEQ -> {
+//                return dequeHasPath;
+//            }
+//            case Constants.ASTAR -> {
+//                return astarHasPath;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Method for removing the start and finish points.
@@ -541,9 +544,9 @@ public class MainModel {
     }
 
     public void clearMazeData(){
-        astarHasPath = false;
-        heapHasPath = false;
-        dequeHasPath = false;
+//        astarHasPath = false;
+//        heapHasPath = false;
+//        dequeHasPath = false;
         minX = -1;
         minY = -1;
         maxX = -1;

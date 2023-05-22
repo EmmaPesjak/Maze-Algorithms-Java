@@ -31,12 +31,6 @@ public interface Constants {
     String ERR_NO_VALID_FILE = "Please enter a valid file name or make sure that the file exists.";
     String ERR_COORD = "Please enter start- and finish-coordinates within maze on open path.";
     String ERR_NO_PATH = "No valid paths found. Please re-pick start- and finish-coordinates within maze on open path.";
-    String ERR_NO_PATH_HEAP_DEQUE = "Dijkstra's with heap and deque did not find any paths.";
-    String ERR_NO_PATH_DEQUE_ASTAR = "Dijkstra's with deque and A* did not find any paths.";
-    String ERR_NO_PATH_HEAP_ASTAR = "Dijkstra's with heap and A* did not find any paths.";
-    String ERR_NO_PATH_HEAP = "Dijkstra's with heap did not find any path.";
-    String ERR_NO_PATH_DEQUE = "Dijkstra's with deque did not find any path.";
-    String ERR_NO_PATH_ASTAR = "A* did not find any path.";
 
     // Algorithms
     String DIJK_HEAP = "dijkstraHeap";
@@ -50,7 +44,6 @@ public interface Constants {
     String SELECT_START = "Select the start";
     String SELECT_FINISH = "Select the finish";
     String SOLVE_BUTTON = "Solve Maze";
-    String LOADING = "Finding the shortest path...";
     String TEXT_D_HEAP = "Dijkstra with heap";
     String TEXT_D_DEQ = "Dijkstra with dequeue";
     String TEXT_ASTAR = "A*";

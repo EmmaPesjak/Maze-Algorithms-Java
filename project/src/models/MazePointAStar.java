@@ -49,15 +49,6 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
     }
 
     /**
-     * Getter for the heuristic value. Not currently used by other classes since we compare
-     * heuristics in the compareTo() method, remove?
-     * @return the heuristic value.
-     */
-    public int getHeuristicValue() {
-        return heuristicValue;
-    }
-
-    /**
      * Setter for the heuristic value.
      * @param heuristic is the heuristic value.
      */

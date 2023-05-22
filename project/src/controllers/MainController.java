@@ -100,51 +100,11 @@ public class MainController {
             endTime = System.nanoTime();
             long algorithm3Time = endTime - startTime;
 
-
-
-            // HÄR VISAR DEN 0
-            /*System.out.println("1List-size: " +mainModel.getListSize());
-            boolean heapPath = mainModel.checkIfPath(Constants.DIJK_HEAP);
-            boolean dequePath = mainModel.checkIfPath(Constants.DIJK_DEQ);
-            boolean astarPath = mainModel.checkIfPath(Constants.ASTAR);*/
-
-            // Varför returnar den false fastän algoritmerna har körts???????
-            //System.out.println("H: " + heapPath + ", D:" + dequePath +", A: "+ astarPath);
-
             // Display the results
             SwingUtilities.invokeLater(() -> {
-
-                // HÄR VISAR DEN 0
-                //System.out.println("2List-size: " +mainModel.getListSize());
-
                 mainView.displayResults(path1, path2, path3, algorithm1Time, algorithm2Time, algorithm3Time);
-                System.out.println(mainModel.hasPath());
-                // HUR KAN DE VISA 0 OM PANELEN VISAR PATHSEN???
-                // HÄR VISAR DEN 0
-                /*System.out.println("3List-size: " +mainModel.getListSize());
-
-                if (!heapPath && !dequePath && !astarPath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH);
-                } else if (!heapPath && !dequePath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP_DEQUE);
-                } else if (!dequePath && !astarPath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_DEQUE_ASTAR);
-                } else if (!heapPath && !astarPath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP_ASTAR);
-                } else if (!dequePath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_DEQUE);
-                } else if (!heapPath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_HEAP);
-                } else if (!astarPath){
-                    mainView.displayErrorMsg(Constants.ERR_NO_PATH_ASTAR);
-                }*/
-
-                // Varför 0??? Antagligen JPanel hej.
-                System.out.println("4List-size: " +mainModel.getListSize());
             });
 
-            // Printas bara när man klickar på "restart"
-            System.out.println("5List-size: " +mainModel.getListSize());
         }
     }
 
