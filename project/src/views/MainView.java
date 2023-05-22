@@ -2,8 +2,6 @@ package views;
 
 import support.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,6 +15,7 @@ public class MainView extends JFrame {
     private final ActionListener selectListener;
     private final ActionListener solveListener;
     private final ActionListener restartListener;
+    //private final ActionListener goBackListener;
     private final JTextField textField = new JTextField(30);
     private int clickCount = 0;
     private Point startCoords;
@@ -24,12 +23,13 @@ public class MainView extends JFrame {
     private final JPanel explanationPanel = new JPanel();
     private final JLabel explanationLabel = new JLabel();
     private final JLabel coordLabel = new JLabel();
-    private List<Component> dotComponents;
     private JPanel maze;
 
     /**
-     * Constructor which initiates the GUI and sets an action listener.
-     * @param solveListener is the action listener.
+     * Constructor which initiates the GUI and sets action listeners.
+     * @param selectListener
+     * @param solveListener
+     * @param restartListener
      */
     public MainView(ActionListener selectListener, ActionListener solveListener, ActionListener restartListener) {
         this.selectListener = selectListener;
@@ -37,7 +37,6 @@ public class MainView extends JFrame {
         this.restartListener = restartListener;
         init();
     }
-
 
     /**
      * Initiator for setting up the GUI.
@@ -100,14 +99,13 @@ public class MainView extends JFrame {
      * @param mazeArg is the maze.
      */
     public void showMaze(JPanel mazeArg) {
-        dotComponents = new ArrayList<>();  // to store the dots representing start and finish.
         this.maze = mazeArg;
         panel.removeAll(); // Clear the panel.
 
         coordLabel.setFont(Constants.FONT_SMALL_TEXT);
         coordLabel.setForeground(Constants.COLOR_TEXT);
         coordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        explanationLabel.setFont(Constants.FONT_SMALL_TEXT);
+        explanationLabel.setFont(Constants.FONT_MEDIUM);
         explanationLabel.setForeground(Constants.COLOR_TEXT);
         explanationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         clickCount = 0;
@@ -159,6 +157,11 @@ public class MainView extends JFrame {
         panel.add(maze);
         panel.add(coordLabel);
 
+        //TODO: fungerar ej
+//        JButton goBackButton = new CustomButton("Go back");
+//        goBackButton.addActionListener(restartListener);
+//        panel.add(goBackButton);
+
         this.pack(); // To get the right size for the frame.
         this.revalidate();
         this.repaint();
@@ -195,8 +198,6 @@ public class MainView extends JFrame {
         int dotY = point.y - dot.getHeight() / 2;
         dot.setLocation(dotX, dotY);
 
-        dotComponents.add(dot); // Add the dot component to the list
-
         maze.add(dot);
         maze.revalidate();
         maze.repaint();
@@ -216,25 +217,6 @@ public class MainView extends JFrame {
      */
     public Point getFinishCoords() {
         return finishCoords;
-    }
-
-    /**
-     * Reset the coordinates
-     */
-    public void clearCoords(){
-        startCoords = null;
-        finishCoords = null;
-        removeDots();   // Varför behövs denna ens liksom?? Den ska ju repaintas inne i model??? Livet suger
-        clickCount = 0;
-        //showMaze(maze);
-    }
-
-    public void removeDots() {
-        for (Component dot : dotComponents) {
-            maze.remove(dot);
-        }
-        maze.revalidate();
-        maze.repaint();
     }
 
     /**
@@ -267,7 +249,7 @@ public class MainView extends JFrame {
         westPanel.add(mazeDijkstraOne);
         panel.add(westPanel, BorderLayout.WEST);
 
-        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>" + time1 + " ns</div></html>");
+        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>Computed in: " + time1 + " μs</div></html>");
         label1.setForeground(Constants.COLOR_TEXT);
         label1.setFont(Constants.FONT_TEXT);
         label1.setHorizontalAlignment(JLabel.CENTER);
@@ -284,7 +266,7 @@ public class MainView extends JFrame {
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>" + time2 + " ns</div></html>");
+        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>Computed in: " + time2 + " μs</div></html>");
         label2.setForeground(Constants.COLOR_TEXT);
         label2.setFont(Constants.FONT_TEXT);
         label2.setHorizontalAlignment(JLabel.CENTER);
@@ -297,7 +279,7 @@ public class MainView extends JFrame {
         eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
         panel.add(eastPanel, BorderLayout.EAST);
 
-        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>" + time3 + " ns</div></html>");
+        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>Computed in: " + time3 + " μs</div></html>");
         label3.setForeground(Constants.COLOR_TEXT);
         label3.setFont(Constants.FONT_TEXT);
         label3.setHorizontalAlignment(JLabel.CENTER);
@@ -333,10 +315,8 @@ public class MainView extends JFrame {
      * @param errorMsg is the error message string.
      */
     public void displayErrorMsg (String errorMsg) {
-
-        JOptionPane.showMessageDialog(this, errorMsg);
-        this.revalidate();
-        this.repaint();
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this, errorMsg);
+        });
     }
-
 }
