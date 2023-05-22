@@ -7,28 +7,59 @@ import java.awt.*;
  * comparing paths. Similar to the other implemented MazePoint class but have the added functionality
  * of heuristic value specifically used by the A* algorithm.
  */
-public class MazePointAStar implements Comparable<MazePointAStar> {
-    private final Point point;
-    private int distance;
+public class MazePointAStar extends BaseMazePoint{
+    //private final Point point;
+    //private int distance;
     private int heuristicValue; // Represents the heuristic value of the point, used to estimate the distance.
-    private MazePointAStar previous; // Used to link the path together to be able to reconstruct it in the GUI later.
+    //private MazePointAStar previous; // Used to link the path together to be able to reconstruct it in the GUI later.
 
     /**
      * Constructor.
      * @param point is the coordinate point.
      */
     public MazePointAStar(Point point) {
-        this.point = point;
+        super(point);
+        /*this.point = point;
         this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
+
+        this.previous = null;*/
         this.heuristicValue = 0;
-        this.previous = null;
     }
+
+
+    /**
+     * Setter for the heuristic value.
+     * @param heuristic is the heuristic value.
+     */
+    /*public void setHeuristicValue(int heuristic) {
+        this.heuristicValue = heuristic;
+    }*/
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(BaseMazePoint otherPoint) {
+        int totalCost = this.distance + this.heuristicValue;
+        int otherTotalCost = otherPoint.distance + ((MazePointAStar) otherPoint).heuristicValue;
+        return Integer.compare(totalCost, otherTotalCost);
+    }
+
+    /*@Override
+    public int compareTo(BaseMazePoint other) {
+        // Compare both the heuristic value and the distance.
+        int totalCost = this.distance + this.heuristicValue;
+        int otherTotalCost = other.distance + other.heuristicValue;
+        return Integer.compare(totalCost, otherTotalCost);
+    }*/
+
+
 
     /**
      * Getter for the point coordinate.
      * @return the point.
      */
-    public Point getPoint() {
+    /*public Point getPoint() {
         return point;
     }
 
@@ -36,7 +67,7 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
      * Getter for the distance.
      * @return the distance.
      */
-    public int getDistance() {
+    /*public int getDistance() {
         return distance;
     }
 
@@ -44,23 +75,16 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
      * Setter for the distance.
      * @param distance is the distance.
      */
-    public void setDistance(int distance) {
+    /*public void setDistance(int distance) {
         this.distance = distance;
-    }
+    }*/
 
-    /**
-     * Setter for the heuristic value.
-     * @param heuristic is the heuristic value.
-     */
-    public void setHeuristicValue(int heuristic) {
-        this.heuristicValue = heuristic;
-    }
 
     /**
      * Getter for the point's previous point.
      * @return the previous point.
      */
-    public MazePointAStar getPrevious() {
+    /*public MazePointAStar getPrevious() {
         return previous;
     }
 
@@ -68,7 +92,7 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
      * Setter for the point's previous point.
      * @param previous is the previous point.
      */
-    public void setPrevious(MazePointAStar previous) {
+    /*public void setPrevious(MazePointAStar previous) {
         this.previous = previous;
     }
 
@@ -76,11 +100,11 @@ public class MazePointAStar implements Comparable<MazePointAStar> {
      * {@inheritDoc}
      * Used when inserting in the priority queue.
      */
-    @Override
+    /*@Override
     public int compareTo(MazePointAStar otherPoint) {
         // Compare both the heuristic value and the distance.
         int totalCost = this.distance + this.heuristicValue;
         int otherTotalCost = otherPoint.distance + otherPoint.heuristicValue;
         return Integer.compare(totalCost, otherTotalCost);
-    }
+    }*/
 }

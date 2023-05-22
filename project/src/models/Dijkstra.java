@@ -8,12 +8,12 @@ import java.util.List;
  * Class representing Dijkstra's algorithm using a Priority Queue, used for solving the maze and
  * finding the shortest path.
  */
-public class Dijkstra {
+public class Dijkstra extends BaseAlgorithm {
 
-    private final boolean[][] maze;
-    private final MazePointDijkstra[][] mazePoints;
-    private final Point start;
-    private final Point end;
+    //private final boolean[][] maze;
+    //private final MazePointDijkstra[][] mazePoints;
+    //private final Point start;
+    //private final Point end;
 
     /**
      * Constructor, sets the maze 2D array, start and end points and initiates a 2D array with
@@ -23,10 +23,12 @@ public class Dijkstra {
      * @param end is the end point.
      */
     public Dijkstra(boolean[][] maze, Point start, Point end) {
-        this.maze = maze;
+        super(maze, start, end);
+        //this.mazePoints = new MazePointDijkstra[maze.length][maze[0].length];
+        /*this.maze = maze;
         this.mazePoints = new MazePointDijkstra[maze.length][maze[0].length];
         this.start = start;
-        this.end = end;
+        this.end = end;*/
     }
 
     /**
@@ -39,8 +41,8 @@ public class Dijkstra {
         convertToMazePoints();
 
         // Get the start and end.
-        MazePointDijkstra startMazePoint = mazePoints[start.x][start.y];
-        MazePointDijkstra endMazePoint = mazePoints[end.x][end.y];
+        MazePointDijkstra startMazePoint = (MazePointDijkstra) mazePoints[start.x][start.y];
+        MazePointDijkstra endMazePoint = (MazePointDijkstra) mazePoints[end.x][end.y];
 
         // Create a priority queue for prioritizing the points by distance. These points have
         // not yet been visited but are considered in the order of the priority.
@@ -77,7 +79,7 @@ public class Dijkstra {
 
             // Otherwise continue traversing the maze, adding available neighbours to the
             // open set (prio queue).
-            List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
+            List<MazePointDijkstra> neighbors = getNeighbours(currentPoint);
             for (MazePointDijkstra neighbor : neighbors) {
                 // Check if they are in the closed set (already visited), do not add.
                 if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
@@ -106,8 +108,8 @@ public class Dijkstra {
         // Convert the 2D array to a 2D array of MazePointDijkstras.
         convertToMazePoints();
         // Get the start and end.
-        MazePointDijkstra startMazePoint = mazePoints[start.x][start.y];
-        MazePointDijkstra endMazePoint = mazePoints[end.x][end.y];
+        MazePointDijkstra startMazePoint = (MazePointDijkstra) mazePoints[start.x][start.y];
+        MazePointDijkstra endMazePoint = (MazePointDijkstra) mazePoints[end.x][end.y];
 
         // Initialize a deque to store points to be visited.
         Deque<MazePointDijkstra> openSet = new ArrayDeque<>();
@@ -140,7 +142,7 @@ public class Dijkstra {
             }
 
             // Get the neighbors of the current point.
-            List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
+            List<MazePointDijkstra> neighbors = getNeighbours(currentPoint);
 
             // Process the neighbors.
             for (MazePointDijkstra neighbor : neighbors) {
@@ -181,7 +183,7 @@ public class Dijkstra {
      * @param point is the current point.
      * @return an array of neighbouring MazePointDijkstras.
      */
-    private List<MazePointDijkstra> getNeighbors(MazePointDijkstra point) {
+    /*private List<MazePointDijkstra> getNeighbors(MazePointDijkstra point) {
         List<MazePointDijkstra> neighbors = new ArrayList<>();// Create an array for the neighbours.
         // Get the x and y coordinates.
         int x = point.getPoint().x;
@@ -201,24 +203,24 @@ public class Dijkstra {
             neighbors.add(mazePoints[x][y + 1]); // Below neighbour.
         }
         return neighbors;
-    }
+    }*/
 
     /**
      * Generates the final shortest path by reconstructing it from the start point to the end point.
      * @param endPoint is the end point.
      * @return the path as an array of points.
      */
-    private List<Point> generateFinalPath(MazePointDijkstra endPoint) {
+    /*private List<Point> generateFinalPath(MazePointDijkstra endPoint) {
         List<Point> shortestPointPath = new ArrayList<>(); // Create an array for the points.
         // Set the current point as the end point to begin.
         MazePointDijkstra currentPoint = endPoint;
         // Loop over, adding the point to the array, continuing to the previous point.
         while (currentPoint != null) {
             shortestPointPath.add(currentPoint.getPoint());
-            currentPoint = currentPoint.getPrevious();
+            currentPoint = (MazePointDijkstra) currentPoint.getPrevious();
         }
         // Reverse the path so it begins at the start.
         Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.
         return shortestPointPath;
-    }
+    }*/
 }

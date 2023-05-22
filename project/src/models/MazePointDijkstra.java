@@ -6,26 +6,32 @@ import java.awt.*;
  * Represents a Maze Point used by Dijkstra's algorithm. Implements the comparable interface for
  * comparing paths.
  */
-public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
-    private final Point point;
-    private MazePointDijkstra previous;
-    private int distance;
+public class MazePointDijkstra extends BaseMazePoint {
+    //private final Point point;
+    //private MazePointDijkstra previous;
+    //private int distance;
 
     /**
      * Constructor.
      * @param point is the coordinate point.
      */
     public MazePointDijkstra(Point point) {
-        this.point = point;
-        this.previous = null;
-        this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
+        super(point);
+        //this.point = point;
+        //this.previous = null;
+        //this.distance = Integer.MAX_VALUE; // Set the initial to max, so we can update this later when running the algorithm.
+    }
+
+    @Override
+    public int compareTo(BaseMazePoint other) {
+        return Integer.compare(this.distance, other.distance);
     }
 
     /**
      * Getter for the point coordinate.
      * @return the point.
      */
-    public Point getPoint() {
+    /*public Point getPoint() {
         return point;
     }
 
@@ -33,7 +39,7 @@ public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
      * Getter for the point's previous point.
      * @return the previous point.
      */
-    public MazePointDijkstra getPrevious() {
+    /*public MazePointDijkstra getPrevious() {
         return previous;
     }
 
@@ -41,7 +47,7 @@ public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
      * Setter for the point's previous point.
      * @param previous is the previous point.
      */
-    public void setPrevious(MazePointDijkstra previous) {
+    /*public void setPrevious(MazePointDijkstra previous) {
         this.previous = previous;
     }
 
@@ -49,7 +55,7 @@ public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
      * Getter for the distance.
      * @return the distance.
      */
-    public int getDistance() {
+    /*public int getDistance() {
         return distance;
     }
 
@@ -57,16 +63,16 @@ public class MazePointDijkstra implements Comparable<MazePointDijkstra> {
      * Setter for the distance.
      * @param distance is the distance.
      */
-    public void setDistance(int distance) {
+    /*public void setDistance(int distance) {
         this.distance = distance;
-    }
+    }*/
 
     /**
      * {@inheritDoc}
      * Used when inserting in the priority queue.
      */
-    @Override
+    /*@Override
     public int compareTo(MazePointDijkstra other) {
         return Integer.compare(this.distance, other.distance);
-    }
+    }*/
 }

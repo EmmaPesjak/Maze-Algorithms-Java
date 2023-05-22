@@ -11,11 +11,11 @@ import java.util.List;
  * going towards the goal. The heuristic value is an estimation of the remaining distance from the
  * current point to the goal point, not taking the wall obstacles of the maze into consideration.
  */
-public class AStar {
-    private final boolean[][] maze;
-    private final MazePointAStar[][] mazePoints;
-    private final Point start;
-    private final Point end;
+public class AStar extends BaseAlgorithm {
+    //private final boolean[][] maze;
+    //private final MazePointAStar[][] mazePoints;
+    //private final Point start;
+    //private final Point end;
 
     /**
      * Constructor, sets the maze 2D array, start and end points and initiates a 2D array with
@@ -25,10 +25,11 @@ public class AStar {
      * @param end is the end point.
      */
     public AStar(boolean[][] maze, Point start, Point end) {
-        this.maze = maze;
-        this.mazePoints = new MazePointAStar[maze.length][maze[0].length];
-        this.start = start;
-        this.end = end;
+        super(maze, start, end);
+        //this.maze = maze;
+        //this.mazePoints = new MazePointAStar[maze.length][maze[0].length];
+        //this.start = start;
+        //this.end = end;
     }
 
     /**
@@ -52,8 +53,8 @@ public class AStar {
         // Convert the 2D array to a 2D array of MazePointAStars.
         convertToMazePoints();
         // Get the start and end.
-        MazePointAStar startMazePoint = mazePoints[start.x][start.y];
-        MazePointAStar endMazePoint = mazePoints[end.x][end.y];
+        MazePointAStar startMazePoint = (MazePointAStar) mazePoints[start.x][start.y];
+        MazePointAStar endMazePoint = (MazePointAStar) mazePoints[end.x][end.y];
 
         // Create a priority queue for prioritizing the points by distance and heuristic. These points have
         // not yet been visited but are considered in the order of the priority.
@@ -117,7 +118,7 @@ public class AStar {
      * @param point is the current point.
      * @return an array of neighbouring MazePointAStars.
      */
-    private List<MazePointAStar> getNeighbours(MazePointAStar point) {
+    /*private List<MazePointAStar> getNeighbours(MazePointAStar point) {
         List<MazePointAStar> neighbours = new ArrayList<>(); // Create an array for the neighbours.
         // Get the x and y coordinates.
         int x = point.getPoint().x;
@@ -137,7 +138,7 @@ public class AStar {
             neighbours.add(mazePoints[x][y + 1]); // Below neighbour.
         }
         return neighbours;
-    }
+    }*/
 
     /**
      * Method for calculating the heuristic value between a point and the end point. The heuristic
@@ -160,17 +161,17 @@ public class AStar {
      * @param endPoint is the end point.
      * @return the path as an array of points.
      */
-    private List<Point> generateFinalPath(MazePointAStar endPoint) {
+    /*private List<Point> generateFinalPath(MazePointAStar endPoint) {
         List<Point> shortestPointPath = new ArrayList<>(); // Create an array for the points.
         // Set the current point as the end point to begin.
         MazePointAStar currentPoint = endPoint;
         // Loop over, adding the point to the array, continuing to the previous point.
         while (currentPoint != null) {
             shortestPointPath.add(currentPoint.getPoint());
-            currentPoint = currentPoint.getPrevious();
+            currentPoint = (MazePointAStar) currentPoint.getPrevious();
         }
         // Reverse the path so it begins at the start.
         Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.
         return shortestPointPath;
-    }
+    }*/
 }
