@@ -2,6 +2,7 @@ package controllers;
 
 import models.MainModel;
 import support.Constants;
+import views.CustomPanel;
 import views.MainView;
 
 import javax.swing.*;
@@ -9,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,8 @@ import java.util.Objects;
 public class MainController {
 
     private final MainModel mainModel = new MainModel(this::rePick);
-    private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(), new RestartButtonListener());
+    private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(),
+            new RestartButtonListener());
 
     /**
      * Responsible for redirecting the user to change coordinates if no valid path was found.
@@ -28,7 +29,7 @@ public class MainController {
     private void rePick() throws IOException {
         mainView.init();
         String file = mainView.getFileName();
-        JPanel img = mainModel.getMaze(file);
+        CustomPanel img = mainModel.getMaze(file);
         mainView.showMaze(img);
         mainView.displayErrorMsg(Constants.ERR_NO_PATH);
     }
@@ -48,7 +49,7 @@ public class MainController {
                     // Get values before calling show-maze.
                     String file = mainView.getFileName();
 
-                    JPanel img = mainModel.getMaze(file);
+                    CustomPanel img = mainModel.getMaze(file);
                     mainView.showMaze(img);
 
                 } catch (IOException ex) {
@@ -64,6 +65,10 @@ public class MainController {
      * Inner class responsible for listening to the solve button.
      */
     class SolveButtonListener implements ActionListener {
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -82,8 +87,7 @@ public class MainController {
             }
 
             long startTime, endTime;
-            JPanel heapPath, dequePath, aStarPath;
-
+            CustomPanel heapPath, dequePath, aStarPath;
 
             // Run the algorithms and calculate the paths
             startTime = System.nanoTime();
@@ -108,7 +112,6 @@ public class MainController {
                 mainView.displayResults(heapPath, dequePath, aStarPath, heapTime, dequeTime, aStarTime);
             });
         }
-
     }
 
     /**

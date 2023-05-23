@@ -6,10 +6,7 @@ import java.util.List;
 
 /**
  * Class representing the A* algorithm deriving from BaseAlgorithm, used for solving the maze and finding the
- * shortest path.
- *
- * SKA VI HA DETTA?
- * Slightly smarter (in some cases, not always in mazes since the shortest path may actually lead
+ * shortest path. Slightly smarter (in some cases, not always in mazes since the shortest path may actually lead
  * away from the finish point) than Dijkstra's algorithm since it takes a heuristic value into consideration,
  * going towards the goal. The heuristic value is an estimation of the remaining distance from the
  * current point to the goal point, not taking the wall obstacles of the maze into consideration.
@@ -90,7 +87,6 @@ public class AStar extends BaseAlgorithm {
         return Collections.emptyList();
     }
 
-
     /**
      * Method for calculating the heuristic value between a point and the end point. The heuristic
      * value is an estimation of the remaining distance from the current point to the goal point,
@@ -106,7 +102,6 @@ public class AStar extends BaseAlgorithm {
         // Sum up the x and y differences and return it as the heuristic value.
         return differenceX + differenceY;
     }
-
 
     /**
      * {@inheritDoc}

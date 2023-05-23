@@ -24,7 +24,7 @@ public interface Constants {
     Font FONT_BUTTON = new Font(Font.MONOSPACED, Font.BOLD, 32);
 
     // Values.
-    int MAX_PANEL_WIDTH = 700;  // Måste vara 700, annars tar du bort väggar i bilderna
+    int MAX_PANEL_WIDTH = 700;
     int MAX_PANEL_HEIGHT = 700;
 
     // Error messages.

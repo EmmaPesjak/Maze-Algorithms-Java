@@ -18,8 +18,6 @@ public class MazePointDijkstra extends BaseMazePoint {
 
     /**
      * {@inheritDoc}
-     * @param other
-     * @return
      */
     @Override
     public int compareTo(BaseMazePoint other) {
