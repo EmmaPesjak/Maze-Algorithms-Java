@@ -242,7 +242,6 @@ scenario, where N is the total number of points in the maze. However, certain pa
 the maze, initializing data structures, checking if the goal is reached, retrieving neighbors, and marking visited points,
 have a time complexity of O(N) or O(1).
 
-
 # Dijkstra's with Deque:
 Main loop: The main loop of the algorithm continues until the deque is empty. In the worst-case scenario, the loop can 
 iterate over all points in the maze, resulting in a time complexity of O(N).
