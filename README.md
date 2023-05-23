@@ -191,71 +191,45 @@ with a GUI, implemented multiple pathfinding algorithms, and achieved the desire
 provided us with valuable learning experiences, allowing us to enhance our programming skills and deepen our understanding 
 of algorithmic problem-solving.
 
+### Run time complexity
 
-### Run time complexity   - omformulera litta, taget from chatgpt hej
+# General Operations:
+All algorithms involve a mix of O(n) and O(1) time complexities for various operations.
 
-# For all algorithms:
-- Converting the maze to MazePointAStar objects: This operation has a time complexity of O(N), where N is the total 
-  number of points in the maze. It involves iterating over the maze array and creating MazePointAStar objects for each 
-  point.
+- Converting the maze to MazePoint objects has a time complexity of O(n), where N is the total number of points in the 
+  maze. It involves iterating over the maze array and creating MazePoint objects for each point.
+- Initialization, setup, neighbor retrieval, goal checking, and marking visited points have constant time complexities 
+  of O(1) as they don't require any iteration.
 
-- Initializing data structures and setting up the start point: These operations take constant time and can be considered 
-  O(1). This includes creating a priority queue/deque, a visited array, setting the start point's distance to 0, and 
-  adding it to the priority queue/deque.
+# A* Algorithm:
+Updating distances, heuristic values, and adding neighbors to the priority queue have a time complexity of O(log N) in
+the worst case. This is because it involves adding elements to the priority queue and maintaining the heap structure, 
+where the height of the heap determines the number of comparisons required.
 
-- Retrieving neighbors: The time complexity for retrieving neighbors depends on the number of neighbors a point has. 
-  In our implementation, we consider four neighbors (left, right, above, below) and iterate over them. This operation 
-  can be considered O(1) since the number of neighbors is constant.
+# Dijkstra's Algorithm with Heap:
+Polling the head of the priority queue has a time complexity of O(log N) as it involves removing the highest priority 
+element from the priority queue.
+Updating distances and adding neighbors to the heap have a time complexity of O(1) in the worst case, as they involve 
+adding elements to the end of the priority queue without any iteration.
 
-- Checking if the goal is reached: This operation takes constant time as it involves comparing the current point to the 
-  end point. It can be considered O(1).
+Overall, Dijkstra's algorithm with a heap has a time complexity of O(N log N) in the worst-case scenario, where N is the
+total number of points in the maze.
 
-- Marking the current point as visited: This operation takes constant time and can be considered O(1) as it involves 
-  updating the visited array.
+# Dijkstra's Algorithm with Deque:
+Getting the point at the front of the deque takes constant time and has a time complexity of O(1) as it involves 
+retrieving the first element from the deque without any iteration.
+Updating distances and adding neighbors to the deque also have a time complexity of O(1) in the worst case, as they 
+involve adding elements to the end of the deque without any iteration.
 
-- Generating the final path: Constructing the final path by traversing the pointers from the end point to the start 
-  point takes linear time proportional to the length of the path, which can be at most O(N).
+Overall, Dijkstra's algorithm with a deque has a time complexity of O(N) in the worst-case scenario, where N is the 
+total number of points in the maze.
 
-# A*:
-Main loop: The main loop of the algorithm continues until the priority queue is empty. In the worst case scenario, the 
-loop can iterate over all points in the maze, resulting in a time complexity of O(N).
+In conclusion, the A* algorithm may not have the best theoretical time complexity compared to Dijkstra's algorithm, but 
+its advantage lies in its ability to make more informed decisions about which paths to explore. In practice, the 
+efficiency of an algorithm depends not only on its time complexity but also on other factors, such as the specific 
+characteristics of the problem, the quality of the heuristic function, and the efficiency of the data structures used.
 
-Updating distances and heuristics: Updating the distances and heuristic values of neighbors, as well as adding them to 
-the priority queue, can be considered O(log N) in the worst case, as it involves adding elements to the priority queue.
 
-Polling the point at the head of the priority queue: This operation has a time complexity of O(log N) as it involves 
-removing the highest priority element from the priority queue.
-
-Overall, the A* algorithm has a time complexity of O(N log N) in the worst case scenario, where N is the total number 
-of points in the maze. However, certain parts of the algorithm, such as converting the maze, initializing data structures,
-checking if the goal is reached, and retrieving neighbors, have constant time complexities of O(1).
-
-# Dijkstra's with Heap:
-Main loop: The main loop of the algorithm continues until the priority queue is empty. In the worst-case scenario, the 
-loop can iterate over all points in the maze, resulting in a time complexity of O(N).
-
-Polling the point at the head of the priority queue: This operation has a time complexity of O(log N) as it involves 
-removing the highest priority element from the priority queue.
-
-Overall, the Dijkstra's algorithm with a heap (priority queue) has a time complexity of O(N log N) in the worst-case 
-scenario, where N is the total number of points in the maze. However, certain parts of the algorithm, such as converting 
-the maze, initializing data structures, checking if the goal is reached, retrieving neighbors, and marking visited points,
-have a time complexity of O(N) or O(1).
-
-# Dijkstra's with Deque:
-Main loop: The main loop of the algorithm continues until the deque is empty. In the worst-case scenario, the loop can 
-iterate over all points in the maze, resulting in a time complexity of O(N).
-
-Getting the point at the front of the deque: This operation takes constant time and can be considered O(1) as it 
-involves retrieving the first element from the deque.
-
-Updating distances and adding to the deque: Updating the distances of neighbors and adding them to the deque has a time 
-complexity of O(1) in the worst case, as it involves adding elements to the end of the deque.
-
-Overall, the Dijkstra's algorithm with a deque (ArrayDeque) has a time complexity of O(N) in the worst-case scenario, 
-where N is the total number of points in the maze. Certain parts of the algorithm, such as converting the maze, 
-initializing data structures, checking if the goal is reached, retrieving neighbors, and marking visited points, have a
-time complexity of O(N) or O(1).
 
 
 
