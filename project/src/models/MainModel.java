@@ -25,7 +25,6 @@ public class MainModel {
     private CustomPanel panel;
 
     private boolean[][] maze;
-    private int scale;
     private final int cellSize = 5;
     private int minX, minY, maxX, maxY;
 
@@ -52,17 +51,9 @@ public class MainModel {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        // Calculate the scaling factor for the JPanel size since we have to shrink the image.
-        scale = (int) Math.min((float) Constants.MAX_PANEL_WIDTH / width, (float) Constants.MAX_PANEL_HEIGHT / height);
-
-        // Can't have scale 0. TODO: detta är ju kanske inte optimalt...
-        if (scale == 0) {
-            scale = 1;
-        }
-
-        // Calculate the scaled dimensions for the JPanel.
-        panelWidth = (width * scale);
-        panelHeight = (height * scale);
+        // Calculate the dimensions for the JPanel.
+        panelWidth = width;
+        panelHeight = height;
 
         // Create a custom JPanel to display the binary image.
         panel = new CustomPanel() {
@@ -82,12 +73,10 @@ public class MainModel {
             panel.repaint();
         });
 
-
         return panel;
     }
 
     public CustomPanel displayPath(Point startPoint, Point finish, String algo){
-
         // Adjust the start and end coordinates to match the cell size
         startX = startPoint.x / cellSize;
         startY = startPoint.y / cellSize;
@@ -111,16 +100,15 @@ public class MainModel {
                 if (showPoints && startX != -1) {
 
                     // Adjust the coordinates to the cell-size of maze.
-                    int scaledStartX = startX * cellSize * scale + cellSize / 2;
-                    int scaledStartY = startY * cellSize * scale + cellSize / 2;
-                    int scaledEndX = endX * cellSize * scale + cellSize / 2;
-                    int scaledEndY = endY * cellSize * scale + cellSize / 2;
+                    int scaledStartX = startX * cellSize + cellSize / 2;
+                    int scaledStartY = startY * cellSize + cellSize / 2;
+                    int scaledEndX = endX * cellSize + cellSize / 2;
+                    int scaledEndY = endY * cellSize + cellSize / 2;
 
                     g.setColor(Constants.COLOR_START);
                     g.fillOval(scaledStartX - 5, scaledStartY - 5, 10, 10); // -5 to center.
                     g.setColor(Constants.COLOR_END);
                     g.fillOval(scaledEndX - 5, scaledEndY - 5, 10, 10); // -5 to center.
-
                 }
 
                 // Draw the calculated paths.
@@ -138,7 +126,6 @@ public class MainModel {
                                 throw new RuntimeException(e);
                             }
                         }
-
                         // Draw the shortest path.
                         drawPath(g, shortestPath);
                     }
@@ -152,7 +139,6 @@ public class MainModel {
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }
-
                     }
                     case (Constants.ASTAR) -> {
                         // Solve the maze with the A* algorithm and get a list of points with the path.
@@ -202,8 +188,8 @@ public class MainModel {
         // Populate the x and y coordinate arrays for drawing the polyline.
         for (int i = 0; i < numPoints; i++) {
             Point point = path.get(i);
-            xPoints[i] = (int) (point.x * cellSize * scale + cellSize / 2.0);
-            yPoints[i] = (int) (point.y * cellSize * scale + cellSize / 2.0);
+            xPoints[i] = (int) (point.x * cellSize + cellSize / 2.0);
+            yPoints[i] = (int) (point.y * cellSize + cellSize / 2.0);
         }
 
         // Draw the polyline representing the path.
