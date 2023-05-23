@@ -2,6 +2,7 @@ package models;
 
 import support.Constants;
 import support.RePickWhenNoPath;
+import views.CustomPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,12 +22,11 @@ public class MainModel {
     private int startX = -1, startY = -1, endX = -1, endY = -1;
     private BufferedImage image;
     private boolean showPoints = true; // Flag to control the display of start and end points.
-    private JPanel panel;
+    private CustomPanel panel;
 
     private boolean[][] maze;
     private int scale;
     private final int cellSize = 5;
-
     private int minX, minY, maxX, maxY;
 
     private List<Point> shortestPath;
@@ -37,13 +37,13 @@ public class MainModel {
 
     /**
      * Constructor.
-     * @param rePick
+     * @param rePick is the rePick interface.
      */
     public MainModel(RePickWhenNoPath rePick) {
         this.rePick = rePick;
     }
 
-    public JPanel getMaze(String fileName) throws IOException {
+    public CustomPanel getMaze(String fileName) throws IOException {
         // Get the image.
         image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
         generateMaze(image);
@@ -65,7 +65,7 @@ public class MainModel {
         panelHeight = (height * scale);
 
         // Create a custom JPanel to display the binary image.
-        panel = new JPanel() {
+        panel = new CustomPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -86,7 +86,7 @@ public class MainModel {
         return panel;
     }
 
-    public JPanel displayPath(Point startPoint, Point finish, String algo){
+    public CustomPanel displayPath(Point startPoint, Point finish, String algo){
 
         // Adjust the start and end coordinates to match the cell size
         startX = startPoint.x / cellSize;
@@ -98,7 +98,7 @@ public class MainModel {
         Point end = new Point(endX, endY);
 
         // Create a custom JPanel to display the binary image.
-        panel = new JPanel() {
+        panel = new CustomPanel() {
             @Override
             protected void paintComponent(Graphics g) {
 
@@ -129,7 +129,7 @@ public class MainModel {
                         dijkstra = new Dijkstra(maze, start, end);
                         shortestPath = dijkstra.solveHeapPath();
 
-                        // If no path was found
+                        // If no path was found. Only necessary to check in one of the algorithms.
                         if (shortestPath.size() == 0) {
                             try {
                                 rePick.rePick();
@@ -178,14 +178,13 @@ public class MainModel {
     }
 
     /**
-     * Bättre time complexity ???
-     * In this modified drawPath method, we create two arrays, xPoints and yPoints, to store the
+     * In this drawPath method, we create two arrays, xPoints and yPoints, to store the
      * x and y coordinates of the points in the path. Instead of drawing individual lines between points,
      * we pass these arrays to the drawPolyline method of the Graphics2D object. This method draws a polyline
      * connecting all the points in a single method call, resulting in better performance and reduced time
      * complexity compared to drawing individual lines.
-     * @param g
-     * @param path
+     * @param g is the graphics.
+     * @param path is the path of points to draw.
      */
     private void drawPath(Graphics g, List<Point> path) {
         g.setColor(Constants.COLOR_PATH);

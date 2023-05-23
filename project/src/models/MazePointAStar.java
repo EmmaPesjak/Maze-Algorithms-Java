@@ -4,7 +4,7 @@ import java.awt.*;
 
 /**
  * Represents a Maze Point used by the A* algorithm. Implements the comparable interface for
- * comparing paths. Similar to the other implemented MazePoint class but have the added functionality
+ * comparing paths. Similar to the MazePointDijkstra class but have the added functionality
  * of heuristic value specifically used by the A* algorithm.
  */
 public class MazePointAStar extends BaseMazePoint{

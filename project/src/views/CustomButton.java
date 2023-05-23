@@ -11,7 +11,7 @@ import java.awt.*;
 public class CustomButton extends JButton {
 
     /**
-     * Constructor setting design of the button.
+     * Constructor setting the design of the button.
      * @param text is the text displayed in the button.
      */
     public CustomButton(String text) {

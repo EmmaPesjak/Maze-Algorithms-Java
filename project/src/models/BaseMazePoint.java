@@ -77,5 +77,4 @@ public abstract class BaseMazePoint implements Comparable<BaseMazePoint>{
     public void setHeuristicValue(int heuristic) {
         this.heuristicValue = heuristic;
     }
-
 }

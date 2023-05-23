@@ -2,7 +2,6 @@ package models;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,9 +34,6 @@ public abstract class BaseAlgorithm {
             shortestPointPath.add(currentPoint.getPoint());
             currentPoint = currentPoint.getPrevious();
         }
-        // Reverse the path so it begins at the start.
-        // #TODO Ska vi ha denna???
-        Collections.reverse(shortestPointPath); // Technically not needed to reverse the path for our program.
         return shortestPointPath;
     }
 
@@ -65,7 +61,6 @@ public abstract class BaseAlgorithm {
                 neighbours.add((T) mazePoints[newX][newY]);
             }
         }
-
         return neighbours;
     }
 
@@ -74,5 +69,4 @@ public abstract class BaseAlgorithm {
      * which are stored in the mazePoints 2D array.
      */
     protected abstract void convertToMazePoints();
-
 }
