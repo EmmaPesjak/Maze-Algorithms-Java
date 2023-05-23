@@ -6,7 +6,6 @@ Features & annat:
 - Städa upp kod + kommentarer.
 - MVG-grejer ???
 
-SCALE??? ta bort eftersom det inte fungerar?
   
 
 
