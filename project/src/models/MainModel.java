@@ -149,7 +149,6 @@ public class MainModel {
                         shortestPath = dijkstra.solveDequeuePath();
 
                         if (shortestPath.size() != 0){
-                            //dequeHasPath = true;
                             // Draw the shortest path.
                             drawPath(g, shortestPath);
                         }

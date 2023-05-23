@@ -27,9 +27,9 @@ public class MainView extends JFrame {
 
     /**
      * Constructor which initiates the GUI and sets action listeners.
-     * @param selectListener
-     * @param solveListener
-     * @param restartListener
+     * @param selectListener listener for selecting file.
+     * @param solveListener listener for solving maze.
+     * @param restartListener listener for restarting path-solver.
      */
     public MainView(ActionListener selectListener, ActionListener solveListener, ActionListener restartListener) {
         this.selectListener = selectListener;
@@ -39,34 +39,36 @@ public class MainView extends JFrame {
     }
 
     /**
-     * Initiator for setting up the GUI.
+     * Initialize GUI.
      */
     public void init() {
         panel.removeAll(); // Clear the panel.
         this.setResizable(false);
-        this.setSize(1000, 600); // Annan storlek?
+        this.setSize(1000, 600);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setupMainPanel();
+
+        this.add(panel);
+        this.revalidate();
+        this.repaint();
+    }
+
+    /**
+     * Set up attributes for the panel.
+     */
+    private void setupMainPanel() {
         panel.setBackground(Constants.COLOR_BACKGROUND);
-
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.add(Box.createRigidArea(new Dimension(0, 100)));
 
-        JLabel title = new JLabel(Constants.TITLE);
-        title.setFont(Constants.FONT_BIG);
-        title.setForeground(Constants.COLOR_TEXT);
-        title.setHorizontalAlignment(JLabel.CENTER);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel title = createLabel(Constants.TITLE, Constants.FONT_BIG);
         panel.add(title);
 
         panel.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        JLabel textLabel = new JLabel(Constants.ENTER_NAME);
-        textLabel.setForeground(Constants.COLOR_TEXT);
-        textLabel.setFont(Constants.FONT_TEXT);
-        textLabel.setHorizontalAlignment(JLabel.CENTER);
-        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel textLabel = createLabel(Constants.ENTER_NAME, Constants.FONT_TEXT);
         panel.add(textLabel);
 
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -80,10 +82,6 @@ public class MainView extends JFrame {
         final CustomButton selectButton = new CustomButton(Constants.SELECT_BUTTON);
         selectButton.addActionListener(selectListener);
         panel.add(selectButton);
-
-        this.add(panel);
-        this.revalidate();
-        this.repaint();
     }
 
     /**
@@ -225,84 +223,48 @@ public class MainView extends JFrame {
     public void displayResults(JPanel mazeDijkstraOne, JPanel mazeDijkstraTwo, JPanel mazeAStar,
                                 long time1, long time2, long time3) {
 
+        // Create labels to display the execution times and names of corresponding algorithm.
+        String s1 = Constants.HTML_RESULT_START + Constants.TEXT_D_HEAP + Constants.HTML_RESULT_MID + time1 + Constants.HTML_RESULT_END;
+        String s2 = Constants.HTML_RESULT_START + Constants.TEXT_D_DEQ + Constants.HTML_RESULT_MID + time2 + Constants.HTML_RESULT_END;
+        String s3 = Constants.HTML_RESULT_START + Constants.TEXT_ASTAR + Constants.HTML_RESULT_MID + time3 + Constants.HTML_RESULT_END;
+        JLabel heapLbl = createLabel(s1, Constants.FONT_TEXT);
+        JLabel dequeLbl = createLabel(s2, Constants.FONT_TEXT);
+        JLabel aStarLbl = createLabel(s3, Constants.FONT_TEXT);
+
+        mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
+        mazeDijkstraTwo.setBackground(Constants.COLOR_BACKGROUND);
+        mazeAStar.setBackground(Constants.COLOR_BACKGROUND);
+
+        // Create panels that will contain the paths.
+        JPanel centerPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeDijkstraTwo);
+
+        JPanel westPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeDijkstraOne);
+
+        JPanel eastPanel = createCustomPanel(new BorderLayout(),
+                Box.createRigidArea(new Dimension(10, 0)), mazeAStar);
+
         clickCount = 0; // reset the click count for potential next solved maze
         panel.removeAll(); // Clear the panel.
         explanationPanel.removeAll(); // Clear the panel.
 
         panel.setBackground(Constants.COLOR_BACKGROUND);
-        mazeDijkstraOne.setBackground(Constants.COLOR_BACKGROUND);
-        mazeDijkstraTwo.setBackground(Constants.COLOR_BACKGROUND);
-        mazeAStar.setBackground(Constants.COLOR_BACKGROUND);
-
         panel.setLayout(new BorderLayout());
-
         panel.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        JPanel westPanel = new JPanel();
-        westPanel.setLayout(new BorderLayout());
-        westPanel.setBackground(Constants.COLOR_BACKGROUND);
-        westPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        westPanel.add(mazeDijkstraOne);
-        panel.add(westPanel, BorderLayout.WEST);
-
-        JLabel label1 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_HEAP + "<br>Computed in: " + time1 + " μs</div></html>");
-        label1.setForeground(Constants.COLOR_TEXT);
-        label1.setFont(Constants.FONT_TEXT);
-        label1.setHorizontalAlignment(JLabel.CENTER);
-        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new GridLayout(2, 1, 10, 10));
-        JPanel labelsPanel = new JPanel();
-        labelsPanel.setLayout(new GridLayout(1, 3, 10, 5));
-
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
-        centerPanel.add(mazeDijkstraTwo);
-        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
-
-        panel.add(centerPanel, BorderLayout.CENTER);
-
-        JLabel label2 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_D_DEQ + "<br>Computed in: " + time2 + " μs</div></html>");
-        label2.setForeground(Constants.COLOR_TEXT);
-        label2.setFont(Constants.FONT_TEXT);
-        label2.setHorizontalAlignment(JLabel.CENTER);
-        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new BorderLayout());
-        eastPanel.setBackground(Constants.COLOR_BACKGROUND);
-        eastPanel.add(mazeAStar, BorderLayout.WEST);
-        eastPanel.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
-        panel.add(eastPanel, BorderLayout.EAST);
-
-        JLabel label3 = new JLabel("<html><div style='text-align:center; line-height: 1.0'>" + Constants.TEXT_ASTAR + "<br>Computed in: " + time3 + " μs</div></html>");
-        label3.setForeground(Constants.COLOR_TEXT);
-        label3.setFont(Constants.FONT_TEXT);
-        label3.setHorizontalAlignment(JLabel.CENTER);
-        label3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        southPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Constants.COLOR_BACKGROUND);
-
         final CustomButton restartButton = new CustomButton(Constants.RESTART_BUTTON);
-        buttonPanel.add(restartButton);
         restartButton.addActionListener(restartListener);
 
-        labelsPanel.add(label1);
-        labelsPanel.add(label2);
-        labelsPanel.add(label3);
-        labelsPanel.setBackground(Constants.COLOR_BACKGROUND);
-
-        southPanel.add(labelsPanel);
-        southPanel.add(buttonPanel);
+        // Create panels to display buttons and labels.
+        JPanel labelsPanel = createCustomPanel(new GridLayout(1, 3, 10, 5), heapLbl, dequeLbl, aStarLbl);
+        JPanel buttonPanel = createCustomPanel(null, restartButton);
+        JPanel southPanel = createCustomPanel(new GridLayout(2, 1, 10, 10), labelsPanel, buttonPanel);
 
         panel.add(southPanel, BorderLayout.SOUTH);
+        panel.add(westPanel, BorderLayout.WEST);
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(eastPanel, BorderLayout.EAST);
 
         this.pack(); // To get the right size for the frame.
         this.revalidate();
@@ -318,5 +280,32 @@ public class MainView extends JFrame {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(this, errorMsg);
         });
+    }
+
+    /**
+     * Creates a label with specified properties.
+     * @param text The label text.
+     * @param font The font of the label.
+     * @return The created label.
+     */
+    private JLabel createLabel(String text, Font font) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(Constants.COLOR_TEXT);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
+    private JPanel createCustomPanel(LayoutManager layout, Component... components) {
+        JPanel panel = new JPanel();
+        panel.setLayout(layout);
+        panel.setBackground(Constants.COLOR_BACKGROUND);
+
+        for (Component component : components) {
+            panel.add(component);
+        }
+
+        return panel;
     }
 }
