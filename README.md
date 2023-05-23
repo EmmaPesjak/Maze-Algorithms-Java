@@ -154,40 +154,123 @@ Figure 1 depicts a Gantt chart roughly describing the project plan that has been
 ![](projectplan.png)<br>
 Figure 1. Gantt chart of the project plan.
 
-## Discussion
+### Discussion
 
-DISKUSSION HÄR OBV
+# Goal achievement and personal reflection
+Throughout this project, our main goal was to create a maze-solving application in Java with a graphical user interface
+(GUI) adhering to the Model-View-Controller (MVC) design pattern. We also aimed to implement two variations of Dijkstra's 
+algorithm using different data structures, as well as the A* algorithm for pathfinding in the maze.
 
-by letting the user themselves pick start and finish point the interactivity of the program is increased, and it becomes
-more flexible as different paths can be found in the same maze...
+In terms of fulfilling the goals, we can confidently say that we successfully achieved them. We were able to create a 
+functional maze-solving application with a GUI implemented using the MVC design pattern. The application allowed users 
+to select a maze image, choose start and end coordinates, and initiate the pathfinding algorithms.
 
-Priority queue vs deque:
+Regarding the implementation of the algorithms, we successfully implemented two variations of Dijkstra's algorithm: one 
+utilizing a heap with a PriorityQueue and the other employing a Deque. These algorithms effectively calculated the 
+shortest path in the maze. Additionally, we researched and implemented the A* algorithm, which incorporated a heuristic 
+value to estimate the distance from the current point to the endpoint. Although the learning materials did not cover 
+the A* algorithm, we took the initiative to study and understand its principles, enabling us to successfully implement 
+it in the application.
 
-PriorityQueue:
+While we encountered challenges during the image processing phase and the interpretation of the instructions, we were able 
+to overcome them by conducting additional research and applying problem-solving techniques. Ultimately, we managed to 
+develop a functioning application that met the initial goals set for the project.
 
-PriorityQueue is a data structure that orders its elements based on their priorities.
-It provides efficient retrieval of the element with the highest priority (lowest value) using a heap-based implementation.
-In Dijkstra's algorithm, a PriorityQueue can be used to store the unvisited nodes, where the priority is determined by the distance from the source node.
-The PriorityQueue ensures that the node with the smallest distance is always dequeued first, making it suitable for Dijkstra's algorithm where the shortest distance needs to be determined.
-The time complexity for enqueueing an element into a PriorityQueue is O(log N), and the time complexity for dequeuing the element with the highest priority is O(1).
-Deque (Double-ended Queue):
+# Outcome and result
+We observed notable differences in the performance of the implemented algorithms. Dijkstra's algorithm with a 
+PriorityQueue was the slowest, likely due to the additional computational overhead of maintaining element priorities. 
+Dijkstra's algorithm with a Deque showed improved performance, leveraging a simple FIFO structure for efficient 
+traversal. However, the A* algorithm stood out as the fastest, utilizing a heuristic value to estimate distances and 
+make informed decisions during pathfinding. These outcomes underscore the importance of algorithmic efficiency and data 
+structure selection. Overall, the A* algorithm proved to be the most efficient and effective approach for maze 
+pathfinding in this project.
 
-Deque is a data structure that allows insertion and removal of elements at both ends (front and rear).
-It can function as both a queue (first-in, first-out) and a stack (last-in, first-out).
-In Dijkstra's algorithm, a Deque can be used to store the unvisited nodes, where nodes are inserted at one end and dequeued from the other end.
-The Deque allows flexibility in terms of the order of node processing. For example, you can implement Dijkstra's algorithm in a breadth-first manner by enqueueing nodes at the rear and dequeuing them from the front, or you can implement it in a depth-first manner by enqueueing nodes at the front and dequeuing them from the rear.
-The time complexity for enqueueing and dequeuing an element from a Deque is O(1).
+# Conclusion
+In conclusion, we are satisfied with the outcomes of this project as we successfully created a maze-solving application 
+with a GUI, implemented multiple pathfinding algorithms, and achieved the desired functionality. This project has 
+provided us with valuable learning experiences, allowing us to enhance our programming skills and deepen our understanding 
+of algorithmic problem-solving.
 
 
-### Run time complexity
+### Run time complexity   - omformulera litta, taget from chatgpt hej
+
+# For all algorithms:
+- Converting the maze to MazePointAStar objects: This operation has a time complexity of O(N), where N is the total 
+  number of points in the maze. It involves iterating over the maze array and creating MazePointAStar objects for each 
+  point.
+
+- Initializing data structures and setting up the start point: These operations take constant time and can be considered 
+  O(1). This includes creating a priority queue/deque, a visited array, setting the start point's distance to 0, and 
+  adding it to the priority queue/deque.
+
+- Retrieving neighbors: The time complexity for retrieving neighbors depends on the number of neighbors a point has. 
+  In our implementation, we consider four neighbors (left, right, above, below) and iterate over them. This operation 
+  can be considered O(1) since the number of neighbors is constant.
+
+- Checking if the goal is reached: This operation takes constant time as it involves comparing the current point to the 
+  end point. It can be considered O(1).
+
+- Marking the current point as visited: This operation takes constant time and can be considered O(1) as it involves 
+  updating the visited array.
+
+- Generating the final path: Constructing the final path by traversing the pointers from the end point to the start 
+  point takes linear time proportional to the length of the path, which can be at most O(N).
+
+# A*:
+Main loop: The main loop of the algorithm continues until the priority queue is empty. In the worst case scenario, the 
+loop can iterate over all points in the maze, resulting in a time complexity of O(N).
+
+Updating distances and heuristics: Updating the distances and heuristic values of neighbors, as well as adding them to 
+the priority queue, can be considered O(log N) in the worst case, as it involves adding elements to the priority queue.
+
+Polling the point at the head of the priority queue: This operation has a time complexity of O(log N) as it involves 
+removing the highest priority element from the priority queue.
+
+Overall, the A* algorithm has a time complexity of O(N log N) in the worst case scenario, where N is the total number 
+of points in the maze. However, certain parts of the algorithm, such as converting the maze, initializing data structures,
+checking if the goal is reached, and retrieving neighbors, have constant time complexities of O(1).
+
+# Dijkstra's with Heap:
+Main loop: The main loop of the algorithm continues until the priority queue is empty. In the worst-case scenario, the 
+loop can iterate over all points in the maze, resulting in a time complexity of O(N).
+
+Polling the point at the head of the priority queue: This operation has a time complexity of O(log N) as it involves 
+removing the highest priority element from the priority queue.
+
+Overall, the Dijkstra's algorithm with a heap (priority queue) has a time complexity of O(N log N) in the worst-case 
+scenario, where N is the total number of points in the maze. However, certain parts of the algorithm, such as converting 
+the maze, initializing data structures, checking if the goal is reached, retrieving neighbors, and marking visited points,
+have a time complexity of O(N) or O(1).
+
+
+# Dijkstra's with Deque:
+Main loop: The main loop of the algorithm continues until the deque is empty. In the worst-case scenario, the loop can 
+iterate over all points in the maze, resulting in a time complexity of O(N).
+
+Getting the point at the front of the deque: This operation takes constant time and can be considered O(1) as it 
+involves retrieving the first element from the deque.
+
+Updating distances and adding to the deque: Updating the distances of neighbors and adding them to the deque has a time 
+complexity of O(1) in the worst case, as it involves adding elements to the end of the deque.
+
+Overall, the Dijkstra's algorithm with a deque (ArrayDeque) has a time complexity of O(N) in the worst-case scenario, 
+where N is the total number of points in the maze. Certain parts of the algorithm, such as converting the maze, 
+initializing data structures, checking if the goal is reached, retrieving neighbors, and marking visited points, have a
+time complexity of O(N) or O(1).
+
+
+
+
+
 Calculate the run time complexity of all solutions and compare them. Snacka om bigO och 
 - Verkar som att 2d boolean array är mest efficient i vårt allt, eftersom alla pixels har samma weights. en graph är
   bättre om man har olika graph strukturer och mer flexibel, men i vårt fall är det mög. dessutom så fick vi ner tiden
   när vi bara genererar maze 1 gång.
 
-Deque är O(1) och priority queue är O(n)
 
 ### Personal reflections
+Ska vi ha denna såhär, är inte det inne i discussion?
 This project has taught us a lot about different pathfinding algorithms, image processing and GUIs. It has been 
 challenging but rewarding. The learning modules of the course has provided us with background knowledge of different
 datastructures and algorithms to complete this project.
+
