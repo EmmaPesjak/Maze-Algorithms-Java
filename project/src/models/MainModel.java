@@ -42,9 +42,17 @@ public class MainModel {
         this.rePick = rePick;
     }
 
+    /**
+     * Generates a maze to be displayed, based on the filename of the maze-image.
+     * @param fileName name of file.
+     * @return custom JPanel.
+     * @throws IOException exception.
+     */
     public CustomPanel getMaze(String fileName) throws IOException {
         // Get the image.
         image = ImageIO.read(new File("project/src/mazeImages/" + fileName));
+
+        // Generate the maze from image.
         generateMaze(image);
 
         // Get height and width.
@@ -76,13 +84,21 @@ public class MainModel {
         return panel;
     }
 
+    /**
+     * Calculate the path using provided algorithm, and create a CustomPanel displaying the results.
+     * @param startPoint start-point.
+     * @param finish end-point.
+     * @param algo type of algorithm.
+     * @return CustomPanel containing the paths, or null if no paths.
+     */
     public CustomPanel displayPath(Point startPoint, Point finish, String algo){
-        // Adjust the start and end coordinates to match the cell size
+        // Adjust the start and end coordinates to match the cell size.
         startX = startPoint.x / cellSize;
         startY = startPoint.y / cellSize;
         endX = finish.x / cellSize;
         endY = finish.y / cellSize;
 
+        // Create start- and end-points.
         Point start = new Point(startX, startY);
         Point end = new Point(endX, endY);
 
@@ -93,7 +109,7 @@ public class MainModel {
 
                 super.paintComponent(g);
 
-                // Scale and draw the binary image on the panel.
+                // Draw the binary image on the panel.
                 g.drawImage(image, 0, 0, panelWidth, panelHeight, null);
 
                 // Draw the start and end points
@@ -132,7 +148,6 @@ public class MainModel {
 
                     case (Constants.DIJK_DEQ) -> {
                         dijkstra = new Dijkstra(maze, start, end);
-
                         shortestPath = dijkstra.solveDequeuePath();
 
                         if (shortestPath.size() != 0){
@@ -164,11 +179,7 @@ public class MainModel {
     }
 
     /**
-     * In this drawPath method, we create two arrays, xPoints and yPoints, to store the
-     * x and y coordinates of the points in the path. Instead of drawing individual lines between points,
-     * we pass these arrays to the drawPolyline method of the Graphics2D object. This method draws a polyline
-     * connecting all the points in a single method call, resulting in better performance and reduced time
-     * complexity compared to drawing individual lines.
+     * Draw the paths between the start- and end-point to display the shortest paths,
      * @param g is the graphics.
      * @param path is the path of points to draw.
      */
@@ -182,6 +193,8 @@ public class MainModel {
         g2d.setStroke(new BasicStroke(3));
 
         int numPoints = path.size();
+
+        // Create two arrays for x- and y-coordinates.
         int[] xPoints = new int[numPoints];
         int[] yPoints = new int[numPoints];
 
@@ -201,6 +214,8 @@ public class MainModel {
      * @param image image containing the maze.
      */
     private void generateMaze(BufferedImage image) {
+
+        // Get size and adjust using cell-size.
         int width = image.getWidth();
         int height = image.getHeight();
         int mazeWidth = width / cellSize;
@@ -212,6 +227,7 @@ public class MainModel {
         // Define threshold, in this case, 85% of the pixels need to be white to be considered to be a white cell.
         int threshold = (int) (0.85 * (cellSize * cellSize));
 
+        // Loop through all coordinates.
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
 
@@ -221,25 +237,25 @@ public class MainModel {
                 int endXCell = startXCell + cellSize;
                 int endYCell = startYCell + cellSize;
 
-                int whiteCount = 0;
+                int whiteCount = 0;  // amount of white pixels
 
+                // For all pixels in cell.
                 for (int i = startXCell; i < endXCell; i++) {
                     for (int j = startYCell; j < endYCell; j++) {
                         if (image.getRGB(i, j) == Color.WHITE.getRGB()) {
-                            whiteCount++;
+                            whiteCount++;  // increase white-count.
                         }
                     }
                 }
-                // Set to true if amount of white pixels are more than the threshold AND within walls.
+                // Set to true if amount of white pixels are more than the threshold.
                 maze[x][y] = whiteCount >= threshold;
-
             }
         }
 
         // Identify the boundaries of the walls.
         identifyBoundaries();
 
-        // Set cells outside the boundaries to false
+        // Set cells outside the boundaries to false.
         for (int x = 0; x < mazeWidth; x++) {
             for (int y = 0; y < mazeHeight; y++) {
                 if (!isWithinBoundary(x, y)) {
