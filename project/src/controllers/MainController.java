@@ -19,7 +19,8 @@ import java.util.Objects;
 public class MainController {
 
     private final MainModel mainModel = new MainModel(this::rePick);
-    private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(), new RestartButtonListener());
+    private final MainView mainView = new MainView(new SelectButtonListener(), new SolveButtonListener(),
+            new RestartButtonListener());
 
     /**
      * Responsible for redirecting the user to change coordinates if no valid path was found.
@@ -111,7 +112,6 @@ public class MainController {
                 mainView.displayResults(heapPath, dequePath, aStarPath, heapTime, dequeTime, aStarTime);
             });
         }
-
     }
 
     /**

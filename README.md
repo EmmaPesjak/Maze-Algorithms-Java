@@ -10,21 +10,26 @@ SCALE??? ta bort eftersom det inte fungerar?
   
 
 
+KVAR I README:
+* method
+* discussion
+* Run time complexity
+
+
 
 # Project
 
 ## Group Members details
 Emma Pesjak, empe2105.
 Ebba Nimér, ebni2100.
-Link to repo:
+Link to repository:
 https://bitbucket.org/EmmaPesjak/dt183g_project/src/master/
 
 ## Environment & Tools
 Emma: This assignment was performed on a Windows 10 PC with IntelliJ version 2022.2.3, Java version openjdk 19.0.1,
 and Git version 2.33.0.windows.2.
 
-Ebba:
-Microsoft Windows 10 Home 64-bit, IntelliJ IDEA 2021.3.3, Command Prompt, openjdk 17.0.2 2022-01-18, 
+Ebba: Microsoft Windows 10 Home 64-bit, IntelliJ IDEA 2021.3.3, Command Prompt, openjdk 17.0.2 2022-01-18, 
 OpenJDK Runtime Environment (build 17.0.2+8-86), OpenJDK 64-Bit Server VM (build 17.0.2+8-86, mixed mode, sharing),
 Apache Maven 3.8.5, and Git version 2.33.0.windows.2
 
@@ -56,9 +61,39 @@ smaller screens, since this course is focused on algorithms and not design, this
 of the program.
 
 ## Methodology
-Emma skriver om MVC/GUI och algoritmerna
+The MVC pattern was the base structure and architecture used for this project. Different packages for models, views,
+and controllers contained almost all the classes and interfaces. A `Constants` interface was created in the support
+package. This interface contained defined constant values used throughout the program by the different classes.
+The `Main` class was the program's main starting point and initiated the `MainController` in an AWT event dispatch 
+thread for the GUI to update properly.
 
-Ebba om mazegenerator och pathdrawing
+The `MainController` was responsible for communication with the `MainModel` and the `MainView`, accessing data from 
+the view, telling the model to calculate the data, and then telling the view to update. Action listeners for the View's 
+buttons were implemented as inner classes. Three different action listeners were implemented; the 
+`SelectButtonListener`, the `SolveButtonListener`, and the `RestartButtonListener`. The`SelectButtonListener` simply
+ensured that the user had entered a valid file name, displaying error messages in alert dialogs if not, then 
+communicating the file name to the `MainModel` which produced the JPanel of the image to be displayed in the `MainView`.
+The `SolveButtonListener` got the start and finish coordinates from the `MainView`, checked if they were valid through 
+the `MainModel`, letting the user re-pick if not, then ran the different algorithms through the `MainModel`, 
+calculating the times taken, and lastly displaying the results to the user through the `MainView`. The 
+`RestartButtonListener` simply cleared the values of the user's chosen coordinates in the `MainModel` and initiated 
+the main screen of the `MainView`. A private `rePick()` method was also implemented in the `MainController`. This 
+method was responsible for redirecting the user in the GUI to change coordinates if no valid path was found. The method 
+was used by the `MainModel` through the `RePickWhenNoPath` interface for communicating between `MainModel` and 
+`MainController` without the `MainModel` being aware of the `MainController`, ensuring that the MVC pattern was 
+followed.
+
+The `MainView` was responsible for creating the GUI for the application. The class initiated the JFrame and the 
+constructor set the action listeners used by the buttons. To make the code more readable and since all the buttons of 
+the application and almost all the panels and labels shared the same base design, the generic classes `CustomButton`,
+`CustomLabel`, `CustomCalcLabel`, and `CustomPanel` were created. BEHÖVER VI FÖRKLARA MER SWING???
+
+The `MainModel` class was responsible for handling the application's data, performing calculations, and
+communicating with the controller. The `MainModel` class was completely in charge of the logic for
+
+EBBA SKRIVER DU OM MAINMODEL/mazegenerating och pathdrawing?
+
+Emma skriver om algoritmerna??? ELLER SKRIVER EBBA OM ARV OCH SÅNT SHIT??
 
 ### Project plan
 Figure 1 depicts a Gantt chart roughly describing the project plan that has been followed for this project.
@@ -67,7 +102,10 @@ Figure 1 depicts a Gantt chart roughly describing the project plan that has been
 Figure 1. Gantt chart of the project plan.
 
 ## Discussion
-by letting the user themselves pick start and finish point the interactivity of the program is increased and it becomes
+
+DISKUSSION HÄR OBV
+
+by letting the user themselves pick start and finish point the interactivity of the program is increased, and it becomes
 more flexible as different paths can be found in the same maze...
 
 ### Run time complexity
@@ -79,4 +117,5 @@ Calculate the run time complexity of all solutions and compare them. Snacka om b
 
 ### Personal reflections
 This project has taught us a lot about different pathfinding algorithms, image processing and GUIs. It has been 
-challenging but rewarding.
+challenging but rewarding. The learning modules of the course has provided us with background knowledge of different
+datastructures and algorithms to complete this project.
