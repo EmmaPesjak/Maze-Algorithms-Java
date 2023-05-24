@@ -10,6 +10,8 @@ import java.util.List;
  * away from the finish point) than Dijkstra's algorithm since it takes a heuristic value into consideration,
  * going towards the goal. The heuristic value is an estimation of the remaining distance from the
  * current point to the goal point, not taking the wall obstacles of the maze into consideration.
+ *
+ * SKA VI HA ALL DENNA TEXT??
  */
 public class AStar extends BaseAlgorithm {
 
@@ -63,7 +65,7 @@ public class AStar extends BaseAlgorithm {
             }
 
             // Otherwise continue traversing the maze, adding available neighbours to the
-            // open set (prio queue).
+            // open set (priority queue).
             List<MazePointAStar> neighbours = getNeighbours(currentPoint);
             for (MazePointAStar neighbor : neighbours) {
                 // Check if they are in the closed set (already visited), do not add.

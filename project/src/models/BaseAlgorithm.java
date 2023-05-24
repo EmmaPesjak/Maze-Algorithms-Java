@@ -13,6 +13,12 @@ public abstract class BaseAlgorithm {
     protected final Point end;
     protected final BaseMazePoint[][] mazePoints;
 
+    /**
+     * Constructor taking arguments for the maze and start- and end-points.
+     * @param maze maze.
+     * @param start start-point.
+     * @param end end-point.
+     */
     public BaseAlgorithm(boolean[][] maze, Point start, Point end) {
         this.maze = maze;
         this.start = start;

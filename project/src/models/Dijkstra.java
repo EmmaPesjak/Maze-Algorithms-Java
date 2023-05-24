@@ -5,8 +5,8 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Class representing Dijkstra's algorithm using a Priority Queue, used for solving the maze and
- * finding the shortest path.
+ * Class representing Dijkstra's algorithm, implemented with two distinct calculations using Priority Queue and Deque.
+ * Used for solving the maze and finding the shortest path.
  */
 public class Dijkstra extends BaseAlgorithm {
 
@@ -62,7 +62,7 @@ public class Dijkstra extends BaseAlgorithm {
             }
 
             // Otherwise continue traversing the maze, adding available neighbours to the
-            // open set (prio queue).
+            // open set (priority queue).
             List<MazePointDijkstra> neighbors = getNeighbours(currentPoint);
             for (MazePointDijkstra neighbor : neighbors) {
                 // Check if they are in the closed set (already visited), do not add.
@@ -85,7 +85,7 @@ public class Dijkstra extends BaseAlgorithm {
     }
 
     /**
-     * Solve the shortest path using Dequeue and map.
+     * Solve the shortest path using Deque.
      * @return shortest path.
      */
     public List<Point> solveDequeuePath(){
@@ -113,7 +113,6 @@ public class Dijkstra extends BaseAlgorithm {
 
             // Mark the current point as visited.
             visited[currentPoint.getPoint().x][currentPoint.getPoint().y] = true;
-
 
             // Check if we have reached the end, if so, return the shortest path.
             if (currentPoint == endMazePoint) {
