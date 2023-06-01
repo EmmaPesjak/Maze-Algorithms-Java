@@ -148,7 +148,7 @@ public class MainModel {
 
                     case (Constants.DIJK_DEQ) -> {
                         dijkstra = new Dijkstra(maze, start, end);
-                        shortestPath = dijkstra.solveDequeuePath();
+                        shortestPath = dijkstra.solveDequePath();
 
                         if (shortestPath.size() != 0){
                             // Draw the shortest path.

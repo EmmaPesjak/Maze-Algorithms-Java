@@ -88,7 +88,7 @@ public class Dijkstra extends BaseAlgorithm {
      * Solve the shortest path using Deque.
      * @return shortest path.
      */
-    public List<Point> solveDequeuePath(){
+    public List<Point> solveDequePath(){
         // Convert the 2D array to a 2D array of MazePointDijkstras.
         convertToMazePoints();
         // Get the start and end.
