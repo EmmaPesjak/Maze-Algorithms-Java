@@ -6,12 +6,8 @@ import java.util.List;
 
 /**
  * Class representing the A* algorithm deriving from BaseAlgorithm, used for solving the maze and finding the
- * shortest path. Slightly smarter (in some cases, not always in mazes since the shortest path may actually lead
- * away from the finish point) than Dijkstra's algorithm since it takes a heuristic value into consideration,
- * going towards the goal. The heuristic value is an estimation of the remaining distance from the
+ * shortest path. The heuristic value is an estimation of the remaining distance from the
  * current point to the goal point, not taking the wall obstacles of the maze into consideration.
- *
- * SKA VI HA ALL DENNA TEXT??
  */
 public class AStar extends BaseAlgorithm {
 
@@ -64,18 +60,18 @@ public class AStar extends BaseAlgorithm {
                 return generateFinalPath(currentPoint);
             }
 
-            // Otherwise continue traversing the maze, adding available neighbours to the
+            // Otherwise continue traversing the maze, adding available neighbors to the
             // open set (priority queue).
-            List<MazePointAStar> neighbours = getNeighbours(currentPoint);
-            for (MazePointAStar neighbor : neighbours) {
+            List<MazePointAStar> neighbors = getNeighbors(currentPoint);
+            for (MazePointAStar neighbor : neighbors) {
                 // Check if they are in the closed set (already visited), do not add.
                 if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
                     continue;
                 }
 
-                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
+                // Calculate a new distance by adding 1 (since the neighbors are 1 away from the current point).
                 int newDistance = currentPoint.getDistance() + 1;
-                // If the neighbour's current distance is higher, we update its previous point to the current point
+                // If the neighbor's current distance is higher, we update its previous point to the current point
                 // and calculate and set the new distance and heuristics. Then we add it to the open set.
                 if (newDistance < neighbor.getDistance()) {
                     neighbor.setPrevious(currentPoint);

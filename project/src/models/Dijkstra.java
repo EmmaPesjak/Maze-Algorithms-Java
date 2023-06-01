@@ -61,17 +61,17 @@ public class Dijkstra extends BaseAlgorithm {
                 return generateFinalPath(currentPoint);
             }
 
-            // Otherwise continue traversing the maze, adding available neighbours to the
+            // Otherwise continue traversing the maze, adding available neighbors to the
             // open set (priority queue).
-            List<MazePointDijkstra> neighbors = getNeighbours(currentPoint);
+            List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
             for (MazePointDijkstra neighbor : neighbors) {
                 // Check if they are in the closed set (already visited), do not add.
                 if (visited[neighbor.getPoint().x][neighbor.getPoint().y]) {
                     continue;
                 }
-                // Calculate a new distance by adding 1 (since the neighbours are 1 away from the current point).
+                // Calculate a new distance by adding 1 (since the neighbors are 1 away from the current point).
                 int tentativeDistance = currentPoint.getDistance() + 1;
-                // If the neighbour's current distance is higher, we update its previous point to the current point
+                // If the neighbor's current distance is higher, we update its previous point to the current point
                 // and calculate and set the new distance. Then we add it to the open set.
                 if (tentativeDistance < neighbor.getDistance()) {
                     neighbor.setPrevious(currentPoint);
@@ -120,7 +120,7 @@ public class Dijkstra extends BaseAlgorithm {
             }
 
             // Get the neighbors of the current point.
-            List<MazePointDijkstra> neighbors = getNeighbours(currentPoint);
+            List<MazePointDijkstra> neighbors = getNeighbors(currentPoint);
 
             // Process the neighbors.
             for (MazePointDijkstra neighbor : neighbors) {

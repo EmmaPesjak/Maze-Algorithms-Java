@@ -44,12 +44,12 @@ public abstract class BaseAlgorithm {
     }
 
     /**
-     * Creates an array of neighbouring MazePoints.
+     * Creates an array of neighboring MazePoints.
      * @param point is the current point.
-     * @return an array of neighbouring MazePoints.
+     * @return an array of neighboring MazePoints.
      */
-    protected <T extends BaseMazePoint> List<T> getNeighbours(T point) {
-        List<T> neighbours = new ArrayList<>();
+    protected <T extends BaseMazePoint> List<T> getNeighbors(T point) {
+        List<T> neighbors = new ArrayList<>();
 
         // Get the x and y coordinates.
         int x = point.getPoint().x;
@@ -64,10 +64,10 @@ public abstract class BaseAlgorithm {
             int newY = y + offset[1];
 
             if (newX >= 0 && newX < maze.length && newY >= 0 && newY < maze[0].length && maze[newX][newY]) {
-                neighbours.add((T) mazePoints[newX][newY]);
+                neighbors.add((T) mazePoints[newX][newY]);
             }
         }
-        return neighbours;
+        return neighbors;
     }
 
     /**
