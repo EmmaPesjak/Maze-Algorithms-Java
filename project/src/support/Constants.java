@@ -23,10 +23,6 @@ public interface Constants {
     Font FONT_SMALL_TEXT = new Font(Font.MONOSPACED, Font.PLAIN, 18);
     Font FONT_BUTTON = new Font(Font.MONOSPACED, Font.BOLD, 32);
 
-    // Values.
-    int MAX_PANEL_WIDTH = 700;
-    int MAX_PANEL_HEIGHT = 700;
-
     // Error messages.
     String ERR_NO_FILE_NAME = "Please enter a file name.";
     String ERR_NO_VALID_FILE = "Please enter a valid file name or make sure that the file exists.";
@@ -34,7 +30,7 @@ public interface Constants {
 
     // Algorithms
     String DIJK_HEAP = "dijkstraHeap";
-    String DIJK_DEQ = "dijkstraDequeue";
+    String DIJK_DEQ = "dijkstraDeque";
     String ASTAR = "aStar";
 
     // GUI text.
@@ -45,7 +41,7 @@ public interface Constants {
     String SELECT_FINISH = "Select the finish";
     String SOLVE_BUTTON = "Solve Maze";
     String TEXT_D_HEAP = "Dijkstra with heap";
-    String TEXT_D_DEQ = "Dijkstra with dequeue";
+    String TEXT_D_DEQ = "Dijkstra with deque";
     String TEXT_ASTAR = "A*";
     String RESTART_BUTTON = "Run new maze";
     String HTML_RESULT_START = "<html><div style='text-align:center; line-height: 1.0'>";
